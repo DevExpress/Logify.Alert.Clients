@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F6D512E9-D2FB-4EBE-BA0E-B7403CF99258}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Logify.Wpf</RootNamespace>
+    <AssemblyName>Logify.Alert.Wpf</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugTest|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DEBUGTEST</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" Condition="'$(Configuration)'=='Debug'">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\DevExpress.Key\StrongKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Logify.Alert.Core\Collectors\AppDomainCollector.cs">
+      <Link>Collectors\AppDomainCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\ApplicationCollector.cs">
+      <Link>Collectors\ApplicationCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\AssemblyCollector.cs">
+      <Link>Collectors\AssemblyCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\CompositeInfoCollector.cs">
+      <Link>Collectors\CompositeInfoCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\CultureCollector.cs">
+      <Link>Collectors\CultureCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\DesktopEnvironmentCollector.cs">
+      <Link>Collectors\DesktopEnvironmentCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\DisplayCollector.cs">
+      <Link>Collectors\DisplayCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\ExceptionObjectCollector.cs">
+      <Link>Collectors\ExceptionObjectCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\FrameworkVersionsCollector.cs">
+      <Link>Collectors\FrameworkVersionsCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\GuiResourcesCollector.cs">
+      <Link>Collectors\GuiResourcesCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\MemoryCollector.cs">
+      <Link>Collectors\MemoryCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\MiniDumpCollector.cs">
+      <Link>Collectors\MiniDumpCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\OperatingSystemCollector.cs">
+      <Link>Collectors\OperatingSystemCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\ScreenShotCollector.cs">
+      <Link>Collectors\ScreenShotCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\VirtualMachineCollector.cs">
+      <Link>Collectors\VirtualMachineCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\ReportSender\BackgroundThreadExceptionReportSender.cs">
+      <Link>ReportSender\BackgroundThreadExceptionReportSender.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\ReportSender\ExternalProcessReportSender.cs">
+      <Link>ReportSender\ExternalProcessReportSender.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\ReportSender\FileExceptionReportSender.cs">
+      <Link>ReportSender\FileExceptionReportSender.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\ReportSender\ServiceExceptionReportSender.cs">
+      <Link>ReportSender\ServiceExceptionReportSender.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\StackBasedIgnoreDetection.cs">
+      <Link>StackBasedIgnoreDetection.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Tests\Collectors\CultureCollectorTests.cs">
+      <Link>Tests\Collectors\CultureCollectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Tests\Collectors\DesktopEnvironmentCollectorTests.cs">
+      <Link>Tests\Collectors\DesktopEnvironmentCollectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Tests\Collectors\OperatingSystemCollectorTests.cs">
+      <Link>Tests\Collectors\OperatingSystemCollectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\Tests\Logger\JsonTextWriterLoggerTests.cs">
+      <Link>Tests\Logger\JsonTextWriterLoggerTests.cs</Link>
+    </Compile>
+    <Compile Include="Collectors\AppDispatcherCollector.cs" />
+    <Compile Include="Collectors\WpfApplicationCollector.cs" />
+    <Compile Include="Collectors\DispatcherCollector.cs" />
+    <Compile Include="Collectors\TaskShedulerCollector.cs" />
+    <Compile Include="Collectors\WPFCollector.cs" />
+    <Compile Include="Collectors\WPFEnvironmentCollector.cs" />
+    <Compile Include="LogifyClient.cs" />
+    <Compile Include="ReportSender\ReportSender.cs" />
+    <Compile Include="CollectorFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Logify.Alert.Core\Logify.Alert.Core.csproj">
+      <Project>{e6fe00aa-7637-4697-b25b-a3d340596fe7}</Project>
+      <Name>Logify.Alert.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
