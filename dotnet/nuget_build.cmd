@@ -1,10 +1,5 @@
 @echo on
 
-if "%1"=="" (
-  ECHO Usage buget_build.cmd <artifacts dir (usually bin)>
-  goto finish
-)
-
 rd tmp /Q /S
 mkdir tmp
 
