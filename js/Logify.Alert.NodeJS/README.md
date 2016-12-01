@@ -11,8 +11,8 @@ $ npm install logify-alert --save
 ## Quick Start
 
 ```javascript
-var logifyAlertClient = require('logify-alert');
-let client = new logifyAlertClient.default('SPECIFY_YOUR_API_KEY_HERE')
+const logifyAlert = require('logify-alert');
+const client = new logifyAlert.default('SPECIFY_YOUR_API_KEY_HERE')
 client.startHandling();
 ```
 
