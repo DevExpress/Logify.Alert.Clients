@@ -7,12 +7,43 @@ $ nuget install Logify.Alert.Win
 ```
 
 ## Quick Start
+### Automatic error reporting
 ```csharp
 using DevExpress.Logify.Win;
 
 LogifyAlert client = LogifyAlert.Instance;
 client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
 client.StartExceptionsHandling();
+```
+
+### Manual error reporting
+```csharp
+using DevExpress.Logify.Win;
+try {
+    LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
+    RunYourCode();
+}
+catch (Exception e) {
+    LogifyAlert.Instance.Send(e);
+}
+```
+
+## Configuration
+You may setup Logify Alert client using  App.config file as follows
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <configSections>
+    <section name="logifyAlert" type="DevExpress.Logify.LogifyConfigSection, Logify.Alert.Win" />
+  </configSections>
+  <logifyAlert>
+    <apiKey value="My Api Key" />
+    <confirmSend value="false" />
+    <customData>
+      <add key="MACHINE_NAME" value="My Server" />
+    </customData>
+  </logifyAlert>
+</configuration>
 ```
 
 ## API
@@ -94,8 +125,44 @@ catch (Exception e) {
     client.Send(e, data);
 }
 ```
+
 ### Events
 
 #### BeforeReportException
+Occurs before Logify Alert sends a new crash report to the service.
+
+The **BeforeReportException** event occurs between the [CanReportException](#canreportexception) event and sending a new report to the Logify Alert service. If report send is canceled in the [CanReportException](#canreportexception) event's handler, the report is not sent and the **BeforeReportException** event isn't raised.
+
+Handle the **BeforeReportException event** to add custom data to the sent report. To do this, assign the required data to the [CustomData](#customdata) property.
+```csharp
+LogifyAlert.Instance.BeforeReportException += OnBeforeReportException;
+
+void OnBeforeReportException(object sender, EventArgs e) {
+    LogifyAlert.Instance.CustomData["LoggedInUser"] = "Mary";
+}
+```
+
 
 #### CanReportException
+Occurs between generating a new crash report and raising the [BeforeReportException](#beforereportexception) event.
+
+The **CanReportException** event occurs right after a new report is generated and is prepared to be sent to the Logify Alert service. Handle the **CanReportException** event to cancel the report send. To do this, assign **true** to the appropriate CanReportExceptionEventArgs's **Cancel** property. Thus, the generated report is not posted to the service and the [BeforeReportException](#beforereportexception) isn't raised.
+```csharp
+LogifyAlert.Instance.CanReportException += OnCanReportException;
+
+void OnCanReportException(object sender, CanReportExceptionEventArgs args) {
+    if (args.Exception is MyCustomException)
+        args.Cancel = true;
+}
+```
+
+### Attributes
+#### LogifyIgnoreAttribute
+Indicates that exceptions thrown at specific method should not be handled and send by Logify Alert.
+
+```csharp
+[LogifyIgnore(true)]
+void ThisMethodShouldNotReportAnyExceptions() {
+    RunSomeCode();
+}
+```
