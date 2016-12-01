@@ -5,13 +5,13 @@ JavaScript client for reports exceptions to [Logify Alert](https://logify.devexp
 ## Links to script
 
 The current version of the JavaScript client is available by the following links:
-```javascript
+```
 https://logifyjs.devexpress.com/logifyAlert.js - full version
 https://logifyjs.devexpress.com/logifyAlert.min.js - minified version
 ```
 
 Additionally there are clients for specific versions. For example:
-```javascript
+```
 https://logifyjs.devexpress.com/0.0.4/logifyAlert.js - full version
 https://logifyjs.devexpress.com/0.0.4/logifyAlert.min.js - minified version
 ```
