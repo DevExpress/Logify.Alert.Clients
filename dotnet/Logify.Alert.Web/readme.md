@@ -1,24 +1,49 @@
-# Logify Alert for WPF applications
+# Logify Alert for ASP.NET WebForms and MVC applications
 WinForms and console client to report exceptions to [Logify Alert](https://logify.devexpress.com)
 
 ## Install
 ```sh
-$ nuget install Logify.Alert.Wpf
+$ nuget install Logify.Alert.Web
 ```
 
 ## Quick Start
 ### Automatic error reporting
-```csharp
-using DevExpress.Logify.Wpf;
-
-LogifyAlert client = LogifyAlert.Instance;
-client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
-client.StartExceptionsHandling();
+#### Modify Application's Web.config File
+Add the Logify Alert settings to the application's **Web.config** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Documentation/CreateApp) generated for it.
+```xml
+<configuration>
+  <configSections>
+    <section name="logifyAlert" type="DevExpress.Logify.WebLogifyConfigSection, Logify.Alert.Web"/>
+  </configSections>
+  <logifyAlert>
+    <apiKey value="SPECIFY_YOUR_API_KEY_HERE"/>
+  </logifyAlert>
+</configuration>
 ```
+Add the Logify.Alert.Web module to the **Modules** section.
+```xml
+<system.webServer>
+  <modules>
+    <add name="Logify.Alert.Web" type="DevExpress.Logify.Web.AspExceptionHandler, Logify.Alert.Web" preCondition="managedHandler"/>
+  </modules>
+</system.webServer>
+```
+#### Modify Application's WebApiconfig.cs File (WebApi applications only)
+Add the following code to the end of the **Register()** method declared in the application's **WebApiconfig.cs** file.
+```csharp
+public static class WebApiConfig {
+    public static void Register(HttpConfiguration config) {
+        //...
+        config.Filters.Add(new DevExpress.Logify.Web.WebApiExceptionHandler());
+    }
+}
+```
+
+That's it. Now, your application will report about unhandled exceptions to the Logify Alert service. To manage and view generated reports, use the [Logify Alert](https://logify.devexpress.com) link.
 
 ### Manual error reporting
 ```csharp
-using DevExpress.Logify.Wpf;
+using DevExpress.Logify.Web;
 try {
     LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
     RunYourCode();
@@ -29,15 +54,17 @@ catch (Exception e) {
 ```
 
 ## Configuration
-You may setup Logify Alert client using **App.config** file as follows
+You can set up Logify Alert client using the **Web.config** file as follows.
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <configSections>
-    <section name="logifyAlert" type="DevExpress.Logify.LogifyConfigSection, Logify.Alert.Wpf" />
+    <section name="logifyAlert" type="DevExpress.Logify.WebLogifyConfigSection, Logify.Alert.Web" />
   </configSections>
   <logifyAlert>
     <apiKey value="My Api Key" />
+    <appName value="My Site" />
+    <version value="1.0.5" />
     <customData>
       <add key="MACHINE_NAME" value="My Server" />
     </customData>

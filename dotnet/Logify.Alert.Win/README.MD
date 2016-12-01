@@ -29,7 +29,7 @@ catch (Exception e) {
 ```
 
 ## Configuration
-You can set up Logify Alert client using the App.config file as follows.
+You can set up Logify Alert client using the **App.config** file as follows.
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
