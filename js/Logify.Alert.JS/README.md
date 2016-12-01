@@ -4,13 +4,13 @@ JavaScript client for reports exceptions to [Logify Alert](https://logify.devexp
 
 ## Links to script
 
-The current version of the JavaScript client is available by the following links:
+The latest version of the JavaScript client is available by the following links:
 ```
 https://logifyjs.devexpress.com/logifyAlert.js - full version
 https://logifyjs.devexpress.com/logifyAlert.min.js - minified version
 ```
 
-Additionally there are clients for specific versions. For example:
+Additionally, there are clients for specific Logify Alert versions. For example:
 ```
 https://logifyjs.devexpress.com/0.0.4/logifyAlert.js - full version
 https://logifyjs.devexpress.com/0.0.4/logifyAlert.min.js - minified version
@@ -66,9 +66,7 @@ client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
 
 #### collectLocalStorage
 
-Spacifies if Logify Alert client will correct local storage data.
-
-By default: false.
+Specifies whether or not Logify Alert client will collect local storage data. Default value is **false**.
 
 ```javascript
 client.collectLocalStorage = true;
@@ -76,9 +74,7 @@ client.collectLocalStorage = true;
 
 #### collectSessionStorage
 
-Spacifies if Logify Alert client will correct session storage data.
-
-By default: true.
+Spacifies if Logify Alert client will correct session storage data. Default value is **true**.
 
 ```javascript
 client.collectSessionStorage = false;
@@ -86,9 +82,7 @@ client.collectSessionStorage = false;
 
 #### collectCookies
 
-Spacifies if Logify Alert client will correct cookies.
-
-By default: true.
+Specifies whether or not the Logify Alert client will collect cookies. Default value is **true**.
 
 ```javascript
 client.collectCookies = false;
@@ -96,11 +90,11 @@ client.collectCookies = false;
 
 ### Methods for automatic reporting
 
-Logify Alert allows you to automatically listen to uncaught exceptions and deliver crash reports. For this purpose, use the methods below.
+Logify Alert allows you to automatically listen to uncaught exceptions and rejection, and deliver crash reports. For this purpose, use the methods below.
 
 #### startHandling()
 
-Commands Logify Alert to start listening to uncaught exceptions and rejections and sending reports for all processed exceptions. 
+Commands Logify Alert to start listening to uncaught exceptions and rejections and send reports for all processed exceptions. 
 
 ```javascript
 client.startHandling();
