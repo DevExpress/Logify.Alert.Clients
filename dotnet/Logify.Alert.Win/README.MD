@@ -1,5 +1,5 @@
 # Logify Alert for WinForms and console applications
-WinForms and console client to report exceptions to [Logify Alert](https://logify.devexpress.com)
+WinForms and console client to report exceptions to [Logify Alert](https://logify.devexpress.com).
 
 ## Install
 ```sh
@@ -29,7 +29,7 @@ catch (Exception e) {
 ```
 
 ## Configuration
-You may setup Logify Alert client using  App.config file as follows
+You can set up Logify Alert client using the App.config file as follows.
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
@@ -158,7 +158,7 @@ void OnCanReportException(object sender, CanReportExceptionEventArgs args) {
 
 ### Attributes
 #### LogifyIgnoreAttribute
-Indicates that exceptions thrown at specific method should not be handled and send by Logify Alert.
+Indicates that exceptions thrown from a specific method should not be handled and sent to Logify Alert.
 
 ```csharp
 [LogifyIgnore(true)]
