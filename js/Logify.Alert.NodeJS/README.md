@@ -12,7 +12,7 @@ $ npm install logify-alert --save
 
 ```javascript
 const logifyAlert = require('logify-alert');
-const client = new logifyAlert.default('SPECIFY_YOUR_API_KEY_HERE')
+let client = new logifyAlert.default('SPECIFY_YOUR_API_KEY_HERE')
 client.startHandling();
 ```
 
