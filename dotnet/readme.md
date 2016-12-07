@@ -1,12 +1,16 @@
 # Logify Alert .NET Clients
 
 ## Platforms
-* [WinForms](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Win)
-* [Console apps](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Win)
-* [ASP.NET](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Web)
-* [ASP.NET MVC](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Web)
-* [ASP.NET WebApi](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Web)
-* [WPF](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Wpf)
+| Platform | Package |
+-----------|---------|
+| [WinForms](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Win) | <a href="https://www.nuget.org/packages/Logify.Alert.Win/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Win.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Win.svg" style="max-width:100%;" /></a> |
+| [Console apps](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Win) | <a href="https://www.nuget.org/packages/Logify.Alert.Win/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Win.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Win.svg" style="max-width:100%;" /></a> |
+| [ASP.NET](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Web) | <a href="https://www.nuget.org/packages/Logify.Alert.Web/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" style="max-width:100%;" /></a> |
+| [ASP.NET MVC](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Web) | <a href="https://www.nuget.org/packages/Logify.Alert.Web/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" style="max-width:100%;" /></a> |
+| [ASP.NET WebApi](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Web) | <a href="https://www.nuget.org/packages/Logify.Alert.Web/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" style="max-width:100%;" /></a> |
+| [WPF](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Wpf) | <a href="https://www.nuget.org/packages/Logify.Alert.Wpf/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Wpf.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Wpf.svg" style="max-width:100%;" /></a> |
 
 ## Integrations
-* [log4net](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Log4Net)
+| Product | Package |
+-----------|---------|
+| [log4net](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Log4Net) | <a href="https://www.nuget.org/packages/Logify.Alert.Log4Net/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Log4Net.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Log4Net.svg" style="max-width:100%;" /></a>|
