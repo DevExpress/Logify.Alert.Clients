@@ -1,7 +1,7 @@
 # Logify Alert for ASP.NET WebForms and MVC applications
 WinForms and console client to report exceptions to [Logify Alert](https://logify.devexpress.com)
 
-## Install
+## Install <a href="https://www.nuget.org/packages/Logify.Alert.Web/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" style="max-width:100%;" /></a>
 ```sh
 $ nuget install Logify.Alert.Web
 ```

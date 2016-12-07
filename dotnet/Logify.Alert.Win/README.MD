@@ -2,7 +2,6 @@
 WinForms and console client to report exceptions to [Logify Alert](https://logify.devexpress.com).
 
 ## Install <a href="https://www.nuget.org/packages/Logify.Alert.Win/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Win.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Win.svg" style="max-width:100%;" /></a>
-
 ```sh
 $ nuget install Logify.Alert.Win
 ```
