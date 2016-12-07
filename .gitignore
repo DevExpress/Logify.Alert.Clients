@@ -26,3 +26,4 @@ Logify.NodeJS/lib/
 Logify.NodeJS/bundle/
 .cr/
 js/Logify.Alert.NodeJS/bundle/
+js/Logify.Alert.JS/lib/
