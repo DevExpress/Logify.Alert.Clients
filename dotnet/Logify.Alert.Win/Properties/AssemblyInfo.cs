@@ -8,7 +8,8 @@ using DevExpress.Logify.Core;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DevExpress Logify Alert Win")]
-[assembly: AssemblyDescription(AssemblyInfo.AssemblyDescriptionCommon)]
+[assembly: AssemblyDescription(AssemblyInfo.AssemblyDescriptionCommon +
+"The Logify.Alert.Win package contains the Logify Alert client for WinForms and console applications. Use this client to set up your application so it reported uncaught exceptions to the service.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(AssemblyInfo.AssemblyCompany)]
 [assembly: AssemblyProduct(AssemblyInfo.AssemblyProduct)]

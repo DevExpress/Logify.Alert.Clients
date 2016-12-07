@@ -8,7 +8,8 @@ using DevExpress.Logify.Core;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DevExpress Logify Alert log4net appender")]
-[assembly: AssemblyDescription(AssemblyInfo.AssemblyDescriptionCommon)]
+[assembly: AssemblyDescription(AssemblyInfo.AssemblyDescriptionCommon +
+"The Logify.Alert.Log4Net package contains the Logify Alert appender for log4net.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(AssemblyInfo.AssemblyCompany)]
 [assembly: AssemblyProduct(AssemblyInfo.AssemblyProduct)]
