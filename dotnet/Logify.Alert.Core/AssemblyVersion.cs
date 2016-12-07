@@ -6,6 +6,7 @@ namespace DevExpress.Logify.Core {
         public const string AssemblyCompany = "Developer Express Inc.";
         public const string AssemblyProduct = "DevExpress Logify Alert";
         public const string AssemblyTrademark = "DevExpress Logify Alert";
+        public const string AssemblyDescriptionCommon = "Logify Alert is a cloud service that catches unhandled exceptions in your applications and automatically delivers crash reports.";
 
         public const string VersionShort = "1.0";
 

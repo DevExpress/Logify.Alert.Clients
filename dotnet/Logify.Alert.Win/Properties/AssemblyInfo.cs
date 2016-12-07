@@ -7,8 +7,8 @@ using DevExpress.Logify.Core;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DevExpress Logify Win")]
-[assembly: AssemblyDescription("DevExpress Logify WinForms Library")]
+[assembly: AssemblyTitle("DevExpress Logify Alert Win")]
+[assembly: AssemblyDescription(AssemblyInfo.AssemblyDescriptionCommon)]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(AssemblyInfo.AssemblyCompany)]
 [assembly: AssemblyProduct(AssemblyInfo.AssemblyProduct)]

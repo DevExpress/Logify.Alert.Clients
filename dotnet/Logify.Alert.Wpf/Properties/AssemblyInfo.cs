@@ -9,8 +9,8 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DevExpress Logify Wpf")]
-[assembly: AssemblyDescription("DevExpress Logify Wpf Library")]
+[assembly: AssemblyTitle("DevExpress Logify Alert Wpf")]
+[assembly: AssemblyDescription(AssemblyInfo.AssemblyDescriptionCommon)]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(AssemblyInfo.AssemblyCompany)]
 [assembly: AssemblyProduct(AssemblyInfo.AssemblyProduct)]
