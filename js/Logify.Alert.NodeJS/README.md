@@ -2,7 +2,7 @@
 
 Node.js client for reports exceptions to [Logify Alert](https://logify.devexpress.com/).
 
-## Install
+## Install [![npm](https://img.shields.io/npm/v/logify-alert.svg)](https://www.npmjs.com/package/logify-alert)
 
 ```sh
 $ npm install logify-alert --save
