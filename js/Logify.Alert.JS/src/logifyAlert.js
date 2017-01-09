@@ -58,7 +58,7 @@ class logifyAlert {
     }
 
     createCollector(owner) {
-        let collector = new jsCollector();
+        let collector = new jsCollector(owner);
         collector.applicationName = owner.applicationName;
         collector.applicationVersion = owner.applicationVersion;
         collector.userId = owner.userId;
