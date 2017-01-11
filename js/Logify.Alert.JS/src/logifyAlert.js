@@ -13,6 +13,7 @@ class logifyAlert {
         this.collectLocalStorage = false;
         this.collectSessionStorage = true;
         this.collectCookies = true;
+        this.beforeReportException = undefined;
     }
 
     stopHandling() {
@@ -42,6 +43,7 @@ class logifyAlert {
     }
 
     sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, owner) {
+        this.callBeforeReportExceptionCallback();
         let collector = this.createCollector(owner);
         collector.collectErrorData(errorMsg, url, lineNumber, column, errorObj);
 
@@ -50,6 +52,7 @@ class logifyAlert {
     }
 
     sendRejection(reason, promise) {
+        this.callBeforeReportExceptionCallback();
         let collector = this.createCollector(this);
         collector.collectRejectionData(reason, promise);
 
@@ -63,6 +66,12 @@ class logifyAlert {
         collector.applicationVersion = owner.applicationVersion;
         collector.userId = owner.userId;
         return collector;
+    }
+
+    callBeforeReportExceptionCallback() {
+        if(this.beforeReportException != undefined) {
+            this.customData = this.beforeReportException(this.customData);
+        }
     }
 }
 

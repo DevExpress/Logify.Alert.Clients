@@ -13,6 +13,7 @@ describe('browserVersionCollector tests', function() {
         win.navigator.userAgent = "mocUserAgent";
         win.navigator.appName = "mocAppName";
         win.navigator.appVersion = "mocAppVersion";
+        win.navigator.language = "mocLanguage";
 
         collector.process(win, reportData);
 
@@ -20,5 +21,6 @@ describe('browserVersionCollector tests', function() {
         assert.equal("mocUserAgent", reportData.browser.userAgent);
         assert.equal("mocAppName", reportData.browser.appName);
         assert.equal("mocAppVersion", reportData.browser.appVersion);
+        assert.equal("mocLanguage", reportData.browser.language);
     });
 });

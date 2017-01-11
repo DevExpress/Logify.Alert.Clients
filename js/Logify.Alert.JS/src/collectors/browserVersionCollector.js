@@ -16,5 +16,6 @@ export default class browserVersionCollector extends collectorBase {
         report.browser.userAgent = win.navigator.userAgent;
         report.browser.appName = win.navigator.appName;
         report.browser.appVersion = win.navigator.appVersion;
+        report.browser.language = win.navigator.language;
     }
 }

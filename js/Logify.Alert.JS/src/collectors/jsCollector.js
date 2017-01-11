@@ -7,6 +7,7 @@ import windowSizeCollector from "./windowSizeCollector.js";
 import siteDataCollector from "./siteDataCollector.js";
 import logifyInfoCollector from "./logifyInfoCollector.js";
 import customDataCollector from "./customDataCollector.js";
+import scriptsCollector from "./scriptsCollector.js";
 
 export default class jsCollector extends compositeCollector {
     constructor(_owner, isTest = false) {
@@ -25,6 +26,7 @@ export default class jsCollector extends compositeCollector {
         this.collectors.push(new siteDataCollector(this.owner));
         this.collectors.push(new logifyInfoCollector(this.owner));
         this.collectors.push(new customDataCollector(this.owner));
+        this.collectors.push(new scriptsCollector(this.owner));
 
         if(!isTest) {
             this._window = window;
