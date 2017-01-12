@@ -93,3 +93,21 @@ Sends information about the caught rejection to the Logify Alert server.
 ```javascript
 client.sendRejection(reason);
 ```
+
+### Callbacks
+
+#### beforeReportException(customData)
+
+Specifies a delegate to be called before sending exceptions and rejections to the Logify Alert server.
+
+The *customData* parameter holds custom data sent among with an exception or a rejection. Default value is *undefined*. If you change a parameter value within a callback, a new value will be stored and passed to a callback next time you call it in your application.
+
+```javascript
+client.beforeReportException = function (customData) {
+        if (customData == undefined) {
+            customData = {};
+        }
+        customData["test key"] = "test value";
+        return customData;
+}
+```

@@ -137,7 +137,7 @@ Specifies a delegate to be called before sending exceptions and rejections to th
 The *customData* parameter holds custom data sent among with an exception or a rejection. Default value is *undefined*. If you change a parameter value within a callback, a new value will be stored and passed to a callback next time you call it in your application.
 
 ```javascript
-logify.beforeReportException = function (customData) {
+client.beforeReportException = function (customData) {
         if (customData == undefined) {
             customData = {};
         }
