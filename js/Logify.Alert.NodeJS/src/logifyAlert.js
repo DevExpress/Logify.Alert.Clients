@@ -11,6 +11,7 @@ export default class logifyAlert {
         this.applicationVersion = undefined;
         this.userId = undefined;
         this.customData = undefined;
+        this.beforeReportException = undefined;
     }
 
     startHandling() {
@@ -34,12 +35,14 @@ export default class logifyAlert {
     }
     
     sendException(error) {
+        this.callBeforeReportExceptionCallback();
         let collector = this.createCollector();
         collector.handleException(error);
         this.sendReportCore(collector.reportData);
     }
     
     sendRejection(reason) {
+        this.callBeforeReportExceptionCallback();
         let collector = this.createCollector();
         collector.handleRejection(reason);
         this.sendReportCore(collector.reportData);
@@ -59,4 +62,9 @@ export default class logifyAlert {
         return collector;
     }
 
+    callBeforeReportExceptionCallback() {
+        if(this.beforeReportException != undefined) {
+            this.customData = this.beforeReportException(this.customData);
+        }
+    }
 }
