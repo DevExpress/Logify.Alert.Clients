@@ -1,4 +1,4 @@
-# Logify Logger for log4net
+# Logify Alert for log4net
 
 The log4net logger client for [Logify Alert](https://logify.devexpress.com).
 
@@ -9,7 +9,7 @@ Install-Package Logify.Alert.Client.Log4Net
 
 ## Quick Start
 
-Set up Logify Alert client for your target platform. The **App.config** example below is for console or WinForms application.
+Set up the Logify Alert client for your target platform. The **App.config** example below is for a console or WinForms application.
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
@@ -27,7 +27,7 @@ Set up Logify Alert client for your target platform. The **App.config** example 
 ```
 
 
-Register LogifyLoggerAppender as a standard log4net appender either in the application's App.config/Web.config or a special log4net.config configuration file:
+Register LogifyLoggerAppender as a standard log4net appender, either in the application's App.config/Web.config or a special log4net.config configuration file:
 
 ```xml
 <log4net>
