@@ -10,14 +10,7 @@ export default class browserVersionCollector extends collectorBase {
         super.process(win, report);
 
         var scripts = win.document.getElementsByTagName('script');
-
-        if(scripts == null || scripts == undefined)
-            return;
-
         var scriptsCount = scripts.length;
-        if(scriptsCount == undefined || scriptsCount == 0)
-            return;
-
         var result = [];
         for(var i = 0; i < scriptsCount; i++) {
             if(scripts[i].innerHTML == "")

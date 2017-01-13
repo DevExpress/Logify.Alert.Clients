@@ -13,6 +13,7 @@ class logifyAlert {
         this.collectLocalStorage = false;
         this.collectSessionStorage = true;
         this.collectCookies = true;
+        this.collectInputs = false;
         this.beforeReportException = undefined;
     }
 

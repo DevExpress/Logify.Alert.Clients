@@ -5,7 +5,7 @@ export default class browserVersionCollector extends collectorBase {
     constructor(_owner) {
         super(_owner);
     }
-    
+
     process(win, report) {
         super.process(win, report);
 

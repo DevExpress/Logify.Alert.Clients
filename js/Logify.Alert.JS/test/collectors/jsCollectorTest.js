@@ -108,6 +108,9 @@ describe('jsCollector tests', function() {
 
         win.document = new Object();
         win.document.cookie = "mocCookie";
+        win.document.activeElement = {};
+        win.document.activeElement.id = "mocId";
+        
         win.document.getElementsByTagName =  function (tagName) {
             if(tagName == 'script') {
                 var result = [];
@@ -150,7 +153,7 @@ describe('jsCollector tests', function() {
     }
     
     function checkData(collector, hasStack) {
-        assert.equal(8, collector.collectors.length);
+        assert.equal(9, collector.collectors.length);
 
         assert.equal("mocErrorMsg", collector.reportData.error.message);
         assert.equal("mocUrl", collector.reportData.error.url);
@@ -186,6 +189,7 @@ describe('jsCollector tests', function() {
         assert.equal("mocCustomData", collector.reportData.customData);
 
         assert.equal(1, collector.reportData.scripts.length);
+        assert.equal("mocId", collector.reportData.domState.activeElementId);
     }
 });
 
