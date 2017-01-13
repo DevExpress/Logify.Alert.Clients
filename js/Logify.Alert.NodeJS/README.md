@@ -1,6 +1,6 @@
 # Logify Alert for Node.js
 
-Node.js client for reports exceptions to [Logify Alert](https://logify.devexpress.com/).
+A Node.js client for reporting exceptions to [Logify Alert](https://logify.devexpress.com/).
 
 [![npm](https://img.shields.io/npm/v/logify-alert.svg)](https://www.npmjs.com/package/logify-alert)
 
@@ -24,7 +24,7 @@ client.startHandling();
 
 #### applicationName
 
-Specifies an application name. This name is shown in generated reports.
+Specifies the application name. This name is shown in generated reports.
 
 ```javascript
 client.applicationName = 'My Application';
@@ -32,7 +32,7 @@ client.applicationName = 'My Application';
 
 #### applicationVersion
 
-Specifies an application version. This version is shown in generated reports. 
+Specifies the application version. This version is shown in generated reports. 
 
 ```javascript
 client.applicationVersion = '1.0.1';
@@ -60,7 +60,7 @@ Logify Alert allows you to automatically listen to uncaught exceptions and deliv
 
 #### startHandling()
 
-Commands Logify Alert to start listening to uncaught exceptions and rejections and sending reports for all processed exceptions. 
+Commands Logify Alert to start listening to uncaught exceptions and rejections and send reports for all processed exceptions. 
 
 ```javascript
 client.startHandling();
@@ -100,7 +100,7 @@ client.sendRejection(reason);
 
 Specifies a delegate to be called before sending exceptions and rejections to the Logify Alert server.
 
-The *customData* parameter holds custom data sent among with an exception or a rejection. Default value is *undefined*. If you change a parameter value within a callback, a new value will be stored and passed to a callback next time you call it in your application.
+The *customData* parameter holds custom data sent along with an exception or a rejection. The default value is *undefined*. If you change a parameter value within a callback, a new value will be stored and passed to a callback the next time you call it in your application.
 
 ```javascript
 client.beforeReportException = function (customData) {
