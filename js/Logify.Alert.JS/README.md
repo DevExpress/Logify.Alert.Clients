@@ -1,6 +1,6 @@
 # Logify Alert for JavaScript
 
-JavaScript client for reports exceptions to [Logify Alert](https://logify.devexpress.com/).
+A JavaScript client for reporting exceptions to [Logify Alert](https://logify.devexpress.com/).
 
 ## Links to script
 
@@ -34,7 +34,7 @@ https://logifyjs.devexpress.com/0.0.4/logifyAlert.min.js - minified version
 
 #### applicationName
 
-Specifies an application name. This name is shown in generated reports.
+Specifies the application name. This name is shown in generated reports.
 
 ```javascript
 client.applicationName = 'My Application';
@@ -42,7 +42,7 @@ client.applicationName = 'My Application';
 
 #### applicationVersion
 
-Specifies an application version. This version is shown in generated reports. 
+Specifies the application version. This version is shown in generated reports. 
 
 ```javascript
 client.applicationVersion = '1.0.1';
@@ -74,7 +74,7 @@ client.collectLocalStorage = true;
 
 #### collectSessionStorage
 
-Spacifies if Logify Alert client will correct session storage data. Default value is **true**.
+Specifies if Logify Alert client will correct session storage data. The default value is **true**.
 
 ```javascript
 client.collectSessionStorage = false;
@@ -82,7 +82,7 @@ client.collectSessionStorage = false;
 
 #### collectCookies
 
-Specifies whether or not the Logify Alert client will collect cookies. Default value is **true**.
+Specifies whether or not the Logify Alert client will collect cookies. The default value is **true**.
 
 ```javascript
 client.collectCookies = false;
@@ -90,7 +90,7 @@ client.collectCookies = false;
 
 ### Methods for automatic reporting
 
-Logify Alert allows you to automatically listen to uncaught exceptions and rejection, and deliver crash reports. For this purpose, use the methods below.
+Logify Alert allows you to automatically listen to uncaught exceptions and rejections, and deliver crash reports. For this purpose, use the methods below.
 
 #### startHandling()
 
@@ -134,7 +134,7 @@ client.sendRejection(reason, promise);
 
 Specifies a delegate to be called before sending exceptions and rejections to the Logify Alert server.
 
-The *customData* parameter holds custom data sent among with an exception or a rejection. Default value is *undefined*. If you change a parameter value within a callback, a new value will be stored and passed to a callback next time you call it in your application.
+The *customData* parameter holds custom data sent along with an exception or a rejection. The default value is *undefined*. If you change a parameter value within a callback, a new value will be stored and passed to a callback the next time you call it in your application.
 
 ```javascript
 client.beforeReportException = function (customData) {
