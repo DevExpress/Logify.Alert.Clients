@@ -1,5 +1,5 @@
 # Logify Alert for ASP.NET WebForms and MVC applications
-WinForms and console client to report exceptions to [Logify Alert](https://logify.devexpress.com)
+A WebForms and MVC client to report exceptions to [Logify Alert](https://logify.devexpress.com)
 
 ## Install <a href="https://www.nuget.org/packages/Logify.Alert.Web/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" style="max-width:100%;" /></a>
 ```sh
@@ -39,7 +39,7 @@ public static class WebApiConfig {
 }
 ```
 
-That's it. Now, your application will report about unhandled exceptions to the Logify Alert service. To manage and view generated reports, use the [Logify Alert](https://logify.devexpress.com) link.
+That's it. Now, your application will report unhandled exceptions to the Logify Alert service. To manage and view generated reports, use the [Logify Alert](https://logify.devexpress.com) link.
 
 ### Manual error reporting
 ```csharp
@@ -54,7 +54,7 @@ catch (Exception e) {
 ```
 
 ## Configuration
-You can set up Logify Alert client using the **Web.config** file as follows.
+You can set up the Logify Alert client using the **Web.config** file as follows.
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
@@ -75,18 +75,18 @@ You can set up Logify Alert client using the **Web.config** file as follows.
 ## API
 ### Properties
 #### ApiKey
-String. Specifies an [API Key](https://logify.devexpress.com/Documentation/CreateApp) used to register the applications within the Logify service.
+String. Specifies the [API Key](https://logify.devexpress.com/Documentation/CreateApp) used to register the applications within the Logify service.
 ```csharp
 client.ApiKey = "My Api Key";
 ```
 
 #### AppName
-String. Specifies an application name.
+String. Specifies the application name.
 ```csharp
 client.AppName = "My Application";
 ```
 #### AppVersion
-String. Specifies an application version.
+String. Specifies the application version.
 ```csharp
 client.AppVersion = "1.0.2";
 ```
@@ -100,7 +100,7 @@ client.CustomData["CustomerName"] = "Mary";
 ```
 
 #### UserId
-String. Specifies a unique user identifier that corresponds to a sent report.
+String. Specifies a unique user identifier that corresponds to the sent report.
 ```csharp
 client.UserId = "user@myapp.com";
 ```
@@ -167,7 +167,7 @@ void OnBeforeReportException(object sender, EventArgs e) {
 #### CanReportException
 Occurs between generating a new crash report and raising the [BeforeReportException](#beforereportexception) event.
 
-The **CanReportException** event occurs right after a new report is generated and is prepared to be sent to the Logify Alert service. Handle the **CanReportException** event to cancel the report send. To do this, assign **true** to the appropriate CanReportExceptionEventArgs's **Cancel** property. Thus, the generated report is not posted to the service and the [BeforeReportException](#beforereportexception) isn't raised.
+The **CanReportException** event occurs right after a new report is generated and prepared to be sent to the Logify Alert service. Handle the **CanReportException** event to cancel sending the report. To do this, assign **true** to the appropriate CanReportExceptionEventArgs's **Cancel** property. Thus, the generated report is not posted to the service and the [BeforeReportException](#beforereportexception) isn't raised.
 ```csharp
 LogifyAlert.Instance.CanReportException += OnCanReportException;
 
@@ -179,7 +179,7 @@ void OnCanReportException(object sender, CanReportExceptionEventArgs args) {
 
 ### Attributes
 #### LogifyIgnoreAttribute
-Indicates that exceptions thrown at specific method should not be handled and send by Logify Alert.
+Indicates that exceptions thrown at a specific method should not be handled and sent by Logify Alert.
 
 ```csharp
 [LogifyIgnore(true)]
