@@ -64,6 +64,14 @@ A dictionary that contains custom data sent with a generated report.
 client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
 ```
 
+#### collectInputs
+
+Boolean. The default value is **false**. Assign **true** to the *collectInputs* property to collect all inputs passed to a web page (except for the passwords). The collected information stores an input's type, identifier, tag name and value.
+
+```javascript
+client.collectInputs = true;
+```
+
 #### collectLocalStorage
 
 Specifies whether or not Logify Alert client will collect local storage data. Default value is **false**.
