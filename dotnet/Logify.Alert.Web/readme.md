@@ -53,6 +53,34 @@ catch (Exception e) {
 }
 ```
 
+### Manual error reporting via [System.Diagnostics.Trace](https://msdn.microsoft.com/en-us/library/system.diagnostics.trace(v=vs.110).aspx)
+```csharp
+using System.Diagnostics;
+using DevExpress.Logify.Web;
+try {
+    LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
+    RunYourCode();
+}
+catch (Exception e) {
+    Trace.TraceError("an exception occured", e);
+}
+```
+
+You can set up the Logify Alert trace listener using the **Web.config** file as follows.
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <system.diagnostics>
+    <trace autoflush="true" indentsize="4">
+      <listeners>
+        <add name="LogifyAlertTraceListener"  type="DevExpress.Logify.Web.LogifyAlertTraceListener, Logify.Alert.Web" />
+      </listeners>
+    </trace>
+  </system.diagnostics>
+</configuration>
+```
+
 ## Configuration
 You can set up the Logify Alert client using the **Web.config** file as follows.
 ```xml
