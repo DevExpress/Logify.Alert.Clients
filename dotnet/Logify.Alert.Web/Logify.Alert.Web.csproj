@@ -127,6 +127,9 @@
     <Compile Include="..\Logify.Alert.Core\StackBasedIgnoreDetection.cs">
       <Link>StackBasedIgnoreDetection.cs</Link>
     </Compile>
+    <Compile Include="..\Logify.Alert.Core\TraceListenerBase.cs">
+      <Link>TraceListenerBase.cs</Link>
+    </Compile>
     <Compile Include="Collectors\ModulesCollector.cs" />
     <Compile Include="Collectors\RequestCollector.cs" />
     <Compile Include="Collectors\ResponseCollector.cs" />
@@ -142,6 +145,7 @@
     <Compile Include="CollectorFactory.cs" />
     <Compile Include="Collectors\WebCollector.cs" />
     <Compile Include="AspExceptionHandler .cs" />
+    <Compile Include="TraceListener.cs" />
     <Compile Include="WebApiExceptionHandler.cs" />
   </ItemGroup>
   <ItemGroup>

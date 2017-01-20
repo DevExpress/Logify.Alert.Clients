@@ -150,6 +150,9 @@
     <Compile Include="..\Logify.Alert.Core\Collectors\FrameworkVersionsCollector.cs">
       <Link>Collectors\FrameworkVersionsCollector.cs</Link>
     </Compile>
+    <Compile Include="..\Logify.Alert.Core\TraceListenerBase.cs">
+      <Link>TraceListenerBase.cs</Link>
+    </Compile>
     <Compile Include="Collectors\WinFormsApplicationCollector.cs" />
     <Compile Include="ConfirmReportSend.cs">
       <SubType>Form</SubType>
@@ -171,6 +174,7 @@
       <DependentUpon>ReportSendProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tests\DxLogifyClientTests.cs" />
+    <Compile Include="TraceListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logify.Alert.Core\Logify.Alert.Core.csproj">
