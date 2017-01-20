@@ -9,7 +9,7 @@ $ nuget install Logify.Alert.Wpf
 ## Quick Start
 ### Automatic error reporting
 ```csharp
-using DevExpress.Logify.Wpf;
+using DevExpress.Logify.WPF;
 
 LogifyAlert client = LogifyAlert.Instance;
 client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
@@ -18,7 +18,7 @@ client.StartExceptionsHandling();
 
 ### Manual error reporting
 ```csharp
-using DevExpress.Logify.Wpf;
+using DevExpress.Logify.WPF;
 try {
     LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
     RunYourCode();
@@ -26,6 +26,32 @@ try {
 catch (Exception e) {
     LogifyAlert.Instance.Send(e);
 }
+```
+
+### Manual error reporting via [System.Diagnostics.Trace](https://msdn.microsoft.com/en-us/library/system.diagnostics.trace(v=vs.110).aspx)
+```csharp
+using System.Diagnostics;
+using DevExpress.Logify.WPF;
+try {
+    LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
+    RunYourCode();
+}
+catch (Exception e) {
+    Trace.TraceError("an exception occured", e);
+}
+```
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <system.diagnostics>
+    <trace autoflush="true" indentsize="4">
+      <listeners>
+        <add name="LogifyAlertTraceListener"  type="DevExpress.Logify.WPF.LogifyAlertTraceListener, Logify.Alert.Wpf" />
+      </listeners>
+    </trace>
+  </system.diagnostics>
+</configuration>
 ```
 
 ## Configuration
