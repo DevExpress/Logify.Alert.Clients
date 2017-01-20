@@ -30,6 +30,7 @@ catch (Exception e) {
 
 ### Manual error reporting via [System.Diagnostics.Trace](https://msdn.microsoft.com/en-us/library/system.diagnostics.trace(v=vs.110).aspx)
 ```csharp
+using System.Diagnostics;
 using DevExpress.Logify.Win;
 try {
     LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
@@ -39,6 +40,8 @@ catch (Exception e) {
     Trace.TraceError("an exception occured", e);
 }
 ```
+
+You can set up the Logify Alert trace listener using the **App.config** file as follows.
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
