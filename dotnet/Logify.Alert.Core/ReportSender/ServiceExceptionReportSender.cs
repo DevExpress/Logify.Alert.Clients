@@ -10,6 +10,9 @@ using DevExpress.Logify.Core;
 namespace DevExpress.Logify.Core {
     public abstract class ServiceExceptionReportSender : ExceptionReportSenderSkeleton {
         protected override bool SendExceptionReportCore(LogifyClientExceptionReport report) {
+        //    return false;
+        //}
+        //protected bool SendExceptionReportCore2(LogifyClientExceptionReport report) {
 #if DEBUG
             try {
                 System.IO.File.WriteAllText(@"C:\exception.log", report.ReportString);

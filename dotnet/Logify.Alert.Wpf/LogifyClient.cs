@@ -58,6 +58,7 @@ namespace DevExpress.Logify.WPF {
             sender.StopWhenFirstSuccess = true;
             sender.Senders.Add(new ExternalProcessExceptionReportSender());
             sender.Senders.Add(defaultSender);
+            //sender.Senders.Add(new TempDirectoryExceptionReportSender() { DirectoryName = "deferred" });
             return sender;
         }
         protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {

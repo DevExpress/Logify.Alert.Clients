@@ -138,6 +138,9 @@
     <Compile Include="..\Logify.Alert.Core\ReportSender\ServiceExceptionReportSender.cs">
       <Link>ReportSender\ServiceExceptionReportSender.cs</Link>
     </Compile>
+    <Compile Include="..\Logify.Alert.Core\ReportSender\TempDirectoryExceptionReportSender.cs">
+      <Link>ReportSender\TempDirectoryExceptionReportSender.cs</Link>
+    </Compile>
     <Compile Include="..\Logify.Alert.Core\StackBasedIgnoreDetection.cs">
       <Link>StackBasedIgnoreDetection.cs</Link>
     </Compile>

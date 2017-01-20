@@ -62,8 +62,19 @@ namespace DevExpress.Logify.Win {
             sender.StopWhenFirstSuccess = true;
             sender.Senders.Add(new ExternalProcessExceptionReportSender());
             sender.Senders.Add(defaultSender);
+            //sender.Senders.Add(new TempDirectoryExceptionReportSender() { DirectoryName = "deferred" });
             return sender;
         }
+        /*public void SendDeferred() {
+            SavedExceptionReportSender sender = new SavedExceptionReportSender();
+            sender.DirectoryName = "deferred";
+            sender.Sender = new WinFormsExceptionReportSender() {
+                ConfirmSendReport = false,
+                ApiKey = this.ApiKey,
+                ServiceUrl = this.ServiceUrl
+            };
+            sender.TrySendSavedReports();
+        }*/
         protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
             return new EmptyBackgroundExceptionReportSender(reportSender);
         }
