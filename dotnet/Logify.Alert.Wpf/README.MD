@@ -41,6 +41,8 @@ catch (Exception e) {
 }
 ```
 
+You can set up the Logify Alert trace listener using the **App.config** file as follows.
+
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
