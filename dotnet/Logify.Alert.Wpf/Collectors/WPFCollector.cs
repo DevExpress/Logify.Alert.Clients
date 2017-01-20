@@ -3,10 +3,9 @@ using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.WPF {
     public class WPFExceptionCollector : CompositeInfoCollector {
-        readonly LogifyAppInfoCollector logifyAppInfoCollector;
+        readonly LogifyAppInfoCollector logifyAppInfoCollector = new LogifyAppInfoCollector(new WpfApplicationCollector());
 
         public WPFExceptionCollector(ILogifyClientConfiguration config) : base(config) {
-            logifyAppInfoCollector = new LogifyAppInfoCollector(new WpfApplicationCollector());
         }
 
         public string AppName { get; set; }
