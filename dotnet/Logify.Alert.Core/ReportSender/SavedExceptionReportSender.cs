@@ -10,9 +10,9 @@ namespace DevExpress.Logify.Core {
 
         public void TrySendSavedReports() {
             try {
-                if (!String.IsNullOrEmpty(DirectoryName))
+                if (String.IsNullOrEmpty(DirectoryName))
                     return;
-                if (Sender != null && Sender.CanSendExceptionReport())
+                if (Sender != null && !Sender.CanSendExceptionReport())
                     return;
                 if (!Directory.Exists(DirectoryName))
                     return;
@@ -34,16 +34,16 @@ namespace DevExpress.Logify.Core {
         }
 
         void TrySendSavedReportsCore() {
-            if (!String.IsNullOrEmpty(DirectoryName))
+            if (String.IsNullOrEmpty(DirectoryName))
                 return;
-            if (Sender != null && Sender.CanSendExceptionReport())
+            if (Sender != null && !Sender.CanSendExceptionReport())
                 return;
             if (!Directory.Exists(DirectoryName))
                 return;
 
             string[] fileNames = Directory.GetFiles(DirectoryName, TempDirectoryExceptionReportSender.TempFileNamePrefix + "*." + TempDirectoryExceptionReportSender.TempFileNameExtension);
             foreach (string fileName in fileNames)
-                TrySendSavedReport(Path.Combine(DirectoryName, fileName));
+                TrySendSavedReport(fileName);
         }
 
         void TrySendSavedReport(string fileName) {
