@@ -7,9 +7,13 @@ namespace DevExpress.Logify.Alert.NLog {
     [Target("LogifyAlert")]
     public sealed class LogifyAlertTarget : TargetWithLayout {
         protected override void Write(LogEventInfo logEvent) {
-            if (logEvent.Exception != null) {
-                if (LogifyClientBase.Instance != null)
-                    LogifyClientBase.Instance.Send(logEvent.Exception);
+            try {
+                if (logEvent.Exception != null) {
+                    if (LogifyClientBase.Instance != null)
+                        LogifyClientBase.Instance.Send(logEvent.Exception);
+                }
+            }
+            catch {
             }
         }
     }
