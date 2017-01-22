@@ -14,5 +14,8 @@
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright (c) 2000-2016 Developer Express Inc.</copyright>
     <tags>Logify Alert CrashReport Crash Exception Handler NLog logging log tracing logfiles</tags>
+    <dependencies>
+      <dependency id="NLog" version="4.0.0" />
+    </dependencies>
   </metadata>
 </package>
