@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogifySend", "Logify.Alert.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Core", "Logify.Alert.Core\Logify.Alert.Core.csproj", "{E6FE00AA-7637-4697-B25B-A3D340596FE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.NLog", "Logify.Alert.NLog\Logify.Alert.NLog.csproj", "{DE7161B6-336C-4D9E-BFA8-7EFE8C3FC4D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,12 @@ Global
 		{E6FE00AA-7637-4697-B25B-A3D340596FE7}.DebugTest|Any CPU.Build.0 = DebugTest|Any CPU
 		{E6FE00AA-7637-4697-B25B-A3D340596FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6FE00AA-7637-4697-B25B-A3D340596FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE7161B6-336C-4D9E-BFA8-7EFE8C3FC4D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE7161B6-336C-4D9E-BFA8-7EFE8C3FC4D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE7161B6-336C-4D9E-BFA8-7EFE8C3FC4D9}.DebugTest|Any CPU.ActiveCfg = DebugTest|Any CPU
+		{DE7161B6-336C-4D9E-BFA8-7EFE8C3FC4D9}.DebugTest|Any CPU.Build.0 = DebugTest|Any CPU
+		{DE7161B6-336C-4D9E-BFA8-7EFE8C3FC4D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE7161B6-336C-4D9E-BFA8-7EFE8C3FC4D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

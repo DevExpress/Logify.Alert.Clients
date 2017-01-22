@@ -1,4 +1,4 @@
-# Logify Alert for log4net
+# Logify Alert for [log4net](https://logging.apache.org/log4net/)
 
 The log4net logger client for [Logify Alert](https://logify.devexpress.com).
 
@@ -27,7 +27,7 @@ Set up the Logify Alert client for your target platform. The **App.config** exam
 ```
 
 
-Register LogifyLoggerAppender as a standard log4net appender, either in the application's App.config/Web.config or a special log4net.config configuration file:
+Register LogifyAlertAppender as a standard log4net appender, either in the application's App.config/Web.config or a special log4net.config configuration file:
 
 ```xml
 <log4net>
