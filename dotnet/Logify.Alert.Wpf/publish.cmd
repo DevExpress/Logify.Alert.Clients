@@ -1,2 +1,2 @@
 @echo off
-nuget pack Logify.Alert.Wpf.csproj -Prop Configuration=Release -IncludeReferencedProjects
+nuget pack Logify.Alert.Wpf.csproj -Prop Configuration=Release

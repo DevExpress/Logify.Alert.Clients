@@ -13,6 +13,7 @@ popd
 
 copy %clientPath%\*.* .\latestclients
 
+call :buildclient Logify.Alert.Core
 call :buildclient Logify.Alert.Win
 call :buildclient Logify.Alert.Web
 call :buildclient Logify.Alert.Wpf
