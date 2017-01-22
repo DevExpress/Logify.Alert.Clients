@@ -4,7 +4,7 @@ The NLog logger client for [Logify Alert](https://logify.devexpress.com).
 
 ## Install <a href="https://www.nuget.org/packages/Logify.Alert.NLog/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.NLog.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.NLog.svg" style="max-width:100%;" /></a>
 ```ps1
-Install-Package Logify.Alert.Client.NLog
+Install-Package Logify.Alert.NLog
 ```
 
 ## Quick Start

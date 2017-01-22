@@ -4,7 +4,7 @@ The log4net logger client for [Logify Alert](https://logify.devexpress.com).
 
 ## Install <a href="https://www.nuget.org/packages/Logify.Alert.Log4Net/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Log4Net.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Log4Net.svg" style="max-width:100%;" /></a>
 ```ps1
-Install-Package Logify.Alert.Client.Log4Net
+Install-Package Logify.Alert.Log4Net
 ```
 
 ## Quick Start
