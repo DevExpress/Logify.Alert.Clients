@@ -14,3 +14,4 @@
 | Product | Package |
 | ------- | ------- |
 | [log4net](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Log4Net) | <a href="https://www.nuget.org/packages/Logify.Alert.Log4Net/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Log4Net.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Log4Net.svg" style="max-width:100%;" /></a> |
+| [NLog](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.NLog) | <a href="https://www.nuget.org/packages/Logify.Alert.NLog/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.NLog.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.NLog.svg" style="max-width:100%;" /></a> |
