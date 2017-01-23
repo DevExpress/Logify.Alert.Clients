@@ -17,6 +17,13 @@ namespace DevExpress.Logify {
         //public ValueElement LogId { get { return (ValueElement)base["logId"]; } }
         [ConfigurationProperty("customData", IsDefaultCollection = true, IsRequired = false)]
         public KeyValueConfigurationCollection CustomData { get { return (KeyValueConfigurationCollection)base["customData"]; } }
+
+        [ConfigurationProperty("offlineReportsEnabled", IsRequired = false)]
+        public ClientValueElement OfflineReportsEnabled { get { return (ClientValueElement)base["offlineReportsEnabled"]; } }
+        [ConfigurationProperty("offlineReportsDirectory", IsRequired = false)]
+        public ClientValueElement OfflineReportsDirectory { get { return (ClientValueElement)base["offlineReportsDirectory"]; } }
+        [ConfigurationProperty("offlineReportsCount", IsRequired = false)]
+        public ClientValueElement OfflineReportsCount { get { return (ClientValueElement)base["offlineReportsCount"]; } }
     }
 
     public class ClientValueElement : ConfigurationElement {
@@ -42,6 +49,17 @@ namespace DevExpress.Logify {
 
             }
         }
+        public int ValueAsInt {
+            get {
+                string value = Value;
+                if (String.IsNullOrEmpty(value))
+                    return 0;
+                int result;
+                if (Int32.TryParse(value, out result))
+                    return result;
+                return 0;
+            }
+        }
     }
 }
 
@@ -61,6 +79,13 @@ namespace DevExpress.Logify.Core {
 
                 if (section.MiniDumpServiceUrl != null)
                     client.MiniDumpServiceUrl = section.MiniDumpServiceUrl.Value;
+
+                if (section.OfflineReportsEnabled != null)
+                    client.OfflineReportsEnabled = section.OfflineReportsEnabled.ValueAsBool;
+                if (section.OfflineReportsDirectory != null)
+                    client.OfflineReportsDirectory = section.OfflineReportsEnabled.Value;
+                if (section.OfflineReportsCount != null)
+                    client.OfflineReportsCount = section.OfflineReportsEnabled.ValueAsInt;
 
                 if (section.CustomData != null && section.CustomData.Count > 0) {
                     foreach (KeyValueConfigurationElement element in section.CustomData)

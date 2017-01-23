@@ -48,8 +48,9 @@ namespace DevExpress.Logify.Core {
 
         void EnsureHaveSpace() {
             try {
+                int reportCount = Math.Max(0, ReportCount);
                 string[] fileNames = Directory.GetFiles(DirectoryName, TempFileNamePrefix + "*." + TempFileNameExtension);
-                if (fileNames == null || fileNames.Length < ReportCount)
+                if (fileNames == null || fileNames.Length <= reportCount)
                     return;
 
                 List<FileInfo> files = new List<FileInfo>();
@@ -58,7 +59,7 @@ namespace DevExpress.Logify.Core {
 
                 files.Sort(new FileInfoDateTimeComparer());
 
-                int limit = files.Count - ReportCount;
+                int limit = files.Count - reportCount;
                 for (int i = 0; i < limit; i++) {
                     try {
                         files[i].Delete();
