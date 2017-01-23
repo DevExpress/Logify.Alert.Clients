@@ -48,7 +48,7 @@ namespace DevExpress.Logify.Core {
 
         void EnsureHaveSpace() {
             try {
-                int reportCount = Math.Max(0, ReportCount);
+                int reportCount = Math.Max(0, ReportCount - 1);
                 string[] fileNames = Directory.GetFiles(DirectoryName, TempFileNamePrefix + "*." + TempFileNameExtension);
                 if (fileNames == null || fileNames.Length <= reportCount)
                     return;

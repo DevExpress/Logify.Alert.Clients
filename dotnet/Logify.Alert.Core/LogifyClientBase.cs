@@ -160,6 +160,10 @@ namespace DevExpress.Logify.Core {
             reportSender.ApiKey = this.ApiKey;
             reportSender.ConfirmSendReport = this.ConfirmSendReport;
             reportSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
+            ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.IsEnabled = this.OfflineReportsEnabled; });
+            ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.DirectoryName = this.OfflineReportsDirectory; });
+            ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.ReportCount = this.OfflineReportsCount; });
+
 
             //TODO:
             //apply values to config

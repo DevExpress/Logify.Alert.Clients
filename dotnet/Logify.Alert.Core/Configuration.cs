@@ -83,9 +83,9 @@ namespace DevExpress.Logify.Core {
                 if (section.OfflineReportsEnabled != null)
                     client.OfflineReportsEnabled = section.OfflineReportsEnabled.ValueAsBool;
                 if (section.OfflineReportsDirectory != null)
-                    client.OfflineReportsDirectory = section.OfflineReportsEnabled.Value;
+                    client.OfflineReportsDirectory = section.OfflineReportsDirectory.Value;
                 if (section.OfflineReportsCount != null)
-                    client.OfflineReportsCount = section.OfflineReportsEnabled.ValueAsInt;
+                    client.OfflineReportsCount = section.OfflineReportsCount.ValueAsInt;
 
                 if (section.CustomData != null && section.CustomData.Count > 0) {
                     foreach (KeyValueConfigurationElement element in section.CustomData)
