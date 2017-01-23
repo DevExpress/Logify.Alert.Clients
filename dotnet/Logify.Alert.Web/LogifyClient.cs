@@ -88,7 +88,7 @@ namespace DevExpress.Logify.Web {
 
         public override void Run() {
             //do nothing
-            SendOfflineReports();
+            //SendOfflineReports();
         }
         public override void Stop() {
             //do nothing

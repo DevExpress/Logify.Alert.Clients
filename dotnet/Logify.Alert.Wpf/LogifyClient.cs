@@ -87,7 +87,7 @@ namespace DevExpress.Logify.WPF {
                 AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
                 Dispatcher.CurrentDispatcher.UnhandledException += OnCurrentDispatcherUnhandledException;
                 //AppDomain.CurrentDomain.FirstChanceException
-                SendOfflineReports();
+                //SendOfflineReports();
             }
 
         }

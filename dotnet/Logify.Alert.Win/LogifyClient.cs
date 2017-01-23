@@ -92,7 +92,7 @@ namespace DevExpress.Logify.Win {
                 AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
                 Application.ThreadException += OnApplicationThreadException;
                 //AppDomain.CurrentDomain.FirstChanceException
-                SendOfflineReports();
+                //SendOfflineReports();
             }
         }
         public override void Stop() {
