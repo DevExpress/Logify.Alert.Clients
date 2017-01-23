@@ -121,8 +121,14 @@
     <Compile Include="..\Logify.Alert.Core\ReportSender\FileExceptionReportSender.cs">
       <Link>ReportSender\FileExceptionReportSender.cs</Link>
     </Compile>
+    <Compile Include="..\Logify.Alert.Core\ReportSender\SavedExceptionReportSender.cs">
+      <Link>ReportSender\SavedExceptionReportSender.cs</Link>
+    </Compile>
     <Compile Include="..\Logify.Alert.Core\ReportSender\ServiceExceptionReportSender.cs">
       <Link>ReportSender\ServiceExceptionReportSender.cs</Link>
+    </Compile>
+    <Compile Include="..\Logify.Alert.Core\ReportSender\TempDirectoryExceptionReportSender.cs">
+      <Link>ReportSender\TempDirectoryExceptionReportSender.cs</Link>
     </Compile>
     <Compile Include="..\Logify.Alert.Core\StackBasedIgnoreDetection.cs">
       <Link>StackBasedIgnoreDetection.cs</Link>
@@ -145,6 +151,7 @@
     <Compile Include="CollectorFactory.cs" />
     <Compile Include="Collectors\WebCollector.cs" />
     <Compile Include="AspExceptionHandler .cs" />
+    <Compile Include="Tests\LogifyClientTests.cs" />
     <Compile Include="TraceListener.cs" />
     <Compile Include="WebApiExceptionHandler.cs" />
   </ItemGroup>
@@ -154,9 +161,7 @@
       <Name>Logify.Alert.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tests\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

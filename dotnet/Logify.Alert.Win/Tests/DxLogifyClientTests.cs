@@ -43,10 +43,10 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(apiKey, externalSender.ApiKey);
             Assert.AreEqual(serviceUrl, externalSender.ServiceUrl);
 
-            WinFormsExceptionReportSender winFormsSernder = composite.Senders[1] as WinFormsExceptionReportSender;
-            Assert.AreEqual(true, winFormsSernder != null);
-            Assert.AreEqual(apiKey, winFormsSernder.ApiKey);
-            Assert.AreEqual(serviceUrl, winFormsSernder.ServiceUrl);
+            WinFormsExceptionReportSender winFormsSender = composite.Senders[1] as WinFormsExceptionReportSender;
+            Assert.AreEqual(true, winFormsSender != null);
+            Assert.AreEqual(apiKey, winFormsSender.ApiKey);
+            Assert.AreEqual(serviceUrl, winFormsSender.ServiceUrl);
 
             //FileExceptionReportSender file = composite.Senders[2] as FileExceptionReportSender;
             //Assert.AreEqual(true, file != null);

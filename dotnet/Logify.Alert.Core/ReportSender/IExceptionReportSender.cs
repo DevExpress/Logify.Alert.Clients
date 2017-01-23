@@ -15,4 +15,18 @@ namespace DevExpress.Logify.Core {
         IExceptionReportSender Clone();
         void CopyFrom(IExceptionReportSender instance);
     }
+    public interface IExceptionReportSenderWrapper {
+        IExceptionReportSender InnerSender { get; }
+    }
+    public interface IOfflineDirectoryExceptionReportSender {
+        string DirectoryName { get; set; }
+        int ReportCount { get; set; }
+        bool IsEnabled { get; set; }
+    }
+
+    public interface ISavedReportSender {
+        IExceptionReportSender Sender { get; set; }
+        string DirectoryName { get; set; }
+        void TrySendOfflineReports();
+    }
 }

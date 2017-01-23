@@ -4,11 +4,11 @@ using System.Text;
 using System.Threading;
 
 namespace DevExpress.Logify.Core {
-    public class SavedExceptionReportSender {
+    class SavedExceptionReportSender : ISavedReportSender {
         public string DirectoryName { get; set; }
         public IExceptionReportSender Sender { get; set; }
 
-        public void TrySendSavedReports() {
+        public void TrySendOfflineReports() {
             try {
                 if (String.IsNullOrEmpty(DirectoryName))
                     return;
@@ -17,8 +17,12 @@ namespace DevExpress.Logify.Core {
                 if (!Directory.Exists(DirectoryName))
                     return;
 
+                string[] files = GetSavedFiles();
+                if (files == null || files.Length <= 0)
+                    return;
+
                 Thread thread = new Thread(TrySendSavedReportsWorker);
-                //thread.Priority = ThreadPriority.Highest;
+                thread.Priority = ThreadPriority.Lowest;
                 thread.Start();
             }
             catch {
@@ -41,9 +45,13 @@ namespace DevExpress.Logify.Core {
             if (!Directory.Exists(DirectoryName))
                 return;
 
-            string[] fileNames = Directory.GetFiles(DirectoryName, TempDirectoryExceptionReportSender.TempFileNamePrefix + "*." + TempDirectoryExceptionReportSender.TempFileNameExtension);
+            string[] fileNames = GetSavedFiles();
             foreach (string fileName in fileNames)
                 TrySendSavedReport(fileName);
+        }
+
+        string[] GetSavedFiles() {
+            return Directory.GetFiles(DirectoryName, OfflineDirectoryExceptionReportSender.TempFileNamePrefix + "*." + OfflineDirectoryExceptionReportSender.TempFileNameExtension);
         }
 
         void TrySendSavedReport(string fileName) {

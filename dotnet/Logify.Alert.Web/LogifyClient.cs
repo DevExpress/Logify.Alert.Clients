@@ -63,7 +63,14 @@ namespace DevExpress.Logify.Web {
             sender.StopWhenFirstSuccess = true;
             //sender.Senders.Add(new ExternalProcessExceptionReportSender());
             sender.Senders.Add(defaultSender);
+            sender.Senders.Add(new OfflineDirectoryExceptionReportSender());
             return sender;
+        }
+        protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender() {
+            return new WebExceptionReportSender();
+        }
+        protected override ISavedReportSender CreateSavedReportsSender() {
+            return new SavedExceptionReportSender();
         }
         protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
             return new EmptyBackgroundExceptionReportSender(reportSender);
@@ -81,6 +88,7 @@ namespace DevExpress.Logify.Web {
 
         public override void Run() {
             //do nothing
+            SendOfflineReports();
         }
         public override void Stop() {
             //do nothing

@@ -180,6 +180,7 @@
       <DependentUpon>ReportSendProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tests\DxLogifyClientTests.cs" />
+    <Compile Include="Tests\LogifyClientTests.cs" />
     <Compile Include="TraceListener.cs" />
   </ItemGroup>
   <ItemGroup>

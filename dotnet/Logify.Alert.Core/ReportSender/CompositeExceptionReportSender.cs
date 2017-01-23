@@ -23,6 +23,14 @@ namespace DevExpress.Logify.Core {
                     sender.ServiceUrl = value;
             }
         }
+        public override bool ConfirmSendReport {
+            get { return base.ConfirmSendReport; }
+            set {
+                base.ConfirmSendReport = value;
+                foreach (IExceptionReportSender sender in Senders)
+                    sender.ConfirmSendReport = value;
+            }
+        }
         public override int RetryCount {
             get { return base.RetryCount; }
             set {
@@ -56,6 +64,7 @@ namespace DevExpress.Logify.Core {
                 }
             }
         }
+
 
         public override bool CanSendExceptionReport() {
             int count = Senders.Count;

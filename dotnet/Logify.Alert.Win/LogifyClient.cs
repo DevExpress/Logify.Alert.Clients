@@ -62,19 +62,15 @@ namespace DevExpress.Logify.Win {
             sender.StopWhenFirstSuccess = true;
             sender.Senders.Add(new ExternalProcessExceptionReportSender());
             sender.Senders.Add(defaultSender);
-            //sender.Senders.Add(new TempDirectoryExceptionReportSender() { DirectoryName = "deferred" });
+            sender.Senders.Add(new OfflineDirectoryExceptionReportSender());
             return sender;
         }
-        /*public void SendDeferred() {
-            SavedExceptionReportSender sender = new SavedExceptionReportSender();
-            sender.DirectoryName = "deferred";
-            sender.Sender = new WinFormsExceptionReportSender() {
-                ConfirmSendReport = false,
-                ApiKey = this.ApiKey,
-                ServiceUrl = this.ServiceUrl
-            };
-            sender.TrySendSavedReports();
-        }*/
+        protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender() {
+            return new WinFormsExceptionReportSender();
+        }
+        protected override ISavedReportSender CreateSavedReportsSender() {
+            return new SavedExceptionReportSender();
+        }
         protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
             return new EmptyBackgroundExceptionReportSender(reportSender);
         }
@@ -96,6 +92,7 @@ namespace DevExpress.Logify.Win {
                 AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
                 Application.ThreadException += OnApplicationThreadException;
                 //AppDomain.CurrentDomain.FirstChanceException
+                SendOfflineReports();
             }
         }
         public override void Stop() {

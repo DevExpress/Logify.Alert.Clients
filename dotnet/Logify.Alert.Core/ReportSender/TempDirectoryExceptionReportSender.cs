@@ -1,16 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace DevExpress.Logify.Core {
-    public class TempDirectoryExceptionReportSender : ExceptionReportSenderSkeleton {
-        public const string TempFileNamePrefix = "LogifyR_";
-        public const string TempFileNameExtension = "bin";
+    public class OfflineDirectoryExceptionReportSender : ExceptionReportSenderSkeleton, IOfflineDirectoryExceptionReportSender {
+        internal const string TempFileNamePrefix = "LogifyR_";
+        internal const string TempFileNameExtension = "bin";
         public string DirectoryName { get; set; }
+        public int ReportCount { get; set; }
+        public bool IsEnabled { get; set; }
         public Encoding Encoding { get; set; }
 
+        public OfflineDirectoryExceptionReportSender() {
+            ReportCount = 100;
+            DirectoryName = "offline_reports";
+        }
+
         public override bool CanSendExceptionReport() {
-            return !String.IsNullOrEmpty(DirectoryName);
+            return IsEnabled && !String.IsNullOrEmpty(DirectoryName) && base.CanSendExceptionReport();
         }
 
         protected override bool SendExceptionReportCore(LogifyClientExceptionReport report) {
@@ -21,6 +29,7 @@ namespace DevExpress.Logify.Core {
                 if (!Directory.Exists(DirectoryName))
                     return false;
 
+                EnsureHaveSpace();
                 string fileName = CreateTempFileName(DirectoryName);
                 if (String.IsNullOrEmpty(fileName))
                     return false;
@@ -34,6 +43,37 @@ namespace DevExpress.Logify.Core {
             }
             catch {
                 return false;
+            }
+        }
+
+        void EnsureHaveSpace() {
+            try {
+                string[] fileNames = Directory.GetFiles(DirectoryName, TempFileNamePrefix + "*." + TempFileNameExtension);
+                if (fileNames == null || fileNames.Length < ReportCount)
+                    return;
+
+                List<FileInfo> files = new List<FileInfo>();
+                foreach (string fileName in fileNames)
+                    files.Add(new FileInfo(fileName));
+
+                files.Sort(new FileInfoDateTimeComparer());
+
+                int limit = files.Count - ReportCount;
+                for (int i = 0; i < limit; i++) {
+                    try {
+                        files[i].Delete();
+                    }
+                    catch {
+                    }
+                }
+            }
+            catch {
+            }
+        }
+
+        class FileInfoDateTimeComparer : IComparer<FileInfo> {
+            public int Compare(FileInfo x, FileInfo y) {
+                return Comparer<DateTime>.Default.Compare(x.LastWriteTime, y.LastWriteTime);
             }
         }
 
@@ -53,16 +93,18 @@ namespace DevExpress.Logify.Core {
         }
 
         public override IExceptionReportSender CreateEmptyClone() {
-            return new TempDirectoryExceptionReportSender();
+            return new OfflineDirectoryExceptionReportSender();
         }
         public override void CopyFrom(IExceptionReportSender instance) {
             base.CopyFrom(instance);
-            TempDirectoryExceptionReportSender other = instance as TempDirectoryExceptionReportSender;
+            OfflineDirectoryExceptionReportSender other = instance as OfflineDirectoryExceptionReportSender;
             if (other == null)
                 return;
 
             this.DirectoryName = other.DirectoryName;
             this.Encoding = other.Encoding;
+            this.ReportCount = other.ReportCount;
+            this.IsEnabled = other.IsEnabled;
         }
     }
 }

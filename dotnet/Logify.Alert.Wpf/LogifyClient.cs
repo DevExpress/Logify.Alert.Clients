@@ -58,8 +58,14 @@ namespace DevExpress.Logify.WPF {
             sender.StopWhenFirstSuccess = true;
             sender.Senders.Add(new ExternalProcessExceptionReportSender());
             sender.Senders.Add(defaultSender);
-            //sender.Senders.Add(new TempDirectoryExceptionReportSender() { DirectoryName = "deferred" });
+            sender.Senders.Add(new OfflineDirectoryExceptionReportSender());
             return sender;
+        }
+        protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender() {
+            return new WPFExceptionReportSender();
+        }
+        protected override ISavedReportSender CreateSavedReportsSender() {
+            return new SavedExceptionReportSender();
         }
         protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
             return new EmptyBackgroundExceptionReportSender(reportSender);
@@ -81,6 +87,7 @@ namespace DevExpress.Logify.WPF {
                 AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
                 Dispatcher.CurrentDispatcher.UnhandledException += OnCurrentDispatcherUnhandledException;
                 //AppDomain.CurrentDomain.FirstChanceException
+                SendOfflineReports();
             }
 
         }

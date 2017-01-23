@@ -15,6 +15,9 @@ namespace DevExpress.Logify.Core {
         string apiKey;
         bool confirmSendReport;
         string miniDumpServiceUrl;
+        string offlineReportsDirectory = "offline_reports";
+        int offlineReportsCount = 100;
+        bool offlineReportsEnabled;
 
         public static LogifyClientBase Instance { get; protected set; }
 
@@ -69,6 +72,28 @@ namespace DevExpress.Logify.Core {
                     sender.MiniDumpServiceUrl = value;
             }
         }
+        
+        public string OfflineReportsDirectory {
+            get { return offlineReportsDirectory; }
+            set {
+                offlineReportsDirectory = value;
+                ApplyRecursively<IOfflineDirectoryExceptionReportSender>(ExceptionLoggerFactory.Instance.PlatformReportSender, (s) => { s.DirectoryName = value; });
+            }
+        }
+        public int OfflineReportsCount {
+            get { return offlineReportsCount; }
+            set {
+                offlineReportsCount = value;
+                ApplyRecursively<IOfflineDirectoryExceptionReportSender>(ExceptionLoggerFactory.Instance.PlatformReportSender, (s) => { s.ReportCount = value; });
+            }
+        }
+        public bool OfflineReportsEnabled {
+            get { return offlineReportsEnabled; }
+            set {
+                offlineReportsEnabled = value;
+                ApplyRecursively<IOfflineDirectoryExceptionReportSender>(ExceptionLoggerFactory.Instance.PlatformReportSender, (s) => { s.IsEnabled = value; });
+            }
+        }
         public string AppName { get; set; }
         public string AppVersion { get; set; }
         public string UserId { get; set; }
@@ -76,7 +101,6 @@ namespace DevExpress.Logify.Core {
         protected bool IsSecondaryInstance { get; set; }
 
         internal ILogifyClientConfiguration Config { get { return config; } }
-
 
         internal NetworkCredential ProxyCredentials { get; set; }
 
@@ -100,6 +124,27 @@ namespace DevExpress.Logify.Core {
                 BeforeReportExceptionEventArgs args = new BeforeReportExceptionEventArgs();
                 args.Exception = ex;
                 onBeforeReportException(this, args);
+            }
+        }
+
+        void ApplyRecursively<TSender>(IExceptionReportSender sender, Action<TSender> action) where TSender : class {
+            if (sender == null)
+                return;
+            TSender typedSender = sender as TSender;
+            if (typedSender != null)
+                action(typedSender);
+
+            IExceptionReportSenderWrapper wrapper = sender as IExceptionReportSenderWrapper;
+            if (wrapper != null)
+                ApplyRecursively<TSender>(wrapper.InnerSender, action);
+
+            CompositeExceptionReportSender composite = sender as CompositeExceptionReportSender;
+            if (composite != null) {
+                if (composite.Senders != null && composite.Senders.Count > 0) {
+                    int count = composite.Senders.Count;
+                    for (int i = 0; i < count; i++)
+                        ApplyRecursively<TSender>(composite.Senders[i], action);
+                }
             }
         }
 
@@ -135,8 +180,36 @@ namespace DevExpress.Logify.Core {
         protected abstract void Configure();
         protected abstract IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData);
         protected abstract BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender);
+        protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
+        protected abstract ISavedReportSender CreateSavedReportsSender();
         public abstract void Run();
         public abstract void Stop();
+
+        public void SendOfflineReports() {
+            try {
+                if (!OfflineReportsEnabled)
+                    return;
+
+                IExceptionReportSender innerSender = CreateEmptyPlatformExceptionReportSender();
+                if (innerSender == null)
+                    return;
+
+                innerSender.ConfirmSendReport = false;
+                innerSender.ApiKey = this.ApiKey;
+                innerSender.ServiceUrl = this.ServiceUrl;
+                innerSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
+
+                ISavedReportSender savedReportsSender = CreateSavedReportsSender();
+                if (savedReportsSender == null)
+                    return;
+
+                savedReportsSender.Sender = innerSender;
+                savedReportsSender.DirectoryName = this.OfflineReportsDirectory;
+                savedReportsSender.TrySendOfflineReports();
+            }
+            catch {
+            }
+        }
 
         public void StartExceptionsHandling() {
             Run();
