@@ -43,12 +43,13 @@ namespace DevExpress.Logify.Win {
         protected override IInfoCollectorFactory CreateCollectorFactory() {
             return new WinFormsExceptionCollectorFactory();
         }
-        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData) {
+        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             WinFormsExceptionCollector result = new WinFormsExceptionCollector(config);
             result.AppName = this.AppName;
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;
             result.Collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
+            result.Collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
             return result;
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
@@ -111,13 +112,13 @@ namespace DevExpress.Logify.Win {
             Exception ex = e.ExceptionObject as Exception;
 
             if (ex != null)
-                ReportException(ex, null);
+                ReportException(ex, null, null);
         }
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
         void OnApplicationThreadException(object sender, ThreadExceptionEventArgs e) {
             if (e != null && e.Exception != null) {
-                ReportException(e.Exception, null);
+                ReportException(e.Exception, null, null);
             }
         }
 

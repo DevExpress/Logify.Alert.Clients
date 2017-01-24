@@ -44,12 +44,13 @@ namespace DevExpress.Logify.Web {
             //return new WinFormsExceptionCollectorFactory();
             return new WebDefaultExceptionCollectorFactory(Platform.ASP);
         }
-        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData) {
+        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             WebExceptionCollector result = new WebExceptionCollector(config, Platform.ASP);
             result.AppName = this.AppName;
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;
             result.Collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
+            result.Collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
             return result;
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {

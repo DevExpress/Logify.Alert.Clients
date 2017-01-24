@@ -23,6 +23,7 @@ namespace DevExpress.Logify.Core {
 
         ILogifyClientConfiguration config;
         IDictionary<string, string> customData = new Dictionary<string, string>();
+        AttachmentCollection attachments = new AttachmentCollection();
 
         protected LogifyClientBase() {
             Init(null);
@@ -98,6 +99,7 @@ namespace DevExpress.Logify.Core {
         public string AppVersion { get; set; }
         public string UserId { get; set; }
         public IDictionary<string, string> CustomData { get { return customData; } }
+        public AttachmentCollection Attachments { get { return attachments; } }
         protected bool IsSecondaryInstance { get; set; }
 
         internal ILogifyClientConfiguration Config { get { return config; } }
@@ -182,7 +184,7 @@ namespace DevExpress.Logify.Core {
         protected abstract IExceptionIgnoreDetection CreateIgnoreDetection();
         protected abstract string GetAssemblyVersionString(Assembly asm);
         protected abstract void Configure();
-        protected abstract IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData);
+        protected abstract IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments);
         protected abstract BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender);
         protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
         protected abstract ISavedReportSender CreateSavedReportsSender();
@@ -336,9 +338,12 @@ namespace DevExpress.Logify.Core {
             Send(ex, null);
         }
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData) {
-            ReportException(ex, additionalCustomData);
+            ReportException(ex, additionalCustomData, null);
         }
-        protected void ReportException(Exception ex, IDictionary<string, string> additionalCustomData) {
+        public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            ReportException(ex, additionalCustomData, additionalAttachments);
+        }
+        protected void ReportException(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             try {
                 if (!RaiseCanReportException(ex))
                     return;
@@ -349,7 +354,7 @@ namespace DevExpress.Logify.Core {
 
                 RaiseBeforeReportException(ex);
 
-                ExceptionLogger.ReportException(ex, CreateDefaultCollector(this.config, additionalCustomData));
+                ExceptionLogger.ReportException(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
             }
             catch {
                 //

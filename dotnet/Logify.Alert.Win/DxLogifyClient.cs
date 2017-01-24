@@ -16,8 +16,8 @@ namespace DevExpress.Logify.Win {
         }
 
 
-        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData) {
-            IInfoCollector result = base.CreateDefaultCollector(config, additionalCustomData);
+        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            IInfoCollector result = base.CreateDefaultCollector(config, additionalCustomData, additionalAttachments);
             CompositeInfoCollector collector = result as CompositeInfoCollector;
             if (collector != null) {
                 collector.Collectors.Add(new DevExpressVersionsInStackCollector());

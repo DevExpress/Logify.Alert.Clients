@@ -28,6 +28,8 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(null, client.UserId);
             Assert.AreEqual(true, client.CustomData != null);
             Assert.AreEqual(0, client.CustomData.Count);
+            Assert.AreEqual(true, client.Attachments != null);
+            Assert.AreEqual(0, client.Attachments.Count);
             Assert.AreEqual("offline_reports", client.OfflineReportsDirectory);
             Assert.AreEqual(100, client.OfflineReportsCount);
             Assert.AreEqual(false, client.OfflineReportsEnabled);
