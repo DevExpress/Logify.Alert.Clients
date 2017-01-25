@@ -19,4 +19,8 @@
       <dependency id="log4net" version="2.0.0" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="..\..\bin\net40\Logify.Alert.Log4Net.dll" target="lib\net40\Logify.Alert.Log4Net.dll" />
+    <file src="..\..\bin\net45\Logify.Alert.Log4Net.dll" target="lib\net45\Logify.Alert.Log4Net.dll" />
+  </files>
 </package>

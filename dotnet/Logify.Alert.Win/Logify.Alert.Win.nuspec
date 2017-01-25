@@ -18,4 +18,8 @@
       <dependency id="Logify.Alert.Core" version="$version$" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="..\..\bin\net40\Logify.Alert.Win.dll" target="lib\net40\Logify.Alert.Win.dll" />
+    <file src="..\..\bin\net45\Logify.Alert.Win.dll" target="lib\net45\Logify.Alert.Win.dll" />
+  </files>
 </package>

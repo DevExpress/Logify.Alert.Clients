@@ -38,7 +38,8 @@ for %%i in (*.nupkg) do set nupkgName=%%i
 for %%i in (*.nupkg) do rename %%i %%i.zip
 for %%i in (*.zip) do pkzipc -extract -dir %%i .\unpacked
 del *.zip /Q
-for %%i in (.\unpacked\lib\net40\*.dll) do copy .\latestclients\%%~nxi .\unpacked\lib\net40\ /Y
+for %%i in (.\unpacked\lib\net40\*.dll) do copy .\latestclients\net40\%%~nxi .\unpacked\lib\net40\ /Y
+for %%i in (.\unpacked\lib\net45\*.dll) do copy .\latestclients\net45\%%~nxi .\unpacked\lib\net45\ /Y
 pushd unpacked
 pkzipc -add -recurse -path temp.zip *.*
 move temp.zip ..\..
