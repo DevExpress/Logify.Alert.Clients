@@ -26,6 +26,7 @@ goto finish
 
 :buildclient
 pushd %1
+nuget restore
 call publish.cmd
 move *.nupkg ..\tmp
 popd
