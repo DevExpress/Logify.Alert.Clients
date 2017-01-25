@@ -30,13 +30,12 @@ namespace DevExpress.Logify.Core {
             //Thread.Sleep(3000);
             return Task.FromResult(true);
         }
-
+#endif
         public override IExceptionReportSender CreateEmptyClone() {
             return new BackgroundThreadExceptionReportSender(InnerSender.Clone());
         }
     }
-#endif
-        public class EmptyBackgroundExceptionReportSender : BackgroundExceptionReportSender {
+    public class EmptyBackgroundExceptionReportSender : BackgroundExceptionReportSender {
         public EmptyBackgroundExceptionReportSender(IExceptionReportSender innerSender)
             : base(innerSender) {
         }
