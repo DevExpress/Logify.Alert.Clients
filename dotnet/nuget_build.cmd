@@ -5,13 +5,16 @@ mkdir tmp
 
 pushd tmp
 mkdir latestclients
+mkdir latestclients\net40
+mkdir latestclients\net45
 
 set artifactsDir=%1
 set clientPath=%1
 
 popd
 
-copy %clientPath%\*.* .\latestclients
+copy %clientPath%\net40\*.* .\latestclients\net40
+copy %clientPath%\net45\*.* .\latestclients\net45
 
 call :buildclient Logify.Alert.Core
 call :buildclient Logify.Alert.Win
