@@ -72,7 +72,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release45|AnyCPU'">
     <OutputPath>..\..\bin\net45\</OutputPath>
-    <DefineConstants>TRACE;ASP_CLIENT</DefineConstants>
+    <DefineConstants>TRACE;ASP_CLIENT;NET45</DefineConstants>
     <Optimize>true</Optimize>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
@@ -84,7 +84,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug45|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\bin\net45\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ASP_CLIENT</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ASP_CLIENT;NET45</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
