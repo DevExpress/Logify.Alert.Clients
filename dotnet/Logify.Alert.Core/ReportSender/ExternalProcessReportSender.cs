@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
     public class ExternalProcessExceptionReportSender : ExceptionReportSenderSkeleton {
@@ -35,6 +36,11 @@ namespace DevExpress.Logify.Core {
                 return false;
             }
         }
+#if NET45
+        protected override Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
+            return Task.FromResult(SendExceptionReportCore(report));
+        }
+#endif
 
         string SaveConfigToTemp(string reportPath, Dictionary<string, object> reportData) {
             StringBuilder content = new StringBuilder();

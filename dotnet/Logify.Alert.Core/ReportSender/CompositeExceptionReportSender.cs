@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
     public class CompositeExceptionReportSender : ExceptionReportSenderSkeleton {
@@ -91,7 +92,26 @@ namespace DevExpress.Logify.Core {
             }
             return result;
         }
+#if NET45
+        protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
+            bool result = false;
+            int count = Senders.Count;
+            for (int i = 0; i < count; i++) {
+                try {
+                    if (Senders[i].CanSendExceptionReport()) {
+                        bool success = await Senders[i].SendExceptionReportAsync(report);
+                        result = true;
+                        if (success && StopWhenFirstSuccess)
+                            break;
 
+                    }
+                }
+                catch {
+                }
+            }
+            return result;
+        }
+#endif
         public override IExceptionReportSender CreateEmptyClone() {
             return new CompositeExceptionReportSender();
         }

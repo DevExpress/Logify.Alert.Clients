@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 //using System.Security.Cryptography;
 //using System.Text;
 
@@ -343,26 +344,56 @@ namespace DevExpress.Logify.Core {
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             ReportException(ex, additionalCustomData, additionalAttachments);
         }
-        protected void ReportException(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+#if NET45
+        public async Task<bool> SendAsync(Exception ex) {
+            return await SendAsync(ex, null);
+        }
+        public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData) {
+            return await ReportExceptionAsync(ex, additionalCustomData, null);
+        }
+        public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            return await ReportExceptionAsync(ex, additionalCustomData, additionalAttachments);
+        }
+#endif
+        protected bool ReportException(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             try {
                 if (!RaiseCanReportException(ex))
-                    return;
+                    return false;
 
                 if (ExceptionLoggerFactory.Instance.PlatformIgnoreDetection != null &&
                     ExceptionLoggerFactory.Instance.PlatformIgnoreDetection.ShouldIgnoreException(ex) == ShouldIgnoreResult.Ignore)
-                    return;
+                    return false;
 
                 RaiseBeforeReportException(ex);
 
-                ExceptionLogger.ReportException(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
+                return ExceptionLogger.ReportException(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
             }
             catch {
-                //
+                return false;
             }
         }
+#if NET45
+        protected async Task<bool> ReportExceptionAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            try {
+                if (!RaiseCanReportException(ex))
+                    return false;
+
+                if (ExceptionLoggerFactory.Instance.PlatformIgnoreDetection != null &&
+                    ExceptionLoggerFactory.Instance.PlatformIgnoreDetection.ShouldIgnoreException(ex) == ShouldIgnoreResult.Ignore)
+                    return false;
+
+                RaiseBeforeReportException(ex);
+
+                return await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
+            }
+            catch {
+                return false;
+            }
+        }
+#endif
     }
 
-    
+
 
     public delegate void CanReportExceptionEventHandler(object sender, CanReportExceptionEventArgs args);
     public class CanReportExceptionEventArgs : CancelEventArgs {

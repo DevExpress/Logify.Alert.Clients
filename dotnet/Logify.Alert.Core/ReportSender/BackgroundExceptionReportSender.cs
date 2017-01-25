@@ -25,11 +25,20 @@ namespace DevExpress.Logify.Core {
         protected override bool SendExceptionReportCore(LogifyClientExceptionReport report) {
             //Task task = Task.Factory.StartNew(() => {
             if (innerSender != null)
-                SendExceptionReportInBackground(innerSender, report);
+                return SendExceptionReportInBackground(innerSender, report);
             //});
             return true;
         }
-
-        protected abstract void SendExceptionReportInBackground(IExceptionReportSender innerSender, LogifyClientExceptionReport report);
+#if NET45
+        protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
+            //Task task = Task.Factory.StartNew(() => {
+            if (innerSender != null)
+                return await SendExceptionReportInBackgroundAsync(innerSender, report);
+            //});
+            return true;
+        }
+        protected abstract Task<bool> SendExceptionReportInBackgroundAsync(IExceptionReportSender innerSender, LogifyClientExceptionReport report);
+#endif
+        protected abstract bool SendExceptionReportInBackground(IExceptionReportSender innerSender, LogifyClientExceptionReport report);
     }
 }

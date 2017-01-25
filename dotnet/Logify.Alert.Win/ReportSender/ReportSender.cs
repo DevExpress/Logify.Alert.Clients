@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.Logify.Core;
 
@@ -28,5 +29,11 @@ namespace DevExpress.Logify.Win {
             }
             return base.SendExceptionReport(report);
         }
+#if NET45
+        public override async Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report) {
+            //no dialog in async version
+            return await base.SendExceptionReportAsync(report);
+        }
+#endif
     }
 }

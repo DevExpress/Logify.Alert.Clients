@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
     public class OfflineDirectoryExceptionReportSender : ExceptionReportSenderSkeleton, IOfflineDirectoryExceptionReportSender {
@@ -29,23 +30,29 @@ namespace DevExpress.Logify.Core {
                 if (!Directory.Exists(DirectoryName))
                     return false;
 
-                EnsureHaveSpace();
-                string fileName = CreateTempFileName(DirectoryName);
-                if (String.IsNullOrEmpty(fileName))
-                    return false;
+                lock (typeof(OfflineDirectoryExceptionReportSender)) {
+                    EnsureHaveSpace();
+                    string fileName = CreateTempFileName(DirectoryName);
+                    if (String.IsNullOrEmpty(fileName))
+                        return false;
 
-                Encoding encoding = this.Encoding;
-                if (encoding == null)
-                    encoding = Encoding.UTF8;
+                    Encoding encoding = this.Encoding;
+                    if (encoding == null)
+                        encoding = Encoding.UTF8;
 
-                File.WriteAllText(fileName, report.ReportString, encoding);
-                return true;
+                    File.WriteAllText(fileName, report.ReportString, encoding);
+                    return true;
+                }
             }
             catch {
                 return false;
             }
         }
-
+#if NET45
+        protected override Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
+            return Task.FromResult(SendExceptionReportCore(report));
+        }
+#endif
         void EnsureHaveSpace() {
             try {
                 int reportCount = Math.Max(0, ReportCount - 1);

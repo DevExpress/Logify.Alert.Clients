@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
     public class LogifyClientExceptionReport {
@@ -60,38 +61,76 @@ namespace DevExpress.Logify.Core {
 
             ReportException(ex, collector);
         }
-        public static void ReportException(Exception ex, IInfoCollector collector) {
+        public static bool ReportException(Exception ex, IInfoCollector collector) {
             IExceptionReportSender reportSender = ExceptionLoggerFactory.Instance.PlatformReportSender;
             if (reportSender == null)
-                return;
+                return false;
 
             if (collector == null)
-                return;
+                return false;
 
             reportSender = reportSender.Clone();
 
             ExceptionLogger logger = new ExceptionLogger();
             logger.ReportSender = reportSender;
-            logger.PerformReportException(ex, collector);
+            return logger.PerformReportException(ex, collector);
         }
+#if NET45
+        public static async Task<bool> ReportExceptionAsync(Exception ex, IInfoCollector collector) {
+            IExceptionReportSender reportSender = ExceptionLoggerFactory.Instance.PlatformReportSender;
+            if (reportSender == null)
+                return false;
 
-        void PerformReportException(Exception ex, IInfoCollector collector) {
+            if (collector == null)
+                return false;
+
+            reportSender = reportSender.Clone();
+
+            ExceptionLogger logger = new ExceptionLogger();
+            logger.ReportSender = reportSender;
+            return await logger.PerformReportExceptionAsync(ex, collector);
+        }
+#endif
+        bool PerformReportException(Exception ex, IInfoCollector collector) {
             if (ex == null || collector == null)
-                return;
+                return false;
 
             try {
-                ReportExceptionCore(ex, collector);
+                return ReportExceptionCore(ex, collector);
             }
             catch {
+                return false;
             }
         }
-        void ReportExceptionCore(Exception ex, IInfoCollector collector) {
+#if NET45
+        async Task<bool> PerformReportExceptionAsync(Exception ex, IInfoCollector collector) {
+            if (ex == null || collector == null)
+                return false;
+
+            try {
+                return await ReportExceptionCoreAsync(ex, collector);
+            }
+            catch {
+                return false;
+            }
+        }
+#endif
+        bool ReportExceptionCore(Exception ex, IInfoCollector collector) {
             if (!ShouldSendExceptionReport())
-                return;
+                return false;
 
             LogifyClientExceptionReport report = CreateExceptionReport(ex, collector);
-            SendExceptionReport(report);
+            return SendExceptionReport(report);
         }
+#if NET45
+        async Task<bool> ReportExceptionCoreAsync(Exception ex, IInfoCollector collector) {
+            if (!ShouldSendExceptionReport())
+                return false;
+
+            LogifyClientExceptionReport report = CreateExceptionReport(ex, collector);
+            return await SendExceptionReportAsync(report);
+        }
+#endif
         LogifyClientExceptionReport CreateExceptionReport(Exception ex, IInfoCollector collector) {
             StringBuilder content = new StringBuilder();
             StringWriter writer = new StringWriter(content);
@@ -113,9 +152,19 @@ namespace DevExpress.Logify.Core {
         bool ShouldSendExceptionReport() {
             return ReportSender != null && ReportSender.CanSendExceptionReport();
         }
-        void SendExceptionReport(LogifyClientExceptionReport report) {
+        bool SendExceptionReport(LogifyClientExceptionReport report) {
             if (ReportSender != null)
-                ReportSender.SendExceptionReport(report);
+                return ReportSender.SendExceptionReport(report);
+            else
+                return true;
         }
+#if NET45
+        async Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report) {
+            if (ReportSender != null)
+                return await ReportSender.SendExceptionReportAsync(report);
+            else
+                return true;
+        }
+#endif
     }
 }

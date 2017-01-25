@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
     public interface IExceptionReportSender {
@@ -11,6 +12,9 @@ namespace DevExpress.Logify.Core {
         bool CanSendExceptionReport();
         //bool SendExceptionReport(string report);
         bool SendExceptionReport(LogifyClientExceptionReport report);
+#if NET45
+        Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report);
+#endif
 
         IExceptionReportSender Clone();
         void CopyFrom(IExceptionReportSender instance);

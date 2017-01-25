@@ -47,5 +47,29 @@ namespace DevExpress.Logify.Core {
                 //Debug.WriteLine(client.SendAsync(request).Result);
             }
         }
+#if NET45
+        protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
+#if DEBUG
+            try {
+                System.IO.File.WriteAllText(@"C:\exception.log", report.ReportString);
+            } catch(Exception) { }
+            
+#endif
+            using (HttpClient client = new HttpClient()) {
+                client.BaseAddress = new Uri(ServiceUrl);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("amx", this.ApiKey);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "newreport") {
+                    Content =
+                        new StringContent(report.ReportString, Encoding.UTF8,
+                            "application/json")
+                };
+                //client.DefaultRequestHeaders.ProxyAuthorization = new AuthenticationHeaderValue("amx", this.ApiKey);
+
+                HttpResponseMessage message = await client.SendAsync(request);
+                return message != null && message.StatusCode == HttpStatusCode.OK;
+            }
+        }
+#endif
     }
 }

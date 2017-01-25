@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
     public abstract class ExceptionReportSenderSkeleton : IExceptionReportSender {
@@ -35,6 +36,21 @@ namespace DevExpress.Logify.Core {
             }
             return false;
         }
+#if NET45
+        public virtual async Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report) {
+            //TODO: maybe put report to disk, for further sending in case of unrecoverable error during send (no net or so on)
+            for (int i = 0; i < RetryCount; i++) {
+                try {
+                    if (await SendExceptionReportCoreAsync(report))
+                        return true;
+                }
+                catch {
+                }
+            }
+            return false;
+        }
+        protected abstract Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report);
+#endif
 
         protected abstract bool SendExceptionReportCore(LogifyClientExceptionReport report);
         public abstract IExceptionReportSender CreateEmptyClone();

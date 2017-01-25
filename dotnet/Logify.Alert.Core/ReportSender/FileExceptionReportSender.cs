@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
     public class FileExceptionReportSender : ExceptionReportSenderSkeleton {
@@ -28,6 +29,11 @@ namespace DevExpress.Logify.Core {
                 return false;
             }
         }
+#if NET45
+        protected override Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
+            return Task.FromResult(SendExceptionReportCore(report));
+        }
+#endif
 
         public override IExceptionReportSender CreateEmptyClone() {
             return new FileExceptionReportSender();
