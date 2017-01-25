@@ -1,2 +1,2 @@
 @echo off
-nuget pack Logify.Alert.Serilog.csproj -Prop Configuration=Release45
+nuget pack Logify.Alert.Serilog.csproj -Verbosity detailed -Prop Platform=AnyCPU -Prop Configuration=Release45

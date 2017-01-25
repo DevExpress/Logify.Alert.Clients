@@ -3,18 +3,17 @@
 rd tmp /Q /S
 mkdir tmp
 
-pushd tmp
-mkdir latestclients
-mkdir latestclients\net40
-mkdir latestclients\net45
+mkdir tmp\latestclients
+mkdir tmp\latestclients\net40
+mkdir tmp\latestclients\net45
 
-set artifactsDir=%1
+rem set artifactsDir=%1
 set clientPath=%1
 
-popd
+copy %clientPath%\net40\*.* .\tmp\latestclients\net40
+copy %clientPath%\net45\*.* .\tmp\latestclients\net45
 
-copy %clientPath%\net40\*.* .\latestclients\net40
-copy %clientPath%\net45\*.* .\latestclients\net45
+nuget restore
 
 call :buildclient Logify.Alert.Core
 call :buildclient Logify.Alert.Win
@@ -29,7 +28,6 @@ goto finish
 
 :buildclient
 pushd %1
-nuget restore
 call publish.cmd
 move *.nupkg ..\tmp
 popd
