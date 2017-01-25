@@ -17,7 +17,7 @@
   </metadata>
   <files>
     <!--<file src="..\..\bin\net40\Logify.Alert.Core.dll" target="lib\portable-net40+sl5+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\Logify.Alert.Core.dll" />-->
-    <file src="..\..\bin\net45\Logify.Alert.Core.dll" target="lib\portable40-net40+sl5+win8+wp8+wpa81\Logify.Alert.Core.dll" />
+    <file src="..\..\bin\net40\Logify.Alert.Core.dll" target="lib\portable40-net40+sl5+win8+wp8+wpa81\Logify.Alert.Core.dll" />
     <!--<file src="..\..\bin\net45\Logify.Alert.Core.dll" target="lib\portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\Logify.Alert.Core.dll" />-->
     <file src="..\..\bin\net45\Logify.Alert.Core.dll" target="lib\portable45-net45+win8+wp8+wpa81\Logify.Alert.Core.dll" />
   </files>
