@@ -85,6 +85,7 @@ namespace DevExpress.Logify.Core {
         public long Gen1HeapSize { get { return counterGen1HeapSize.NextSample().RawValue; } }
         public long Gen2HeapSize { get { return counterGen2HeapSize.NextSample().RawValue; } }
 
+        [HandleProcessCorruptedStateExceptions]
         static string GetCounterInstanceNameForProcess(int instanceCount, Process process) {
             try {
                 string instanceName = Path.GetFileNameWithoutExtension(process.MainModule.FileName);
