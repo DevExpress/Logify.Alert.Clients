@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿//#if DEBUG
 using System;
 using System.Globalization;
 using System.IO;
@@ -59,7 +59,8 @@ namespace DevExpress.Logify.Core.Tests {
 {
 ""name"":""img"",
 ""mimeType"":""image/png"",
-""content"":""AAEC"",
+""content"":""H4sIAAAAAAAEAGNgZAIAf4lUCAMAAAA="",
+""compress"":""gzip"",
 },
 ],
 ";
@@ -67,4 +68,4 @@ namespace DevExpress.Logify.Core.Tests {
         }
     }
 }
-#endif
+//#endif

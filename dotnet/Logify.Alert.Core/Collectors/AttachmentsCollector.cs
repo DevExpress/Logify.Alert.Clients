@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 
 namespace DevExpress.Logify.Core {
     public class AttachmentsCollector : IInfoCollector {
@@ -30,41 +32,78 @@ namespace DevExpress.Logify.Core {
             if (attachments == null || attachments.Count <= 0)
                 return;
 
+            int totalAttachmentSize = 0;
+            const int maxTotalAttachmentSize = 3 * 1024 * 1024; // 3Mb
             logger.BeginWriteArray("attachments");
             foreach (Attachment attach in attachments) {
-                AttachmentCollector collector = new AttachmentCollector(attach);
-                collector.Process(ex, logger);
+                AttachmentCollector collector = new AttachmentCollector(attach, totalAttachmentSize, maxTotalAttachmentSize);
+                int writtenContentSize = collector.PerformProcess(ex, logger);
+                totalAttachmentSize += writtenContentSize;
             }
             logger.EndWriteArray("attachments");
         }
 
         public class AttachmentCollector : IInfoCollector {
-            Attachment attach;
+            readonly Attachment attach;
+            int totalAttachmentSize;
+            int maxTotalAttachmentSize;
 
-            public AttachmentCollector(Attachment attach) {
+            public AttachmentCollector(Attachment attach, int totalAttachmentSize, int maxTotalAttachmentSize) {
                 this.attach = attach;
+                this.totalAttachmentSize = totalAttachmentSize;
+                this.maxTotalAttachmentSize = maxTotalAttachmentSize;
             }
 
             public void Process(Exception ex, ILogger logger) {
+                PerformProcess(ex, logger);
+            }
+            public int PerformProcess(Exception ex, ILogger logger) {
+                int writtenContentSize = 0;
                 try {
                     if (attach == null)
-                        return;
+                        return 0;
                     if (attach.Content == null)
-                        return;
+                        return 0;
                     if (String.IsNullOrEmpty(attach.Name))
-                        return;
+                        return 0;
+
+                    byte[] originalContent = attach.Content;
+                    string encodedContent = CompressAndEncodeData(originalContent);
+                    if (String.IsNullOrEmpty(encodedContent))
+                        return 0;
+
+                    writtenContentSize = encodedContent.Length; // assume base64 content
+                    if (totalAttachmentSize + writtenContentSize > maxTotalAttachmentSize)
+                        return 0; // do not store attach exceeding size limit
 
                     logger.BeginWriteObject(String.Empty);
                     try {
                         logger.WriteValue("name", attach.Name);
                         logger.WriteValue("mimeType", attach.MimeType);
-                        logger.WriteValue("content", Convert.ToBase64String(attach.Content));
+                        logger.WriteValue("content", encodedContent);
+                        logger.WriteValue("compress", "gzip");
                     }
                     finally {
                         logger.EndWriteObject(String.Empty);
                     }
                 }
                 catch {
+                }
+                return writtenContentSize;
+            }
+            string CompressAndEncodeData(byte[] data) {
+                try {
+                    using (MemoryStream memoryStream = new MemoryStream()) {
+                        using (GZipStream stream = new GZipStream(memoryStream, CompressionMode.Compress, true)) {
+                            stream.Write(data, 0, data.Length);
+                        }
+                        memoryStream.Flush();
+                        byte[] buffer = memoryStream.GetBuffer();
+                        return Convert.ToBase64String(buffer, 0, (int)memoryStream.Length);
+                    }
+                }
+                catch {
+                    return String.Empty;
                 }
             }
         }

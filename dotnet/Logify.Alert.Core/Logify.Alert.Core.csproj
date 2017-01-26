@@ -72,7 +72,6 @@
   <ItemGroup>
     <Compile Include="AssemblyVersion.cs" />
     <Compile Include="Attachment.cs" />
-    <Compile Include="Collectors\AttachmentsCollector.cs" />
     <Compile Include="Collectors\CustomDataCollector.cs" />
     <Compile Include="Collectors\DevelopementPlatformCollector.cs" />
     <Compile Include="Collectors\DebuggerCollector.cs" />
