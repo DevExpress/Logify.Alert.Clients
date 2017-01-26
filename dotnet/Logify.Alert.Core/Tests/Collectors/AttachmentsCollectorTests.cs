@@ -1,4 +1,4 @@
-﻿//#if DEBUG
+﻿#if DEBUG
 using System;
 using System.Globalization;
 using System.IO;
@@ -68,4 +68,4 @@ namespace DevExpress.Logify.Core.Tests {
         }
     }
 }
-//#endif
+#endif
