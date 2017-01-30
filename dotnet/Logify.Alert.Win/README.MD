@@ -148,7 +148,7 @@ try {
     RunCode();
 }
 catch (Exception e) {
-    var data = new Dictionary<String, String> additionalCustomData();
+    var data = new Dictionary<String, String>();
     data["FailedOperation"] = "RunCode";
     client.Send(e, data);
 }
