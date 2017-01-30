@@ -17,6 +17,7 @@ describe('domStateCollector tests', function() {
         assert.equal("mocElementScrollTop", reportData.domState.activeElementScrollTop);
         assert.equal("mocBodyScrollTop", reportData.domState.bodyScrollTop);
         assert.equal("mocLocation", reportData.domState.location);
+        assert.equal("mocReadyState", reportData.domState.readyState);
         assert.equal(true, reportData.domState.isInsideIFrame);
 
         assert.equal(2, reportData.domState.inputs.length);
@@ -40,6 +41,7 @@ describe('domStateCollector tests', function() {
         collector.process(win, reportData);
 
         assert.equal("mocId", reportData.domState.activeElementId);
+        assert.equal("mocReadyState", reportData.domState.readyState);
         assert.equal("mocTagName", reportData.domState.activeElementTagName);
         assert.equal("mocElementScrollTop", reportData.domState.activeElementScrollTop);
         assert.equal(undefined, reportData.domState.bodyScrollTop);
@@ -60,6 +62,7 @@ describe('domStateCollector tests', function() {
         assert.equal(undefined, reportData.domState.activeElementTagName);
         assert.equal(undefined, reportData.domState.activeElementScrollTop);
         assert.equal("mocBodyScrollTop", reportData.domState.bodyScrollTop);
+        assert.equal("mocReadyState", reportData.domState.readyState);
         assert.equal(undefined, reportData.domState.location);
         assert.equal(false, reportData.domState.isInsideIFrame);
 
@@ -78,6 +81,7 @@ describe('domStateCollector tests', function() {
         assert.equal(undefined, reportData.domState.activeElementId);
         assert.equal(undefined, reportData.domState.activeElementTagName);
         assert.equal(undefined, reportData.domState.activeElementScrollTop);
+        assert.equal("mocReadyState", reportData.domState.readyState);
         assert.equal(undefined, reportData.domState.bodyScrollTop);
         assert.equal("mocLocation", reportData.domState.location);
         assert.equal(false, reportData.domState.isInsideIFrame);
@@ -100,6 +104,8 @@ describe('domStateCollector tests', function() {
             win.document.body = new Object();
             win.document.body.scrollTop = "mocBodyScrollTop";
         }
+
+        win.document.readyState = "mocReadyState";
 
         if(isLocation) {
             win.document.location = new Object();

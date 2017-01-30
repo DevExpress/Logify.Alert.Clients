@@ -27,6 +27,10 @@ export default class domStateCollector extends collectorBase {
         if(win.document.location) {
             report.domState.location = win.document.location.href;
         }
+        
+        if(win.document.readyState) {
+            report.domState.readyState = win.document.readyState;
+        }
 
         try {
             report.domState.isInsideIFrame = (win.self !== win.top);

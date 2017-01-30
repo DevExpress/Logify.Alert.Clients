@@ -110,6 +110,7 @@ describe('jsCollector tests', function() {
         win.document.cookie = "mocCookie";
         win.document.activeElement = {};
         win.document.activeElement.id = "mocId";
+        win.document.readyState = "mocReadyState";
         
         win.document.getElementsByTagName =  function (tagName) {
             if(tagName == 'script') {
