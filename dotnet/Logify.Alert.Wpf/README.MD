@@ -100,6 +100,34 @@ Use the **CustomData** property to attach additional information to the generate
 client.CustomData["CustomerName"] = "Mary";
 ```
 
+#### Instance
+Singleton. Returns the single instance of the LogifyAlert class.
+```csharp
+LogifyAlert client = LogifyAlert.Instance;
+```
+
+#### OfflineReportsCount
+Integer. Specifiies the number of last reports to be kept once an Internet connection is lost. Reports are only saved when the *OfflineReportsEnabled* property is set to **true**.
+```csharp
+client.OfflineReportsEnabled = true;
+client.OfflineReportsCount = 20; // Keeps the last 20 reports
+```
+
+#### OfflineReportsDirectory
+String. Specifies a directory path that will be used to store reports once an Internet connection is lost. Reports are only saved when the *OfflineReportsEnabled* property is set to **true**.
+```csharp
+client.OfflineReportsEnabled = true;
+client.OfflineReportsDirectory = "<directory-for-offline-reports>";
+```
+
+#### OfflineReportsEnabled
+Boolean. Default value is **false**. Specifies whether or not Logify should store the last *OfflineReportsCount* reports once an Internet connection is lost. To send the kept reports once an Internet connection is available, call the *SendOfflineReports* method.
+```csharp
+client.OfflineReportsEnabled = true;
+client.OfflineReportsCount = 20; // Keeps the last 20 reports
+client.OfflineReportsDirectory = "<directory-for-offline-reports>";
+```
+
 #### UserId
 String. Specifies a unique user identifier that corresponds to the sent report.
 ```csharp
@@ -147,6 +175,8 @@ catch (Exception e) {
     client.Send(e, data);
 }
 ```
+#### SendOfflineReports
+Sends all reports saved in the *OfflineReportsDirectory* folder to the Logify Alert service.
 
 ### Events
 
