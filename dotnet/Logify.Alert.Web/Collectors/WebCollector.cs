@@ -23,15 +23,15 @@ namespace DevExpress.Logify.Web {
         }
 
         public override void Process(Exception ex, ILogger logger) {
-            logifyAppInfoCollector.AppName = this.AppName;
-            logifyAppInfoCollector.AppVersion = this.AppVersion;
-            logifyAppInfoCollector.UserId = this.UserId;
+            LogifyAppInfoCollector.AppName = this.AppName;
+            LogifyAppInfoCollector.AppVersion = this.AppVersion;
+            LogifyAppInfoCollector.UserId = this.UserId;
             base.Process(ex, logger);
         }
 
         protected override void RegisterCollectors(ILogifyClientConfiguration config) {
             Collectors.Add(new LogifyProtocolVersionCollector());
-            Collectors.Add(logifyAppInfoCollector);
+            Collectors.Add(LogifyAppInfoCollector);
             //Collectors.Add(new DevelopementPlatformCollector(Platform.ASP)); // added in constuctor
             Collectors.Add(new WebApplicationCollector());
             Collectors.Add(new ExceptionObjectInfoCollector(config));
