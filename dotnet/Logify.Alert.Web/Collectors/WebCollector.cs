@@ -4,7 +4,7 @@ using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Web {
     public class WebExceptionCollector : CompositeInfoCollector {
-        readonly LogifyAppInfoCollector logifyAppInfoCollector = new LogifyAppInfoCollector(new WebApplicationCollector());
+        LogifyAppInfoCollector logifyAppInfoCollector;
 
         public WebExceptionCollector(ILogifyClientConfiguration config, Platform platform) : base(config) {
             Collectors.Add(new DevelopementPlatformCollector(platform));
@@ -14,6 +14,14 @@ namespace DevExpress.Logify.Web {
         public string AppVersion { get; set; }
         public string UserId { get; set; }
 
+        LogifyAppInfoCollector LogifyAppInfoCollector {
+            get {
+                if (logifyAppInfoCollector == null)
+                    logifyAppInfoCollector = new LogifyAppInfoCollector(new WebApplicationCollector());
+                return logifyAppInfoCollector;
+            }
+        }
+
         public override void Process(Exception ex, ILogger logger) {
             logifyAppInfoCollector.AppName = this.AppName;
             logifyAppInfoCollector.AppVersion = this.AppVersion;
@@ -22,15 +30,21 @@ namespace DevExpress.Logify.Web {
         }
 
         protected override void RegisterCollectors(ILogifyClientConfiguration config) {
-            HttpContext context = HttpContext.Current;
             Collectors.Add(new LogifyProtocolVersionCollector());
             Collectors.Add(logifyAppInfoCollector);
             //Collectors.Add(new DevelopementPlatformCollector(Platform.ASP)); // added in constuctor
             Collectors.Add(new WebApplicationCollector());
             Collectors.Add(new ExceptionObjectInfoCollector(config));
-            Collectors.Add(new RequestCollector(context.Request));
-            Collectors.Add(new ResponseCollector(context.Response));
-            Collectors.Add(new ModulesCollector(context.ApplicationInstance.Modules));
+
+            HttpContext context = HttpContext.Current;
+            if (context != null) {
+                if (context.Request != null)
+                    Collectors.Add(new RequestCollector(context.Request));
+                if (context.Response != null)
+                    Collectors.Add(new ResponseCollector(context.Response));
+                if (context.ApplicationInstance != null && context.ApplicationInstance.Modules != null)
+                    Collectors.Add(new ModulesCollector(context.ApplicationInstance.Modules));
+            }
             Collectors.Add(new OperatingSystemCollector());
             Collectors.Add(new VirtualMachineCollector());
             Collectors.Add(new DebuggerCollector());

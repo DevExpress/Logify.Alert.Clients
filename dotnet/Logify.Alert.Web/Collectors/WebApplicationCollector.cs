@@ -6,7 +6,14 @@ using DevExpress.Logify.Core;
 namespace DevExpress.Logify.Web
 {
     class WebApplicationCollector : ApplicationCollector {
-        public override string AppName { get { return HttpContext.Current.Request.Url.AbsolutePath;  } }
+        public override string AppName {
+            get {
+                HttpContext current = HttpContext.Current;
+                if (current != null && current.Request != null && current.Request.Url != null)
+                    return current.Request.Url.AbsolutePath;
+                return String.Empty;
+            }
+        }
         public override string AppVersion {
             get {
                 string version = this.GetVersion();
@@ -39,8 +46,13 @@ namespace DevExpress.Logify.Web
         }
 
         string TryDetectVersion() {
-            object app = HttpContext.Current.ApplicationInstance;
-            if (app == null) return String.Empty;
+            HttpContext current = HttpContext.Current;
+            if (current == null)
+                return String.Empty;
+
+            object app = current.ApplicationInstance;
+            if (app == null)
+                return String.Empty;
 
             Type type = app.GetType();
             while (type != null && type != typeof(object) && !type.BaseType.Name.Equals("HttpApplication"))
