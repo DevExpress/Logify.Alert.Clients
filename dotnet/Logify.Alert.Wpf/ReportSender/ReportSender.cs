@@ -1,6 +1,7 @@
 ﻿using System;
 using DevExpress.Logify.Core;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace DevExpress.Logify.WPF {
     public class WPFExceptionReportSender : ServiceExceptionReportSender {
