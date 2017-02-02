@@ -7,7 +7,7 @@
     <ProjectGuid>{F6D512E9-D2FB-4EBE-BA0E-B7403CF99258}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Logify.Wpf</RootNamespace>
+    <RootNamespace>DevExpres.Logify.WPF</RootNamespace>
     <AssemblyName>Logify.Alert.Wpf</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -179,9 +179,15 @@
     <Compile Include="Collectors\TaskShedulerCollector.cs" />
     <Compile Include="Collectors\WPFCollector.cs" />
     <Compile Include="Collectors\WPFEnvironmentCollector.cs" />
+    <Compile Include="ConfirmReportSendForm.xaml.cs">
+      <DependentUpon>ConfirmReportSendForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LogifyClient.cs" />
     <Compile Include="ReportSender\ReportSender.cs" />
     <Compile Include="CollectorFactory.cs" />
+    <Compile Include="ReportSendProgressForm.xaml.cs">
+      <DependentUpon>ReportSendProgressForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tests\LogifyClientTests.cs" />
     <Compile Include="TraceListener.cs" />
   </ItemGroup>
@@ -219,6 +225,16 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ConfirmReportSendForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportSendProgressForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

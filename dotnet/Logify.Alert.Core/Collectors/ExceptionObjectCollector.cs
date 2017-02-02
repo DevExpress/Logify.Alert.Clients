@@ -107,6 +107,8 @@ namespace DevExpress.Logify.Core {
         }
 
         string NormalizeStackTrace(string stackTrace) {
+            if (String.IsNullOrEmpty(stackTrace))
+                return String.Empty;
             string[] frames = stackTrace.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < frames.Length; i++)

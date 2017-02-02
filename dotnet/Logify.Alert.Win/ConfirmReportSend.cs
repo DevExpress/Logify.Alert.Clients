@@ -45,20 +45,10 @@ namespace DevExpress.Logify.Win {
                 if (Model.OriginalReport == null)
                     return;
 
-                LogifyClientExceptionReport report = Model.OriginalReport;
-                Model.Comments = txtComments.Text;
-                if (!String.IsNullOrEmpty(Model.Comments)) {
-                    report = report.Clone();
-                    AppendUserComments(report, Model.Comments);
-                }
+                LogifyClientExceptionReport report = Model.CreateReportWithUserComments(txtComments.Text);
 
                 if (Model.SendAction != null) {
-                    Thread thread = new Thread(BackgroundSend);
-                    BackgroundSendModel sendModel = new BackgroundSendModel();
-                    sendModel.SendAction = Model.SendAction;
-                    sendModel.Report = report;
-                    sendModel.Thread = thread;
-                    thread.Start(sendModel);
+                    BackgroundSendModel sendModel = BackgroundSendModel.SendReportInBackgroundThread(report, Model.SendAction);
 
                     ReportSendProgressForm progressForm = new ReportSendProgressForm(sendModel);
                     DialogResult result = progressForm.ShowDialog(this);
@@ -72,87 +62,8 @@ namespace DevExpress.Logify.Win {
             }
         }
 
-
-        void BackgroundSend(object obj) {
-            BackgroundSendModel model = obj as BackgroundSendModel;
-            if (model == null)
-                return;
-
-            try {
-                if (model.SendAction == null || model.Report == null) {
-                    model.SendResult = false;
-                    //model.SendComplete = true;
-                    return;
-                }
-
-                model.SendResult = model.SendAction(model.Report);
-                //model.SendComplete = true;
-            }
-            finally {
-                model.SendComplete = true;
-            }
-        }
-
         void btnDontSend_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.Cancel;
         }
-
-        void AppendUserComments(LogifyClientExceptionReport report, string comments) {
-            if (report == null || report.ReportContent == null)
-                return;
-
-            if (String.IsNullOrEmpty(comments))
-                return;
-            comments = comments.Trim();
-
-            if (String.IsNullOrEmpty(comments))
-                return;
-
-            StringBuilder reportContent = report.ReportContent;
-            int lastBraceIndex = -1;
-            for (int i = reportContent.Length - 1; i >= 0; i--) {
-                if (reportContent[i] == '}') {
-                    lastBraceIndex = i;
-                    break;
-                }
-            }
-            if (lastBraceIndex < 0)
-                return;
-
-            string commentsContent = GenerateCommentsContent(comments);
-            if (String.IsNullOrEmpty(commentsContent))
-                return;
-
-            report.ReportContent = reportContent.Insert(lastBraceIndex, commentsContent);
-            report.ResetReportString();
-        }
-
-        string GenerateCommentsContent(string value) {
-            StringBuilder content = new StringBuilder();
-            StringWriter writer = new StringWriter(content);
-            TextWriterLogger logger = new TextWriterLogger(writer);
-
-            logger.WriteValue("userComments", value);
-            return content.ToString();
-        }
-    }
-
-    public class ReportConfirmationModel {
-        public string Comments { get; set; }
-        public string Details { get; set; }
-
-        public string WindowCaption { get; set; }
-        public string InformationText { get; set; }
-
-        internal Func<LogifyClientExceptionReport, bool> SendAction { get; set; }
-        internal LogifyClientExceptionReport OriginalReport { get; set; }
-    }
-
-    public class BackgroundSendModel {
-        public Func<LogifyClientExceptionReport, bool> SendAction { get; set; }
-        public LogifyClientExceptionReport Report { get; set; }
-        public Thread Thread { get; set; }
-        public bool SendComplete { get; set; }
-        public bool SendResult { get; set; }
     }
 }

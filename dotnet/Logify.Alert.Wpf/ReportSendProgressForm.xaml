@@ -1,0 +1,24 @@
+﻿<Window x:Class="DevExpress.Logify.WPF.ReportSendProgressForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DevExpress.Logify.WPF"
+        mc:Ignorable="d"
+        Height="121" Width="321" WindowStyle="None" ShowInTaskbar="False" WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Sending..." Grid.Column="1" Margin="0, 30, 0, 0" TextAlignment="Center"/>
+        <Button Content="Cancel" Grid.Row="1" Grid.Column="1" Click="OnCancelClick" Width="75" MinHeight="23" Margin="8"/>
+    </Grid>
+</Window>

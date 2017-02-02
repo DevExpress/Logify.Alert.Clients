@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Logify.Core;
+using System;
 using System.Threading;
 using System.Windows.Forms;
 
