@@ -8,12 +8,18 @@ using System.Windows.Threading;
 using DevExpress.Logify.Core;
 using System.Diagnostics;
 using System.Reflection;
+using System.ComponentModel;
+using System.Windows;
 
 namespace DevExpress.Logify.WPF {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
 
+        [Obsolete("Please use the LogifyAlert.Instance property instead.", true)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public LogifyAlert() {
+        }
+        internal LogifyAlert(bool b) {
         }
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
@@ -30,7 +36,7 @@ namespace DevExpress.Logify.WPF {
                     if (instance != null)
                         return instance;
 
-                    instance = new LogifyAlert();
+                    instance = new LogifyAlert(true);
                     LogifyClientBase.Instance = instance;
                 }
                 return instance;
@@ -87,6 +93,8 @@ namespace DevExpress.Logify.WPF {
                 //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
                 Dispatcher.CurrentDispatcher.UnhandledException += OnCurrentDispatcherUnhandledException;
+                if (Application.Current != null)
+                    Application.Current.DispatcherUnhandledException += OnCurrentDispatcherUnhandledException;
                 //AppDomain.CurrentDomain.FirstChanceException
                 //SendOfflineReports();
             }
@@ -97,6 +105,8 @@ namespace DevExpress.Logify.WPF {
                 //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.Automatic);
                 AppDomain.CurrentDomain.UnhandledException -= OnCurrentDomainUnhandledException;
                 Dispatcher.CurrentDispatcher.UnhandledException -= OnCurrentDispatcherUnhandledException;
+                if (Application.Current != null)
+                    Application.Current.DispatcherUnhandledException -= OnCurrentDispatcherUnhandledException;
             }
         }
 
@@ -138,6 +148,12 @@ namespace DevExpress.Logify.WPF {
         }
         Mutex OpenExistingMutex(string name) {
             try {
+#if NET45
+                Mutex result;
+                if (Mutex.TryOpenExisting(name, out result))
+                    return result;
+                return null;
+#else
                 try {
                     //AM: TryOpenExisting exists only in .NET4.5
                     MethodInfo tryGetMutex = typeof(Mutex).GetMethod("TryOpenExisting", new Type[] { typeof(string), typeof(Mutex).MakeByRefType() });
@@ -157,6 +173,7 @@ namespace DevExpress.Logify.WPF {
                 catch {
                 }
                 return Mutex.OpenExisting(name);
+#endif
             }
             catch {
                 return null;

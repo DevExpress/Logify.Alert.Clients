@@ -10,7 +10,7 @@ namespace DevExpress.Logify.Core.Tests {
 
         [SetUp]
         public void Setup() {
-            this.client = new LogifyAlert();
+            this.client = new LogifyAlert(true);
         }
         [TearDown]
         public void TearDown() {

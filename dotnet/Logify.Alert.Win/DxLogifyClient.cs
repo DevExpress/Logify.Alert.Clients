@@ -7,6 +7,8 @@ using System.ComponentModel;
 namespace DevExpress.Logify.Win {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class DxLogifyClient : LogifyAlert {
+        public DxLogifyClient() : base(true) {
+        }
         public void ReportToDevExpress2(string logId, string lastExceptionReportFileName, Assembly asm, IDictionary<string, string> customData) {
             ReportToDevExpressCore(logId, lastExceptionReportFileName, asm, customData);
         }

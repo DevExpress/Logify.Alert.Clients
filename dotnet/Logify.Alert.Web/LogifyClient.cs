@@ -9,12 +9,17 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.AccessControl;
 using DevExpress.Logify.Web;
+using System.ComponentModel;
 
 namespace DevExpress.Logify.Web {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
 
+        [Obsolete("Please use the LogifyAlert.Instance property instead.", true)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public LogifyAlert() {
+        }
+        internal LogifyAlert(bool b) {
         }
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
@@ -28,7 +33,7 @@ namespace DevExpress.Logify.Web {
                     if (instance != null)
                         return instance;
 
-                    instance = new LogifyAlert();
+                    instance = new LogifyAlert(true);
                     LogifyClientBase.Instance = instance;
                 }
                 return instance;

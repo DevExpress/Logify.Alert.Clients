@@ -9,12 +9,17 @@ using DevExpress.Logify.Core;
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.AccessControl;
+using System.ComponentModel;
 
 namespace DevExpress.Logify.Win {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
 
+        [Obsolete("Please use the LogifyAlert.Instance property instead.", true)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public LogifyAlert() {
+        }
+        internal LogifyAlert(bool b) {
         }
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
@@ -28,7 +33,7 @@ namespace DevExpress.Logify.Win {
                     if (instance != null)
                         return instance;
 
-                    instance = new LogifyAlert();
+                    instance = new LogifyAlert(true);
                     LogifyClientBase.Instance = instance;
                 }
                 return instance;
@@ -142,6 +147,12 @@ namespace DevExpress.Logify.Win {
         }
         Mutex OpenExistingMutex(string name) {
             try {
+#if NET45
+                Mutex result;
+                if (Mutex.TryOpenExisting(name, out result))
+                    return result;
+                return null;
+#else
                 try {
                     //AM: TryOpenExisting exists only in .NET4.5
                     MethodInfo tryGetMutex = typeof(Mutex).GetMethod("TryOpenExisting", new Type[] { typeof(string), typeof(Mutex).MakeByRefType() });
@@ -161,6 +172,7 @@ namespace DevExpress.Logify.Win {
                 catch {
                 }
                 return Mutex.OpenExisting(name);
+#endif
             }
             catch {
                 return null;
