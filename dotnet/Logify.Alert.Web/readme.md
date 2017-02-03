@@ -3,7 +3,7 @@ A WebForms and MVC client to report exceptions to [Logify Alert](https://logify.
 
 ## Install <a href="https://www.nuget.org/packages/Logify.Alert.Web/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" style="max-width:100%;" /></a>
 ```sh
-$ nuget install Logify.Alert.Web
+$ Install-Package Logify.Alert.Web
 ```
 
 ## Quick Start
