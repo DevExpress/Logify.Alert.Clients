@@ -3,7 +3,7 @@ A WPF client to report exceptions to [Logify Alert](https://logify.devexpress.co
 
 ## Install <a href="https://www.nuget.org/packages/Logify.Alert.Wpf/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Wpf.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Wpf.svg" style="max-width:100%;" /></a>
 ```sh
-$ nuget install Logify.Alert.Wpf
+$ Install-Package Logify.Alert.Wpf
 ```
 
 ## Quick Start
