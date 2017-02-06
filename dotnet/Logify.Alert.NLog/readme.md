@@ -1,4 +1,4 @@
-# Logify Alert for [NLog](http://http://nlog-project.org/)
+# Logify Alert for [NLog](http://nlog-project.org/)
 
 The NLog logger client for [Logify Alert](https://logify.devexpress.com).
 
