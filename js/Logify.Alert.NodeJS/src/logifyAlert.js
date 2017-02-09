@@ -3,7 +3,7 @@ import nodeCollector from "./collectors/nodeCollector.js";
 import customDataCollector from "./collectors/customDataCollector.js";
 import nodeReportSender from "./reportSender/nodeReportSender.js";
 
-export default class logifyAlert {
+class logifyAlert {
     constructor(apiKey) {
         this._apiKey = apiKey;
         this._handleReports = true;
@@ -68,3 +68,5 @@ export default class logifyAlert {
         }
     }
 }
+
+module.exports = logifyAlert;
