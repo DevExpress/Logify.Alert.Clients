@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 
 namespace DevExpress.Logify.Core {
@@ -29,8 +31,13 @@ namespace DevExpress.Logify.Core {
         ShouldIgnoreResult ShouldIgnoreExceptionByExceptionType(Exception ex) {
             try {
                 Type exceptionType = ex.GetType();
+#if NETSTANDARD
+                IEnumerable<LogifyIgnoreAttribute> attributes = exceptionType.GetTypeInfo().GetCustomAttributes<LogifyIgnoreAttribute>(true);
+                return ShouldIgnoreExceptionByAttributes(attributes);
+#else
                 object[] attributes = exceptionType.GetCustomAttributes(true);
                 return ShouldIgnoreExceptionByAttributes(attributes);
+#endif
             }
             catch {
                 return ShouldIgnoreResult.Unknown;
@@ -40,7 +47,19 @@ namespace DevExpress.Logify.Core {
 
         ShouldIgnoreResult ShouldIgnoreExceptionByStack(Exception ex) {
             try {
-                StackTrace trace = new StackTrace(ex);
+                StackTrace trace = new StackTrace(ex, false);
+#if NETSTANDARD
+                StackFrame[] frames = trace.GetFrames();
+                if (frames != null && frames.Length > 0) {
+                    int count = frames.Length;
+                    for (int i = count - 1; i >= 0; i--) { // AM: walk in backward order to process nested calls last
+                        StackFrame frame = frames[i];
+                        ShouldIgnoreResult result = ShouldIgnoreExceptionByStackFrame(ex, frame);
+                        if (result != ShouldIgnoreResult.Unknown)
+                            return result;
+                    }
+                }
+#else
                 int count = trace.FrameCount;
                 for (int i = count - 1; i >= 0; i--) { // AM: walk in backward order to process nested calls last
                     StackFrame frame = trace.GetFrame(i);
@@ -48,6 +67,7 @@ namespace DevExpress.Logify.Core {
                     if (result != ShouldIgnoreResult.Unknown)
                         return result;
                 }
+#endif
                 return ShouldIgnoreResult.Unknown;
             }
             catch {
@@ -60,15 +80,42 @@ namespace DevExpress.Logify.Core {
                 MethodBase method = frame.GetMethod();
                 if (method == null)
                     return ShouldIgnoreResult.Unknown;
-
+#if NETSTANDARD
+                IEnumerable<LogifyIgnoreAttribute> attributes = method.GetCustomAttributes<LogifyIgnoreAttribute>(true);
+                return ShouldIgnoreExceptionByAttributes(attributes);
+#else
                 object[] attributes = method.GetCustomAttributes(true);
                 return ShouldIgnoreExceptionByAttributes(attributes);
+#endif
             }
             catch {
                 return ShouldIgnoreResult.Unknown;
             }
         }
 
+#if NETSTANDARD
+        ShouldIgnoreResult ShouldIgnoreExceptionByAttributes(IEnumerable<LogifyIgnoreAttribute> attributes) {
+            if (attributes == null)
+                return ShouldIgnoreResult.Unknown;
+
+            try {
+                foreach (LogifyIgnoreAttribute attribute in attributes) {
+                    ShouldIgnoreResult result = ShouldIgnoreExceptionByAttribute(attribute);
+                    if (result != ShouldIgnoreResult.Unknown)
+                        return result;
+                }
+                return ShouldIgnoreResult.Unknown;
+            }
+            catch {
+                return ShouldIgnoreResult.Unknown;
+            }
+        }
+        ShouldIgnoreResult ShouldIgnoreExceptionByAttribute(LogifyIgnoreAttribute attribute) {
+            if (attribute == null)
+                return ShouldIgnoreResult.Unknown;
+            return (attribute.Ignore) ? ShouldIgnoreResult.Ignore : ShouldIgnoreResult.Process;
+        }
+#else
         ShouldIgnoreResult ShouldIgnoreExceptionByAttributes(object[] attributes) {
             try {
                 if (attributes == null || attributes.Length <= 0)
@@ -110,6 +157,7 @@ namespace DevExpress.Logify.Core {
                 return ShouldIgnoreResult.Unknown;
             }
         }
-        #endregion
-    }
+#endif
+#endregion
+        }
 }

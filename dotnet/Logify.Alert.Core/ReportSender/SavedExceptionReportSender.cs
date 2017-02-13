@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 
 namespace DevExpress.Logify.Core {
-    class SavedExceptionReportSender : ISavedReportSender {
+    public class SavedExceptionReportSender : ISavedReportSender {
         public string DirectoryName { get; set; }
         public IExceptionReportSender Sender { get; set; }
 
@@ -22,7 +22,9 @@ namespace DevExpress.Logify.Core {
                     return;
 
                 Thread thread = new Thread(TrySendSavedReportsWorker);
+#if !NETSTANDARD
                 thread.Priority = ThreadPriority.Lowest;
+#endif
                 thread.Start();
             }
             catch {

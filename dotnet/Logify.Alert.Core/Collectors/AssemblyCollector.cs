@@ -19,9 +19,10 @@ namespace DevExpress.Logify.Core {
             logger.BeginWriteObject(name);
             try {
                 logger.WriteValue("fullName", asm.FullName);
+                logger.WriteValue("dynamic", asm.IsDynamic);
+#if !NETSTANDARD
                 logger.WriteValue("gac", asm.GlobalAssemblyCache);
                 logger.WriteValue("fullTrust", asm.IsFullyTrusted);
-                logger.WriteValue("dynamic", asm.IsDynamic);
                 try {
                     FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(asm.Location);
                     logger.WriteValue("fileVersion", fileVersion.FileVersion);
@@ -29,6 +30,7 @@ namespace DevExpress.Logify.Core {
                 catch {
                 }
                 //etc.
+#endif
             }
             finally {
                 logger.EndWriteObject(name);

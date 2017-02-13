@@ -12,7 +12,9 @@ namespace DevExpress.Logify.Core {
             RegisterCollectors(config);
         }
 
+#if !NETSTANDARD
         [HandleProcessCorruptedStateExceptions]
+#endif
         public virtual void Process(Exception ex, ILogger logger) {
             int count = Collectors.Count;
             for (int i = 0; i < count; i++) {

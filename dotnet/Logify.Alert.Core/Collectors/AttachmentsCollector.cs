@@ -98,8 +98,20 @@ namespace DevExpress.Logify.Core {
                             stream.Write(data, 0, data.Length);
                         }
                         memoryStream.Flush();
+#if NETSTANDARD
+                        ArraySegment<byte> segment;
+                        if (!memoryStream.TryGetBuffer(out segment))
+                            return null;
+                        if (segment.Offset == 0)
+                            return Convert.ToBase64String(segment.Array, 0, (int)memoryStream.Length);
+                        else {
+                            byte[] buffer = memoryStream.ToArray();
+                            return Convert.ToBase64String(buffer, 0, buffer.Length);
+                        }
+#else
                         byte[] buffer = memoryStream.GetBuffer();
                         return Convert.ToBase64String(buffer, 0, (int)memoryStream.Length);
+#endif
                     }
                 }
                 catch {

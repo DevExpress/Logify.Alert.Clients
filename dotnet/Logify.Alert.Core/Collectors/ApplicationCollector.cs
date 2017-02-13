@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DevExpress.Logify.Core {
-    public abstract class ApplicationCollector : IInfoCollector, ILogifyAppInfo {
+    public abstract class ApplicationCollectorBase : IInfoCollector, ILogifyAppInfo {
 
         public abstract string AppName { get; }
         public abstract string AppVersion { get; }
@@ -15,19 +12,39 @@ namespace DevExpress.Logify.Core {
             try {
                 logger.WriteValue("name", AppName);
                 logger.WriteValue("version", AppVersion);
+#if !NETSTANDARD
                 logger.WriteValue("is64bit", Environment.Is64BitProcess);
-
-                try {
-                    AppDomainCollector domain = new AppDomainCollector(AppDomain.CurrentDomain, "currentDomain");
-                    domain.Process(ex, logger);
-                }
-                catch {
-                }
+#endif
+                SerializeCurrentDomainInfo(ex, logger, "currentDomain");
             }
             finally {
                 logger.EndWriteObject("app");
             }
         }
 
+        protected abstract void SerializeCurrentDomainInfo(Exception ex, ILogger logger, string name);
     }
+#if NETSTANDARD
+    public abstract class ApplicationCollector : ApplicationCollectorBase {
+        protected override void SerializeCurrentDomainInfo(Exception ex, ILogger logger, string name) {
+            //try {
+            //    AppDomainCollector domain = new AppDomainCollector(AppDomain.CurrentDomain, name);
+            //    domain.Process(ex, logger);
+            //}
+            //catch {
+            //}
+        }
+    }
+#else
+    public abstract class ApplicationCollector : ApplicationCollectorBase {
+        protected override void SerializeCurrentDomainInfo(Exception ex, ILogger logger, string name) {
+            try {
+                AppDomainCollector domain = new AppDomainCollector(AppDomain.CurrentDomain, name);
+                domain.Process(ex, logger);
+            }
+            catch {
+            }
+        }
+    }
+#endif
 }

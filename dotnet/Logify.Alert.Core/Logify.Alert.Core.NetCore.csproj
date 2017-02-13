@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <AssemblyName>Logify.Alert.Core</AssemblyName>
+    <RootNamespace>DevExpress.Logify.Core</RootNamespace>
+
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD1_4</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD;NETSTANDARD1_4</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Tests\**" />
+    <EmbeddedResource Remove="Tests\**" />
+    <None Remove="Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Collectors\AppDomainCollector.cs" />
+    <Compile Remove="Collectors\DesktopEnvironmentCollector.cs" />
+    <Compile Remove="Collectors\DisplayCollector.cs" />
+    <Compile Remove="Collectors\FrameworkVersionsCollector.cs" />
+    <Compile Remove="Collectors\GuiResourcesCollector.cs" />
+    <Compile Remove="Collectors\MemoryCollector.cs" />
+    <Compile Remove="Collectors\MiniDumpCollector.cs" />
+    <Compile Remove="Collectors\OperatingSystemCollector.cs" />
+    <Compile Remove="Collectors\ScreenShotCollector.cs" />
+    <Compile Remove="Collectors\VirtualMachineCollector.cs" />
+    <Compile Remove="Configuration.cs" />
+    <Compile Remove="ReportSender\ExternalProcessReportSender.cs" />
+    <Compile Remove="ReportSender\FileExceptionReportSender.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Logify.Alert.Core.nuspec" />
+    <None Remove="publish.cmd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel" Version="4.0.1" />
+    <PackageReference Include="System.Diagnostics.StackTrace" Version="4.0.1" />
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+  </ItemGroup>
+
+</Project>
