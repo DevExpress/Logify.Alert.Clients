@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
-    <AssemblyName>Logify.Alert.Web</AssemblyName>
-    <RootNamespace>DevExpress.Logify.Web</RootNamespace>
+    <AssemblyName>Logify.Alert.Console</AssemblyName>
+    <RootNamespace>DevExpress.Logify.Console</RootNamespace>
 
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -29,22 +29,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Logify.Alert.Web\CollectorFactory.cs" Link="CollectorFactory.cs" />
-    <Compile Include="..\Logify.Alert.Web\ReportSender\ReportSender.cs" Link="ReportSender\ReportSender.cs" />
+    <ProjectReference Include="..\Logify.Alert.Core\Logify.Alert.NetCore.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="1.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Logify.Alert.Core\Logify.Alert.Core.NetCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Collectors\" />
-    <Folder Include="ReportSender\" />
-  </ItemGroup>
-
 </Project>
