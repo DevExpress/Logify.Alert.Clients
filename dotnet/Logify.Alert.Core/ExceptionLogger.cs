@@ -75,7 +75,7 @@ namespace DevExpress.Logify.Core {
             logger.ReportSender = reportSender;
             return logger.PerformReportException(ex, collector);
         }
-#if NET45
+#if ALLOW_ASYNC
         public static async Task<bool> ReportExceptionAsync(Exception ex, IInfoCollector collector) {
             IExceptionReportSender reportSender = ExceptionLoggerFactory.Instance.PlatformReportSender;
             if (reportSender == null)
@@ -102,7 +102,7 @@ namespace DevExpress.Logify.Core {
                 return false;
             }
         }
-#if NET45
+#if ALLOW_ASYNC
         async Task<bool> PerformReportExceptionAsync(Exception ex, IInfoCollector collector) {
             if (ex == null || collector == null)
                 return false;
@@ -122,7 +122,7 @@ namespace DevExpress.Logify.Core {
             LogifyClientExceptionReport report = CreateExceptionReport(ex, collector);
             return SendExceptionReport(report);
         }
-#if NET45
+#if ALLOW_ASYNC
         async Task<bool> ReportExceptionCoreAsync(Exception ex, IInfoCollector collector) {
             if (!ShouldSendExceptionReport())
                 return false;
@@ -158,7 +158,7 @@ namespace DevExpress.Logify.Core {
             else
                 return true;
         }
-#if NET45
+#if ALLOW_ASYNC
         async Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report) {
             if (ReportSender != null)
                 return await ReportSender.SendExceptionReportAsync(report);

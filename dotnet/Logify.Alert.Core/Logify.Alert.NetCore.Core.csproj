@@ -20,12 +20,12 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD1_4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD1_4;ALLOW_ASYNC</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE;RELEASE;NETSTANDARD;NETSTANDARD1_4</DefineConstants>
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD;NETSTANDARD1_4;ALLOW_ASYNC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

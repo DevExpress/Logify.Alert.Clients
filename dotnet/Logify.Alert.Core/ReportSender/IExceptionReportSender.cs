@@ -12,7 +12,7 @@ namespace DevExpress.Logify.Core {
         bool CanSendExceptionReport();
         //bool SendExceptionReport(string report);
         bool SendExceptionReport(LogifyClientExceptionReport report);
-#if NET45
+#if ALLOW_ASYNC
         Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report);
 #endif
 

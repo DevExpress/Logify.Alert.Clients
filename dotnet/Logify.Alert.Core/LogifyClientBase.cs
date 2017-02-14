@@ -344,7 +344,7 @@ namespace DevExpress.Logify.Core {
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             ReportException(ex, additionalCustomData, additionalAttachments);
         }
-#if NET45
+#if ALLOW_ASYNC
         public async Task<bool> SendAsync(Exception ex) {
             return await SendAsync(ex, null);
         }
@@ -372,7 +372,7 @@ namespace DevExpress.Logify.Core {
                 return false;
             }
         }
-#if NET45
+#if ALLOW_ASYNC
         protected async Task<bool> ReportExceptionAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             try {
                 if (!RaiseCanReportException(ex))

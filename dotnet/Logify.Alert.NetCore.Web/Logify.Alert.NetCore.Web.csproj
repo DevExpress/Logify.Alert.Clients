@@ -29,7 +29,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Logify.Alert.Web\CollectorFactory.cs" Link="CollectorFactory.cs" />
     <Compile Include="..\Logify.Alert.Web\ReportSender\ReportSender.cs" Link="ReportSender\ReportSender.cs" />
   </ItemGroup>
 

@@ -42,7 +42,7 @@ namespace DevExpress.Logify.Web {
 
         protected override IInfoCollectorFactory CreateCollectorFactory() {
             //return new WinFormsExceptionCollectorFactory();
-            return new WebDefaultExceptionCollectorFactory(Platform.NETCORE_ASP);
+            return new NetCoreWebDefaultExceptionCollectorFactory(Platform.NETCORE_ASP);
         }
         protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             NetCoreWebExceptionCollector result = new NetCoreWebExceptionCollector(config, Platform.NETCORE_ASP);

@@ -148,7 +148,7 @@ namespace DevExpress.Logify.WPF {
         }
         Mutex OpenExistingMutex(string name) {
             try {
-#if NET45
+#if ALLOW_ASYNC
                 Mutex result;
                 if (Mutex.TryOpenExisting(name, out result))
                     return result;

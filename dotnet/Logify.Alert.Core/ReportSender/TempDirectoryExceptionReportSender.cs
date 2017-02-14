@@ -48,7 +48,7 @@ namespace DevExpress.Logify.Core {
                 return false;
             }
         }
-#if NET45
+#if ALLOW_ASYNC
         protected override Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
             return Task.FromResult(SendExceptionReportCore(report));
         }

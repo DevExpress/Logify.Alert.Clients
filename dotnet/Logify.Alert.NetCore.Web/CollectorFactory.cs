@@ -2,16 +2,16 @@
 using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Web {
-    class WebDefaultExceptionCollectorFactory : IInfoCollectorFactory {
+    class NetCoreWebDefaultExceptionCollectorFactory : IInfoCollectorFactory {
 
         readonly Platform platform;
 
-        public WebDefaultExceptionCollectorFactory(Platform platform) {
+        public NetCoreWebDefaultExceptionCollectorFactory(Platform platform) {
             this.platform = platform;
         }
 
         public IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config) {
-            return new WebExceptionCollector(config, this.platform);
+            return new NetCoreWebExceptionCollector(config, this.platform);
         }
     }
 }

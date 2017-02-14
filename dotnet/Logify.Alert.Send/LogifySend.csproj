@@ -47,7 +47,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release45|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\bin\net45\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NET45</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;ALLOW_ASYNC</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -58,7 +58,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug45|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\bin\net45\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NET45</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;ALLOW_ASYNC</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>

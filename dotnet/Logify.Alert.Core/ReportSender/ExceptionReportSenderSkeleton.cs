@@ -36,7 +36,7 @@ namespace DevExpress.Logify.Core {
             }
             return false;
         }
-#if NET45
+#if ALLOW_ASYNC
         public virtual async Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report) {
             //TODO: maybe put report to disk, for further sending in case of unrecoverable error during send (no net or so on)
             for (int i = 0; i < RetryCount; i++) {

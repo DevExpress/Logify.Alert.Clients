@@ -29,7 +29,7 @@ namespace DevExpress.Logify.Core {
             //});
             return true;
         }
-#if NET45
+#if ALLOW_ASYNC
         protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
             //Task task = Task.Factory.StartNew(() => {
             if (innerSender != null)

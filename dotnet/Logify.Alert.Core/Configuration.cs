@@ -16,6 +16,7 @@ namespace DevExpress.Logify.Core {
     }
 
     public static class ClientConfigurationLoader {
+        [CLSCompliant(false)]
         public static void ApplyClientConfiguration(LogifyClientBase client, IConfigurationSection section) {
             if (section == null)
                 return;

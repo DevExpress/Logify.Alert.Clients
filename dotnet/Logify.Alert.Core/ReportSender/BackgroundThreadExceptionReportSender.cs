@@ -18,7 +18,7 @@ namespace DevExpress.Logify.Core {
             return true;
             //Thread.Sleep(3000);
         }
-#if NET45
+#if ALLOW_ASYNC
         protected override Task<bool> SendExceptionReportInBackgroundAsync(IExceptionReportSender innerSender, LogifyClientExceptionReport report) {
             Thread thread = new Thread(() => {
                 if (innerSender != null)
@@ -45,7 +45,7 @@ namespace DevExpress.Logify.Core {
             else
                 return false;
         }
-#if NET45
+#if ALLOW_ASYNC
         protected override async Task<bool> SendExceptionReportInBackgroundAsync(IExceptionReportSender innerSender, LogifyClientExceptionReport report) {
             if (innerSender != null)
                 return await innerSender.SendExceptionReportAsync(report);

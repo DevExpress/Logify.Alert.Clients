@@ -29,7 +29,7 @@ namespace DevExpress.Logify.Win {
             }
             return base.SendExceptionReport(report);
         }
-#if NET45
+#if ALLOW_ASYNC
         public override async Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report) {
             //no dialog in async version
             return await base.SendExceptionReportAsync(report);
