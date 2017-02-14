@@ -8,6 +8,8 @@ namespace DevExpress.Logify.Core {
         WIN,
         WPF,
         ASP,
+        NETCORE_ASP,
+        NETCORE_CONSOLE,
         NONE
     }
 }

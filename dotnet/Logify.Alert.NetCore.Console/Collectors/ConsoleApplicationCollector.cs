@@ -1,31 +1,28 @@
 ﻿using System;
-//using System.Web.Configuration;
 using DevExpress.Logify.Core;
-using Microsoft.AspNetCore.Http;
 
-namespace DevExpress.Logify.Web
-{
-    class NetCoreWebApplicationCollector : ApplicationCollector {
+namespace DevExpress.Logify.NetCore.Console {
+    class NetCoreConsoleApplicationCollector : ApplicationCollector {
         public override string AppName {
             get {
-                HttpContext current = LogifyHttpContext.Current;
+                return String.Empty;
+                //HttpContext current = HttpContext.Current;
                 //if (current != null && current.Request != null && current.Request.Url != null)
                 //    return current.Request.Url.AbsolutePath;
-                if (current != null && current.Request != null && current.Request.Path != null)
-                    return current.Request.Path.Value;
-                return String.Empty;
+                //return String.Empty;
             }
         }
         public override string AppVersion {
             get {
-                string version = this.GetVersion();
-                return Utils.ValidationVersion(version);
+                return String.Empty;
+                //string version = this.GetVersion();
+                //return Utils.ValidationVersion(version);
             }
         }
         public override string UserId { get { return String.Empty; } }
         
 
-        public NetCoreWebApplicationCollector() : base() {}
+        public NetCoreConsoleApplicationCollector() : base() {}
 
         string GetVersion() {
             string version = this.TryGetVersionFromConfig();
@@ -37,23 +34,20 @@ namespace DevExpress.Logify.Web
         }
 
         string TryGetVersionFromConfig() {
-            return String.Empty;
-            /*
             string version = String.Empty;
-
+            /*
             WebLogifyConfigSection configSection = (WebLogifyConfigSection)WebConfigurationManager.GetSection("logifyAlert");
             if (configSection.Version != null) {
                 version = configSection.Version.Value;
             }
-
-            return version;
             */
+            return version;
         }
 
         string TryDetectVersion() {
             return String.Empty;
             /*
-            HttpContext current = LogifyHttpContext.Current;
+            HttpContext current = HttpContext.Current;
             if (current == null)
                 return String.Empty;
 

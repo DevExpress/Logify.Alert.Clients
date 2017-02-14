@@ -11,7 +11,7 @@ namespace DevExpress.Logify.Web {
         }
 
         public IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config) {
-            return new WebExceptionCollector(config, this.platform);
+            return new NetCoreWebExceptionCollector(config, this.platform);
         }
     }
 }

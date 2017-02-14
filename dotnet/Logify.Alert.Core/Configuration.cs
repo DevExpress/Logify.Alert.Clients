@@ -1,4 +1,51 @@
-﻿using System;
+﻿#if NETSTANDARD
+using System;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+
+namespace DevExpress.Logify.Core {
+    internal class LogifyAlertConfiguration {
+        public string ServiceUrl { get; set; }
+        public string MiniDumpServiceUrl { get; set; }
+        public string ApiKey { get; set; }
+        public bool ConfirmSend { get; set; }
+        public bool OfflineReportsEnabled { get; set; }
+        public string OfflineReportsDirectory { get; set; }
+        public int OfflineReportsCount { get; set; }
+        public Dictionary<string, string> CustomData { get; set; }
+    }
+
+    public static class ClientConfigurationLoader {
+        public static void ApplyClientConfiguration(LogifyClientBase client, IConfigurationSection section) {
+            if (section == null)
+                return;
+
+            LogifyAlertConfiguration config = new LogifyAlertConfiguration();
+            section.Bind(config);
+
+            if (!String.IsNullOrEmpty(config.ServiceUrl))
+                client.ServiceUrl = config.ServiceUrl;
+            if (!String.IsNullOrEmpty(config.ApiKey))
+                client.ApiKey = config.ApiKey;
+            client.ConfirmSendReport = config.ConfirmSend;
+
+            if (!String.IsNullOrEmpty(config.MiniDumpServiceUrl))
+                client.MiniDumpServiceUrl = config.MiniDumpServiceUrl;
+
+            client.OfflineReportsEnabled = config.OfflineReportsEnabled;
+            if (!String.IsNullOrEmpty(config.OfflineReportsDirectory))
+                client.OfflineReportsDirectory = config.OfflineReportsDirectory;
+            client.OfflineReportsCount = config.OfflineReportsCount;
+
+            if (config.CustomData != null && config.CustomData.Count > 0) {
+                foreach (string key in config.CustomData.Keys)
+                    client.CustomData[key] = config.CustomData[key];
+            }
+        }
+    }
+}
+#else
+using System;
 using System.Configuration;
 
 namespace DevExpress.Logify {
@@ -95,3 +142,4 @@ namespace DevExpress.Logify.Core {
         }
     }
 }
+#endif

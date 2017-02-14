@@ -6,11 +6,10 @@ using System.Threading;
 using DevExpress.Logify.Core;
 using System.Diagnostics;
 using System.Reflection;
-using DevExpress.Logify.Web;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.NetCore.Console {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
 
@@ -35,17 +34,14 @@ namespace DevExpress.Logify.Web {
             }
         }
 
-        //public bool SendReportInSeparateProcess { get; set; }
-
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
         protected override IInfoCollectorFactory CreateCollectorFactory() {
-            //return new WinFormsExceptionCollectorFactory();
-            return new WebDefaultExceptionCollectorFactory(Platform.NETCORE_ASP);
+            return new NetCoreConsoleExceptionCollectorFactory();
         }
         protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            NetCoreWebExceptionCollector result = new NetCoreWebExceptionCollector(config, Platform.NETCORE_ASP);
+            NetCoreConsoleExceptionCollector result = new NetCoreConsoleExceptionCollector(config);
             result.AppName = this.AppName;
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;
@@ -54,7 +50,7 @@ namespace DevExpress.Logify.Web {
             return result;
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
-            WebExceptionReportSender defaultSender = new WebExceptionReportSender();
+            NetCoreConsoleExceptionReportSender defaultSender = new NetCoreConsoleExceptionReportSender();
             defaultSender.ConfirmSendReport = ConfirmSendReport;
             if (ConfirmSendReport)
                 return defaultSender;
@@ -68,7 +64,7 @@ namespace DevExpress.Logify.Web {
             return sender;
         }
         protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender() {
-            return new WebExceptionReportSender();
+            return new NetCoreConsoleExceptionReportSender();
         }
         protected override ISavedReportSender CreateSavedReportsSender() {
             return new SavedExceptionReportSender();
@@ -84,19 +80,22 @@ namespace DevExpress.Logify.Web {
             return new StackBasedExceptionIgnoreDetection();
         }
         protected override void Configure() {
-            //TODO:
             //ClientConfigurationLoader.ApplyClientConfiguration(this);
         }
-        internal void Configure(IConfigurationSection section) {
+        public void Configure(IConfigurationSection section) {
             ClientConfigurationLoader.ApplyClientConfiguration(this, section);
         }
 
         public override void Run() {
-            //do nothing
-            //SendOfflineReports();
+            if (!IsSecondaryInstance) {
+                //do nothing
+                //SendOfflineReports();
+            }
         }
         public override void Stop() {
-            //do nothing
+            if (!IsSecondaryInstance) {
+                //do nothing
+            }
         }
    }
 }
