@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFrameworks>netstandard1.5;netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>Logify.Alert.Console</AssemblyName>
     <RootNamespace>DevExpress.Logify.Console</RootNamespace>
 
@@ -20,12 +20,12 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD1_4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE;RELEASE;NETSTANDARD;NETSTANDARD1_4</DefineConstants>
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

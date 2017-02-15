@@ -91,7 +91,7 @@ namespace DevExpress.Logify.Core {
     //TODO: move to platform specific assembly
     public class ExceptionNormalizedStackCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
-#if NETSTANDARD1_4
+#if NETSTANDARD
             CultureInfo prevCulture = CultureInfo.CurrentCulture;
             CultureInfo prevUICulture = CultureInfo.CurrentUICulture;
 #else
@@ -99,7 +99,7 @@ namespace DevExpress.Logify.Core {
             CultureInfo prevUICulture = Thread.CurrentThread.CurrentUICulture;
 #endif
             try {
-#if NETSTANDARD1_4
+#if NETSTANDARD
                 CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
                 CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
 #else
@@ -111,7 +111,7 @@ namespace DevExpress.Logify.Core {
                 logger.WriteValue("normalizedStackTrace", normalizedStackTrace);
             }
             finally {
-#if NETSTANDARD1_4
+#if NETSTANDARD
                 CultureInfo.CurrentCulture = prevCulture;
                 CultureInfo.CurrentUICulture = prevUICulture;
 #else

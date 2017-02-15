@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFrameworks>netstandard1.4;netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>Logify.Alert.Core</AssemblyName>
     <RootNamespace>DevExpress.Logify.Core</RootNamespace>
 
@@ -20,12 +20,12 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD1_4;ALLOW_ASYNC</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD;ALLOW_ASYNC</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE;RELEASE;NETSTANDARD;NETSTANDARD1_4;ALLOW_ASYNC</DefineConstants>
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD;ALLOW_ASYNC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Collectors\AppDomainCollector.cs" />
     <Compile Remove="Collectors\DesktopEnvironmentCollector.cs" />
     <Compile Remove="Collectors\DisplayCollector.cs" />
     <Compile Remove="Collectors\FrameworkVersionsCollector.cs" />
@@ -59,6 +58,18 @@
     <PackageReference Include="System.Diagnostics.StackTrace" Version="4.0.1" />
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Extensions.DependencyModel">
+      <Version>1.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
+    <PackageReference Include="Microsoft.Extensions.DependencyModel">
+      <Version>1.0.0</Version>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
