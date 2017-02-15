@@ -42,7 +42,6 @@
     <Compile Remove="Collectors\GuiResourcesCollector.cs" />
     <Compile Remove="Collectors\MemoryCollector.cs" />
     <Compile Remove="Collectors\MiniDumpCollector.cs" />
-    <Compile Remove="Collectors\OperatingSystemCollector.cs" />
     <Compile Remove="Collectors\ScreenShotCollector.cs" />
     <Compile Remove="Collectors\VirtualMachineCollector.cs" />
     <Compile Remove="ReportSender\ExternalProcessReportSender.cs" />

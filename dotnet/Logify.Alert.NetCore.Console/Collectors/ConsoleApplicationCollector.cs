@@ -1,66 +1,82 @@
 ﻿using System;
 using DevExpress.Logify.Core;
+using System.Reflection;
 
 namespace DevExpress.Logify.NetCore.Console {
     class NetCoreConsoleApplicationCollector : ApplicationCollector {
         public override string AppName {
             get {
-                return String.Empty;
-                //HttpContext current = HttpContext.Current;
-                //if (current != null && current.Request != null && current.Request.Url != null)
-                //    return current.Request.Url.AbsolutePath;
-                //return String.Empty;
+                try {
+                    Assembly asm = Assembly.GetEntryAssembly();
+                    if (asm == null)
+                        return String.Empty;
+
+                    foreach (AssemblyProductAttribute attr in asm.GetCustomAttributes<AssemblyProductAttribute>()) {
+                        if (!String.IsNullOrEmpty(attr.Product))
+                            return attr.Product;
+                    }
+                    foreach (AssemblyTitleAttribute attr in asm.GetCustomAttributes<AssemblyTitleAttribute>()) {
+                        if (!String.IsNullOrEmpty(attr.Title))
+                            return attr.Title;
+                    }
+
+                    return TryDetectAppNameByEntryPoint(asm);
+                }
+                catch {
+                    return String.Empty;
+                }
             }
         }
         public override string AppVersion {
             get {
+                try {
+                    Assembly asm = Assembly.GetEntryAssembly();
+                    if (asm == null)
+                        return String.Empty;
+
+                    foreach (AssemblyInformationalVersionAttribute attr in asm.GetCustomAttributes<AssemblyInformationalVersionAttribute>()) {
+                        if (!String.IsNullOrEmpty(attr.InformationalVersion))
+                            return attr.InformationalVersion;
+                    }
+                    foreach (AssemblyVersionAttribute attr in asm.GetCustomAttributes<AssemblyVersionAttribute>()) {
+                        if (!String.IsNullOrEmpty(attr.Version))
+                            return attr.Version;
+                    }
+                    foreach (AssemblyFileVersionAttribute attr in asm.GetCustomAttributes<AssemblyFileVersionAttribute>()) {
+                        if (!String.IsNullOrEmpty(attr.Version))
+                            return attr.Version;
+                    }
+                }
+                catch {
+                }
                 return String.Empty;
-                //string version = this.GetVersion();
-                //return Utils.ValidationVersion(version);
             }
         }
+
         public override string UserId { get { return String.Empty; } }
         
 
         public NetCoreConsoleApplicationCollector() : base() {}
 
-        string GetVersion() {
-            string version = this.TryGetVersionFromConfig();
-            if (String.IsNullOrEmpty(version)) {
-                version = this.TryDetectVersion();
-            }
-
-            return version;
-        }
-
-        string TryGetVersionFromConfig() {
-            string version = String.Empty;
-            /*
-            WebLogifyConfigSection configSection = (WebLogifyConfigSection)WebConfigurationManager.GetSection("logifyAlert");
-            if (configSection.Version != null) {
-                version = configSection.Version.Value;
-            }
-            */
-            return version;
-        }
-
-        string TryDetectVersion() {
-            return String.Empty;
-            /*
-            HttpContext current = HttpContext.Current;
-            if (current == null)
+        string TryDetectAppNameByEntryPoint(Assembly entryAssembly) {
+            if (entryAssembly == null)
                 return String.Empty;
 
-            object app = current.ApplicationInstance;
-            if (app == null)
+            if (entryAssembly.EntryPoint == null)
+                return String.Empty;
+            Type mainType = entryAssembly.EntryPoint.DeclaringType;
+            if (mainType == null)
                 return String.Empty;
 
-            Type type = app.GetType();
-            while (type != null && type != typeof(object) && !type.BaseType.Name.Equals("HttpApplication"))
-                type = type.BaseType;
+            string @namespace = mainType.Namespace;
+            if (String.IsNullOrEmpty(@namespace))
+                return mainType.Name;
 
-            return type.Assembly.GetName().Version.ToString();
-            */
+            int lastDotIndex = @namespace.LastIndexOf('.');
+            if (lastDotIndex >= 0 && lastDotIndex < @namespace.Length - 1)
+                return @namespace.Substring(lastDotIndex + 1);
+            else
+                return @namespace;
         }
     }
 }

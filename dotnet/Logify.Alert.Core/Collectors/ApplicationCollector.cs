@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace DevExpress.Logify.Core {
     public abstract class ApplicationCollectorBase : IInfoCollector, ILogifyAppInfo {
@@ -13,7 +14,11 @@ namespace DevExpress.Logify.Core {
                 logger.WriteValue("name", AppName);
                 logger.WriteValue("version", AppVersion);
 #if !NETSTANDARD
+                logger.WriteValue("architecture", Environment.Is64BitProcess ? "X64" : "X86");
                 logger.WriteValue("is64bit", Environment.Is64BitProcess);
+#else
+                logger.WriteValue("architecture", RuntimeInformation.ProcessArchitecture.ToString());
+                logger.WriteValue("is64bit", RuntimeInformation.ProcessArchitecture == Architecture.X64 || RuntimeInformation.ProcessArchitecture == Architecture.Arm64);
 #endif
                 SerializeCurrentDomainInfo(ex, logger, "currentDomain");
             }

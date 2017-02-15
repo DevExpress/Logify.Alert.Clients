@@ -43,7 +43,7 @@ namespace DevExpress.Logify.NetCore.Console {
             //    //if (context.ApplicationInstance != null && context.ApplicationInstance.Modules != null)
             //    //    Collectors.Add(new ModulesCollector(context.ApplicationInstance.Modules));
             //}
-            //Collectors.Add(new OperatingSystemCollector());
+            Collectors.Add(new OperatingSystemCollector());
             //Collectors.Add(new VirtualMachineCollector());
             Collectors.Add(new DebuggerCollector());
             //Collectors.Add(new MemoryCollector(config));

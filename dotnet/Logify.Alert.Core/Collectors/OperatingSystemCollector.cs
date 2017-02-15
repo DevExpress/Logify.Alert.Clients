@@ -1,7 +1,56 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Runtime.InteropServices;
 
 namespace DevExpress.Logify.Core {
+#if NETSTANDARD
+    public class OperatingSystemCollector : IInfoCollector {
+        public virtual void Process(Exception ex, ILogger logger) {
+            logger.BeginWriteObject("os");
+            try {
+                logger.WriteValue("platform", DetectPlatform());
+                logger.WriteValue("architecture", RuntimeInformation.OSArchitecture.ToString());
+                //logger.WriteValue("servicePack", os.ServicePack);
+                Version version = DetectRealOSVersion();
+                if (version != null)
+                    logger.WriteValue("version", version.ToString());
+                logger.WriteValue("is64bit", RuntimeInformation.OSArchitecture == Architecture.X64 || RuntimeInformation.OSArchitecture == Architecture.Arm64);
+            }
+            finally {
+                logger.EndWriteObject("os");
+            }
+        }
+
+        Version DetectRealOSVersion() {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                // "Microsoft Windows 6.3.6900 "
+                string content = RuntimeInformation.OSDescription;
+                if (String.IsNullOrEmpty(content))
+                    return null;
+                content = content.Trim();
+                int index = content.LastIndexOf(' ');
+                if (index >= 0 || index < content.Length - 1) {
+                    Version version;
+                    if (Version.TryParse(content.Substring(index + 1), out version))
+                        return version;
+                }
+            }
+
+            return null;
+        }
+
+        string DetectPlatform() {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return "Win32NT";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return "Linux";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                return "OSX";
+
+            return String.Empty;
+        }
+    }
+#else
     public class OperatingSystemCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
             logger.BeginWriteObject("os");
@@ -51,4 +100,5 @@ namespace DevExpress.Logify.Core {
             }
         }
     }
+#endif
 }
