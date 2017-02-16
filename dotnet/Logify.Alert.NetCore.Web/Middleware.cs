@@ -72,6 +72,7 @@ namespace DevExpress.Logify.Web {
         public int StatusCode { get { return this.httpStatusCode; } }
     }
     public static class LogifyIAlertApplicationBuilderExtensions {
+        [CLSCompliant(false)]
         public static IApplicationBuilder UseLogifyAlert(this IApplicationBuilder builder, Microsoft.Extensions.Configuration.IConfigurationSection config) {
             return builder.UseMiddleware<LogifyAlertMiddleware>(config);
         }
