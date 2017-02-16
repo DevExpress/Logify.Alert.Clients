@@ -18,7 +18,7 @@ namespace DevExpress.Logify.Web {
                         logger.BeginWriteObject(key);
                         //logger.WriteValue("domain", cookie.Domain);
                         //logger.WriteValue("expires", cookie.Expires.ToString());
-                        //logger.WriteValue("name", cookie.Name);
+                        logger.WriteValue("name", key);
                         //logger.WriteValue("secure", cookie.Secure);
                         //logger.WriteValue("value", cookie.Value);
                         logger.WriteValue("value", cookie);
