@@ -24,6 +24,9 @@ call :buildclient Logify.Alert.NLog
 call :buildclient Logify.Alert.Serilog
 rd tmp /Q /S
 
+call :mergebymask .\ ..\bin\ Logify.Alert.Core.*.nupkg .\
+call :mergebymask .\ ..\bin\ Logify.Alert.Web.*.nupkg .\
+
 goto finish
 
 :buildclient
@@ -39,9 +42,12 @@ for %%i in (*.nupkg) do set nupkgName=%%i
 for %%i in (*.nupkg) do rename %%i %%i.zip
 for %%i in (*.zip) do pkzipc -extract -dir %%i .\unpacked
 del *.zip /Q
+rem copy signed libs from latestclients directory over existing in package
 for %%i in (.\unpacked\lib\net40\*.dll) do copy .\latestclients\net40\%%~nxi .\unpacked\lib\net40\ /Y
 for %%i in (.\unpacked\lib\net45\*.dll) do copy .\latestclients\net45\%%~nxi .\unpacked\lib\net45\ /Y
 pushd unpacked
+
+rem make package with signed libraries
 pkzipc -add -recurse -path temp.zip *.*
 move temp.zip ..\..
 popd
@@ -49,6 +55,51 @@ rd unpacked /Q /S
 popd
 del %nupkgName%
 rename temp.zip %nupkgName%
+
 exit /b
+
+:mergenupkgbymask
+for %%i in (%1\%3) do set first=%%i
+for %%i in (%2\%3) do set second=%%i
+for %%i in (%1\%3) do set target=%4\%%~nxi
+
+call merge_nupkg %first% %second% %target%
+exit /b
+
+:merge_nupkg
+rd tmp /Q /S
+mkdir tmp
+pushd tmp
+call :unpackpackage %1 .\first
+call :unpackpackage %2 .\second
+
+for %%i in (.\first\*.nuspec) do set firstnuspec=%%i
+for %%i in (.\second\*.nuspec) do set secondnuspec=%%i
+%mergenuspec% %firstnuspec% %secondnuspec% %firstnuspec%
+xcopy .\second\lib .\first\lib  /S /Q
+
+rem for %%i in (%1) do set targetFileName=%%~nxi
+set targetFileName=%3
+call :makepackage .\first %targetFileName%
+rem rd .\first /Q /S
+popd
+rd tmp /Q /S
+exit /b
+
+:unpackpackage
+mkdir %2
+move %1 %1.zip
+pkzipc -extract -dir -over=all %1.zip %2
+move %1.zip %1
+exit /b
+
+:makepackage
+pushd %1
+pkzipc -add -recurse -path temp.zip *.*
+popd
+move %1\temp.zip %2
+exit /b
+
+
 
 :finish
