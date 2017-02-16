@@ -24,8 +24,8 @@ call :buildclient Logify.Alert.NLog
 call :buildclient Logify.Alert.Serilog
 rd tmp /Q /S
 
-call :mergenupkgbymask .\ ..\bin\ Logify.Alert.Core.*.nupkg .\
-call :mergenupkgbymask .\ ..\bin\ Logify.Alert.Web.*.nupkg .\
+call :mergenupkgbymask . ..\bin\ Logify.Alert.Core.*.nupkg .
+call :mergenupkgbymask . ..\bin\ Logify.Alert.Web.*.nupkg .
 
 goto finish
 
