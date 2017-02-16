@@ -24,8 +24,8 @@ call :buildclient Logify.Alert.NLog
 call :buildclient Logify.Alert.Serilog
 rd tmp /Q /S
 
-call :mergebymask .\ ..\bin\ Logify.Alert.Core.*.nupkg .\
-call :mergebymask .\ ..\bin\ Logify.Alert.Web.*.nupkg .\
+call :mergenupkgbymask .\ ..\bin\ Logify.Alert.Core.*.nupkg .\
+call :mergenupkgbymask .\ ..\bin\ Logify.Alert.Web.*.nupkg .\
 
 goto finish
 
@@ -63,27 +63,23 @@ for %%i in (%1\%3) do set first=%%i
 for %%i in (%2\%3) do set second=%%i
 for %%i in (%1\%3) do set target=%4\%%~nxi
 
-call merge_nupkg %first% %second% %target%
+call :merge_nupkg %first% %second% %target%
 exit /b
 
 :merge_nupkg
-rd tmp /Q /S
-mkdir tmp
-pushd tmp
 call :unpackpackage %1 .\first
 call :unpackpackage %2 .\second
 
 for %%i in (.\first\*.nuspec) do set firstnuspec=%%i
 for %%i in (.\second\*.nuspec) do set secondnuspec=%%i
-%mergenuspec% %firstnuspec% %secondnuspec% %firstnuspec%
-xcopy .\second\lib .\first\lib  /S /Q
+mergenuspec %firstnuspec% %secondnuspec% %firstnuspec%
+xcopy .\second\lib .\first\lib  /S /Q /Y
 
 rem for %%i in (%1) do set targetFileName=%%~nxi
 set targetFileName=%3
 call :makepackage .\first %targetFileName%
-rem rd .\first /Q /S
-popd
-rd tmp /Q /S
+rd .\first /Q /S
+rd .\second /Q /S
 exit /b
 
 :unpackpackage
