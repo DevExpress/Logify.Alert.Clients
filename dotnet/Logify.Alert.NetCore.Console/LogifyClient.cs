@@ -82,6 +82,7 @@ namespace DevExpress.Logify.NetCore.Console {
         protected override void Configure() {
             //ClientConfigurationLoader.ApplyClientConfiguration(this);
         }
+        [CLSCompliant(false)]
         public void Configure(IConfigurationSection section) {
             ClientConfigurationLoader.ApplyClientConfiguration(this, section);
         }
