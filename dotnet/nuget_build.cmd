@@ -24,8 +24,18 @@ call :buildclient Logify.Alert.NLog
 call :buildclient Logify.Alert.Serilog
 rd tmp /Q /S
 
+
+
 call :mergenupkgbymask . ..\bin\ Logify.Alert.Core.*.nupkg .
+
+
+
+
 call :mergenupkgbymask . ..\bin\ Logify.Alert.Web.*.nupkg .
+
+
+
+
 
 for %%i in (..\bin\Logify.Alert.Console.*.nupkg) do set nupkgName=%%i
 for %%i in (.\Logify.Alert.Win.*.nupkg) do set winnupkgname=%%i
@@ -63,6 +73,14 @@ rename temp.zip %nupkgName%
 
 exit /b
 
+
+
+
+
+
+
+
+
 :mergenupkgbymask
 for %%i in (%1\%3) do set first=%%i
 for %%i in (%2\%3) do set second=%%i
@@ -70,6 +88,16 @@ for %%i in (%1\%3) do set target=%4\%%~nxi
 
 call :merge_nupkg %first% %second% %target%
 exit /b
+
+
+
+
+
+
+
+
+
+
 
 :merge_nupkg
 call :unpackpackage %1 .\first
@@ -115,4 +143,16 @@ exit /b
 
 
 
+
+
+
+
+
+
+
+
 :finish
+
+
+
+
