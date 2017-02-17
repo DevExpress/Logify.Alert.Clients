@@ -27,6 +27,11 @@ rd tmp /Q /S
 call :mergenupkgbymask . ..\bin\ Logify.Alert.Core.*.nupkg .
 call :mergenupkgbymask . ..\bin\ Logify.Alert.Web.*.nupkg .
 
+for %%i in (..\bin\Logify.Alert.Console.*.nupkg) do set nupkgName=%%i
+for %%i in (.\Logify.Alert.Win.*.nupkg) do set winnupkgname=%%i
+SET targetnupkgname=%winnupkgname:Logify.Alert.Win=Logify.Alert.Console%
+call :patchnetcorepackage %nupkgName% %targetnupkgname%
+
 goto finish
 
 :buildclient
@@ -94,6 +99,18 @@ pushd %1
 pkzipc -add -recurse -path temp.zip *.*
 popd
 move %1\temp.zip %2
+exit /b
+
+:patchnetcorepackage
+set targetFileName=%2
+call :unpackpackage %1 .\first
+for %%i in (.\first\*.nuspec) do set nuspecname=%%i
+for %%i in (.\first\lib\netstandard1.6\*.dll) do set asmname=%%i
+for %%i in (.\first\lib\netstandard1.5\*.dll) do set asmname=%%i
+for %%i in (.\first\lib\netstandard1.4\*.dll) do set asmname=%%i
+dotnet PatchNuspecByAssemblyAttributes.dll %nuspecname% %asmname%
+call :makepackage .\first %targetFileName%
+rd .\first /Q /S
 exit /b
 
 
