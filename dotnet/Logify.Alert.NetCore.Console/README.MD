@@ -23,7 +23,7 @@ catch (Exception e) {
 ## Configuration
 You can set up the Logify Alert client using configuration file as follows.
 
-### JSON configuration file:
+#### JSON configuration file:
 ```json
 {
   "LogifyAlert": {
@@ -45,7 +45,7 @@ LogifyAlert client = LogifyAlert.Instance;
 client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
-### XML configuration file:
+#### XML configuration file:
 ```xml
 <configuration>
   <LogifyAlert>
@@ -69,7 +69,7 @@ LogifyAlert client = LogifyAlert.Instance;
 client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
-### INI configuration file:
+#### INI configuration file:
 ```ini
 [LogifyAlert]
 ApiKey = SPECIFY_YOUR_API_KEY_HERE
