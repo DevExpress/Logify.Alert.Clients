@@ -33,16 +33,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="1.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Logify.Alert.Core\Logify.Alert.NetCore.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Collectors\" />
     <Folder Include="ReportSender\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
