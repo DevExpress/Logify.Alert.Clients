@@ -8,6 +8,8 @@ namespace DevExpress.Logify.Core {
         public string ServiceUrl { get; set; }
         public string MiniDumpServiceUrl { get; set; }
         public string ApiKey { get; set; }
+        public string AppName { get; set; }
+        public string AppVersion { get; set; }
         public bool ConfirmSend { get; set; }
         public bool OfflineReportsEnabled { get; set; }
         public string OfflineReportsDirectory { get; set; }
@@ -28,6 +30,10 @@ namespace DevExpress.Logify.Core {
                 client.ServiceUrl = config.ServiceUrl;
             if (!String.IsNullOrEmpty(config.ApiKey))
                 client.ApiKey = config.ApiKey;
+            if (!String.IsNullOrEmpty(config.AppName))
+                client.AppName = config.AppName;
+            if (!String.IsNullOrEmpty(config.AppVersion))
+                client.AppVersion = config.AppVersion;
             client.ConfirmSendReport = config.ConfirmSend;
 
             if (!String.IsNullOrEmpty(config.MiniDumpServiceUrl))

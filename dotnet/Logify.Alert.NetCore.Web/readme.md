@@ -1,16 +1,61 @@
-# Logify Alert for console applications
-A console client to report exceptions to [Logify Alert](https://logify.devexpress.com).
+# Logify Alert for ASP.NET WebForms and MVC applications
+A WebForms and MVC client to report exceptions to [Logify Alert](https://logify.devexpress.com)
 
-## Install <a href="https://www.nuget.org/packages/Logify.Alert.Console/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Console.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Console.svg" style="max-width:100%;" /></a>
+## Install <a href="https://www.nuget.org/packages/Logify.Alert.Web/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Web.svg" style="max-width:100%;" /></a>
 ```sh
-$ Install-Package Logify.Alert.Console
+$ Install-Package Logify.Alert.Web
 ```
 
 ## Quick Start
+### Automatic error reporting
+#### Add LogifyAlert.json configuration File
+Add the Logify Alert settings to the application's **LogifyAlert.json** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Documentation/CreateApp) generated for it.
+```json
+  "LogifyAlert": {
+    "apiKey": "SPECIFY_YOUR_API_KEY_HERE",
+    "customData": {
+      "MACHINE_NAME": "My Machine"
+    }
+  }
+```
+
+#### Modify Application's Startup.cs file
+Add the following code to the **Startup()** method declared in the application's **Startup.cs** file.
+```csharp
+var builder = new ConfigurationBuilder()
+    .SetBasePath(env.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+    .AddJsonFile("LogifyAlert.json", optional: true, reloadOnChange: false) // <-- add this line
+    .AddEnvironmentVariables();
+Configuration = builder.Build();
+```
+
+Add the following code to the **Configure()** method declared in the application's **Startup.cs** file.
+```csharp
+public static class WebApiConfig {
+    public static void Register(HttpConfiguration config) {
+        //...
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseBrowserLink();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Home/Error");
+        }
+        // You should put Logify Alert initialization after app.UseExceptionHandler call
+        app.UseLogifyAlert(Configuration.GetSection("LogifyAlert"));
+    }
+}
+```
+
+That's it. Now, your application will report unhandled exceptions to the Logify Alert service. To manage and view generated reports, use the [Logify Alert](https://logify.devexpress.com) link.
 
 ### Manual error reporting
 ```csharp
-using DevExpress.Logify.Console;
+using DevExpress.Logify.Web;
 try {
     LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
     RunYourCode();
@@ -21,13 +66,14 @@ catch (Exception e) {
 ```
 
 ## Configuration
-You can set up the Logify Alert client using configuration file as follows.
-
+You can set up the Logify Alert client using the configuration file as follows.
 JSON configuration file:
 ```json
 {
   "LogifyAlert": {
     "apiKey": "SPECIFY_YOUR_API_KEY_HERE",
+    "appName": "Your application name",
+    "appVersion": "1.0.2",
     "customData": {
       "MACHINE_NAME": "My Server"
     }
@@ -90,7 +136,7 @@ client.Configure(configuration.GetSection("LogifyAlert"));
 ## API
 ### Properties
 #### ApiKey
-String. Specifies an [API Key](https://logify.devexpress.com/Documentation/CreateApp) used to register the applications within the Logify service.
+String. Specifies the [API Key](https://logify.devexpress.com/Documentation/CreateApp) used to register the applications within the Logify service.
 ```csharp
 client.ApiKey = "My Api Key";
 ```
@@ -113,7 +159,6 @@ Use the **CustomData** property to attach additional information to the generate
 ```csharp
 client.CustomData["CustomerName"] = "Mary";
 ```
-
 #### Instance
 Singleton. Returns the single instance of the LogifyAlert class.
 ```csharp
@@ -189,7 +234,6 @@ catch (Exception e) {
     client.Send(e, data);
 }
 ```
-
 #### SendOfflineReports
 Sends all reports saved in the *OfflineReportsDirectory* folder to the Logify Alert service.
 
@@ -225,7 +269,7 @@ void OnCanReportException(object sender, CanReportExceptionEventArgs args) {
 
 ### Attributes
 #### LogifyIgnoreAttribute
-Indicates that exceptions thrown from a specific method should not be handled and sent to Logify Alert.
+Indicates that exceptions thrown at a specific method should not be handled and sent by Logify Alert.
 
 ```csharp
 [LogifyIgnore(true)]
