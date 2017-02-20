@@ -11,12 +11,12 @@ $ Install-Package Logify.Alert.Web
 #### Add LogifyAlert.json configuration File
 Add the Logify Alert settings to the application's **LogifyAlert.json** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Documentation/CreateApp) generated for it.
 ```json
-  "LogifyAlert": {
-    "apiKey": "SPECIFY_YOUR_API_KEY_HERE",
-    "customData": {
-      "MACHINE_NAME": "My Machine"
-    }
+"LogifyAlert": {
+  "apiKey": "SPECIFY_YOUR_API_KEY_HERE",
+  "customData": {
+    "MACHINE_NAME": "My Machine"
   }
+}
 ```
 
 #### Modify Application's Startup.cs file
@@ -67,7 +67,7 @@ catch (Exception e) {
 
 ## Configuration
 You can set up the Logify Alert client using the configuration file as follows.
-JSON configuration file:
+#### JSON configuration file:
 ```json
 {
   "LogifyAlert": {
@@ -91,7 +91,7 @@ LogifyAlert client = LogifyAlert.Instance;
 client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
-XML configuration file:
+#### XML configuration file:
 ```xml
 <configuration>
   <LogifyAlert>
@@ -115,7 +115,7 @@ LogifyAlert client = LogifyAlert.Instance;
 client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
-INI configuration file:
+#### INI configuration file:
 ```ini
 [LogifyAlert]
 ApiKey = SPECIFY_YOUR_API_KEY_HERE
