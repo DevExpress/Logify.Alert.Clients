@@ -45,6 +45,7 @@
     <Compile Remove="Collectors\VirtualMachineCollector.cs" />
     <Compile Remove="ReportSender\ExternalProcessReportSender.cs" />
     <Compile Remove="ReportSender\FileExceptionReportSender.cs" />
+    <Compile Remove="TraceListenerBase.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,7 +58,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="1.0.1" />
     <PackageReference Include="System.ComponentModel" Version="4.0.1" />
     <PackageReference Include="System.Diagnostics.StackTrace" Version="4.0.1" />
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
   </ItemGroup>
 
