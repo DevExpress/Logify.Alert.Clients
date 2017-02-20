@@ -16,6 +16,7 @@ copy %clientPath%\net45\*.* .\tmp\latestclients\net45
 nuget restore
 
 call :buildclient Logify.Alert.Core
+call :buildclient Logify.Alert.Console
 call :buildclient Logify.Alert.Win
 call :buildclient Logify.Alert.Web
 call :buildclient Logify.Alert.Wpf
@@ -31,16 +32,21 @@ call :mergenupkgbymask . ..\bin\ Logify.Alert.Core.*.nupkg .
 
 
 
+call :mergenupkgbymask . ..\bin\ Logify.Alert.Console.*.nupkg .
+
+
+
+
 call :mergenupkgbymask . ..\bin\ Logify.Alert.Web.*.nupkg .
 
 
 
 
 
-for %%i in (..\bin\Logify.Alert.Console.*.nupkg) do set nupkgName=%%i
-for %%i in (.\Logify.Alert.Win.*.nupkg) do set winnupkgname=%%i
-SET targetnupkgname=%winnupkgname:Logify.Alert.Win=Logify.Alert.Console%
-call :patchnetcorepackage %nupkgName% %targetnupkgname%
+rem for %%i in (..\bin\Logify.Alert.Console.*.nupkg) do set nupkgName=%%i
+rem for %%i in (.\Logify.Alert.Win.*.nupkg) do set winnupkgname=%%i
+rem SET targetnupkgname=%winnupkgname:Logify.Alert.Win=Logify.Alert.Console%
+rem call :patchnetcorepackage %nupkgName% %targetnupkgname%
 
 goto finish
 
