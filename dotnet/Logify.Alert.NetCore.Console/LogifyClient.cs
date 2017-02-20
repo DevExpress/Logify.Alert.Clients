@@ -9,7 +9,7 @@ using System.Reflection;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
 
-namespace DevExpress.Logify.NetCore.Console {
+namespace DevExpress.Logify.Console {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
 
