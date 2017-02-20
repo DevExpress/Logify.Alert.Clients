@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.NLog", "Logify
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Serilog", "Logify.Alert.Serilog\Logify.Alert.Serilog.csproj", "{AF2D3554-AB15-40CC-8A86-E1161EA75B82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Console", "Logify.Alert.Console\Logify.Alert.Console.csproj", "{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug40|Any CPU = Debug40|Any CPU
@@ -91,6 +93,14 @@ Global
 		{AF2D3554-AB15-40CC-8A86-E1161EA75B82}.Release40|Any CPU.Build.0 = Release40|Any CPU
 		{AF2D3554-AB15-40CC-8A86-E1161EA75B82}.Release45|Any CPU.ActiveCfg = Release45|Any CPU
 		{AF2D3554-AB15-40CC-8A86-E1161EA75B82}.Release45|Any CPU.Build.0 = Release45|Any CPU
+		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Debug40|Any CPU.ActiveCfg = Debug40|Any CPU
+		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Debug40|Any CPU.Build.0 = Debug40|Any CPU
+		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Debug45|Any CPU.ActiveCfg = Debug45|Any CPU
+		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Debug45|Any CPU.Build.0 = Debug45|Any CPU
+		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Release40|Any CPU.ActiveCfg = Release40|Any CPU
+		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Release40|Any CPU.Build.0 = Release40|Any CPU
+		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Release45|Any CPU.ActiveCfg = Release45|Any CPU
+		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Release45|Any CPU.Build.0 = Release45|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
