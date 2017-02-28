@@ -141,7 +141,7 @@ namespace DevExpress.Logify.Core {
             }
 
 
-            if (!evProcessFound.WaitOne(20 * 1000))
+            if (!evProcessFound.WaitOne(1/*20*/ * 1000))
                 throw new InvalidOperationException("Could not get managed performance counter instance name for process " + process.Id);
 
             return instanceName;
