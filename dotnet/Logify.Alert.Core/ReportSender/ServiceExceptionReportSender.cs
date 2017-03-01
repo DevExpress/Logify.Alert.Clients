@@ -20,33 +20,55 @@ namespace DevExpress.Logify.Core {
             } catch(Exception) { }
 
 #endif
-            using (HttpClient client = new HttpClient()) {
-                client.BaseAddress = new Uri(ServiceUrl);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("amx", this.ApiKey);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "newreport") {
-                    Content =
-                        new StringContent(report.ReportString, Encoding.UTF8,
-                            "application/json")
-                };
-                //client.DefaultRequestHeaders.ProxyAuthorization = new AuthenticationHeaderValue("amx", this.ApiKey);
-
-                HttpResponseMessage message = client.SendAsync(request).Result;
-                //client.SendAsync(request).Wait();
-                return message != null && message.StatusCode == HttpStatusCode.OK;
-                /*
-                Task<HttpResponseMessage> task = client.SendAsync(request);
-                if (task.Wait(ReportTimeoutMilliseconds) && task.IsCompleted) {
-                    HttpResponseMessage message = task.Result;
-                    if (message == null)
-                        return false;
-                    return message.StatusCode == HttpStatusCode.OK;
-                }
-                else
-                    return false;
-                */
-                //Debug.WriteLine(client.SendAsync(request).Result);
+#if NETSTANDARD
+            return SendViaHttpClient(report);
+#else
+            return SendViaHttpWebRequest(report);
+#endif
+            
+        }
+#if !NETSTANDARD
+        bool SendViaHttpWebRequest(LogifyClientExceptionReport report) {
+            string url = ServiceUrl;
+            if (!string.IsNullOrEmpty(url)) {
+                if (url[url.Length - 1] != '/')
+                    url += '/';
+                url += "newreport";
             }
+            WebRequest request = WebRequest.Create(url);
+            request.Method = "POST";
+            request.Headers.Add("Authorization", "amx " + this.ApiKey);
+            request.ContentType = "application/json";
+
+            byte[] buffer = Encoding.UTF8.GetBytes(report.ReportString);
+            request.ContentLength = buffer.Length;
+            using (Stream content = request.GetRequestStream()) {
+                content.Write(buffer, 0, buffer.Length);
+                content.Flush();
+            }
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse() as HttpWebResponse;
+            return response != null && response.StatusCode == HttpStatusCode.OK;
+        }
+#endif
+        bool SendViaHttpClient(LogifyClientExceptionReport report) {
+            using (HttpClient client = CreateAndSetupHttpClient()) {
+                HttpRequestMessage request = CreateHttpRequest(report);
+                HttpResponseMessage message = client.SendAsync(request).Result;
+                return message != null && message.StatusCode == HttpStatusCode.OK;
+            }
+        }
+        HttpClient CreateAndSetupHttpClient() {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(ServiceUrl);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("amx", this.ApiKey);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            return client;
+        }
+        HttpRequestMessage CreateHttpRequest(LogifyClientExceptionReport report) {
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "newreport") {
+                Content = new StringContent(report.ReportString, Encoding.UTF8, "application/json")
+            };
+            return request;
         }
 #if ALLOW_ASYNC
         protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
@@ -56,17 +78,8 @@ namespace DevExpress.Logify.Core {
             } catch(Exception) { }
             
 #endif
-            using (HttpClient client = new HttpClient()) {
-                client.BaseAddress = new Uri(ServiceUrl);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("amx", this.ApiKey);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "newreport") {
-                    Content =
-                        new StringContent(report.ReportString, Encoding.UTF8,
-                            "application/json")
-                };
-                //client.DefaultRequestHeaders.ProxyAuthorization = new AuthenticationHeaderValue("amx", this.ApiKey);
-
+            using (HttpClient client = CreateAndSetupHttpClient()) {
+                HttpRequestMessage request = CreateHttpRequest(report);
                 HttpResponseMessage message = await client.SendAsync(request);
                 return message != null && message.StatusCode == HttpStatusCode.OK;
             }
