@@ -21,13 +21,31 @@ namespace DevExpress.Logify.Win {
                     model.SendAction = (r) => { return base.SendExceptionReport(r); };
 
                     ConfirmReportSendForm form = new ConfirmReportSendForm(model);
-                    form.ShowDialog(Form.ActiveForm);
+                    ShowConfirmSendForm(form);
                     return true; // report successful send
                 }
                 catch {
                 }
             }
             return base.SendExceptionReport(report);
+        }
+        void ShowConfirmSendForm(ConfirmReportSendForm form) {
+            Form activeForm = null;
+            try {
+                activeForm = Form.ActiveForm;
+                if (activeForm != null) {
+                    IntPtr handle = activeForm.Handle;
+                    handle = IntPtr.Zero;
+                }
+            }
+            catch {
+                activeForm = null;
+            }
+
+            if (activeForm != null)
+                form.ShowDialog(activeForm);
+            else
+                form.ShowDialog();
         }
 #if ALLOW_ASYNC
         public override async Task<bool> SendExceptionReportAsync(LogifyClientExceptionReport report) {
