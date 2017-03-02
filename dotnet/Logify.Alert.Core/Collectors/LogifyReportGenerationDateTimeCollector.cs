@@ -6,7 +6,7 @@ namespace DevExpress.Logify.Core {
         public virtual void Process(Exception ex, ILogger logger) {
             DateTime utcNow = DateTime.UtcNow;
             string dateTimeString = utcNow.ToString("o", CultureInfo.InvariantCulture);
-            logger.WriteValue("logifyGeneratedUtc", dateTimeString);
+            logger.WriteValue("logifyReportDateTimeUtc", dateTimeString);
         }
     }
 }
