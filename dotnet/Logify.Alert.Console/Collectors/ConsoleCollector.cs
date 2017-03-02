@@ -22,6 +22,7 @@ namespace DevExpress.Logify.Console {
             if (config.MakeMiniDump)
                 Collectors.Add(new MiniDumpCollector());
             Collectors.Add(new LogifyProtocolVersionCollector());
+            Collectors.Add(new LogifyReportGenerationDateTimeCollector());
             Collectors.Add(logifyAppInfoCollector);
             Collectors.Add(new DevelopementPlatformCollector(Platform.WIN));
             Collectors.Add(new ConsoleApplicationCollector());

@@ -31,6 +31,7 @@ namespace DevExpress.Logify.Web {
 
         protected override void RegisterCollectors(ILogifyClientConfiguration config) {
             Collectors.Add(new LogifyProtocolVersionCollector());
+            Collectors.Add(new LogifyReportGenerationDateTimeCollector());
             Collectors.Add(LogifyAppInfoCollector);
             //Collectors.Add(new DevelopementPlatformCollector(Platform.ASP)); // added in constuctor
             Collectors.Add(new WebApplicationCollector());

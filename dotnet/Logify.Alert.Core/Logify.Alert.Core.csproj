@@ -77,6 +77,7 @@
     <Compile Include="Collectors\DebuggerCollector.cs" />
     <Compile Include="Collectors\LogifyAppInfoCollector.cs" />
     <Compile Include="Collectors\LogifyProtocolVersionCollectior.cs" />
+    <Compile Include="Collectors\LogifyReportGenerationDateTimeCollector.cs" />
     <Compile Include="Configuration\ClientConfiguration.cs" />
     <Compile Include="crc32.cs" />
     <Compile Include="ExceptionLogger.cs" />

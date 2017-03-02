@@ -135,8 +135,8 @@ namespace DevExpress.Logify.Core.Tests {
                 @"""negative"":""-Infinity""," + "\r\n" +
             @"}," + "\r\n" +
             @"""perMilleSymbol"":""‰""," + "\r\n" +
-            @"""digitShapes"":""None""," + "\r\n" +
             @"""NaNSymbol"":""NaN""," + "\r\n" +
+            @"""digitShapes"":""None""," + "\r\n" +
             @"""nativeDigits"": [" 
                 + "\r\n" + "\"0\","
                 + "\r\n" + "\"1\","
@@ -234,9 +234,9 @@ namespace DevExpress.Logify.Core.Tests {
         @"""MacCodePage"":10000," + "\r\n" +
         @"""OEMCodePage"":437," + "\r\n" +
         @"""isNeutralCulture"":false," + "\r\n" +
+        @"""ISO2"":""en""," + "\r\n" +
         @"""ISO1"":""eng""," + "\r\n" +
         @"""WinAPI"":""ENU""," + "\r\n" +
-        @"""ISO2"":""en""," + "\r\n" +
     @"}," + "\r\n" +
 @"}," + "\r\n";
             Assert.AreEqual(expected, Content);
