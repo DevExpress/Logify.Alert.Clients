@@ -14,19 +14,13 @@
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright (c) 2000-2016 Developer Express Inc.</copyright>
     <tags>Logify Alert CrashReport Crash Exception Handler</tags>
-    <!--<dependencies>
-      <group targetFramework=".NETStandard1.4">
-        <dependency id="System.Diagnostics.TraceSource" version="4.0.0" exclude="Build,Analyzers" />
-        <dependency id="NETStandard.Library" version="1.6.0" exclude="Build,Analyzers" />
-        <dependency id="System.Diagnostics.StackTrace" version="4.0.1" exclude="Build,Analyzers" />
-        <dependency id="System.ComponentModel" version="4.0.1" exclude="Build,Analyzers" />
-      </group>
-    </dependencies>-->
   </metadata>
   <files>
     <!--<file src="..\..\bin\net40\Logify.Alert.Core.dll" target="lib\portable-net40+sl5+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\Logify.Alert.Core.dll" />-->
+    <file src="..\..\bin\net40\Logify.Alert.Core.dll" target="lib\net40\Logify.Alert.Core.dll" />
     <file src="..\..\bin\net40\Logify.Alert.Core.dll" target="lib\portable40-net40+sl5+win8+wp8+wpa81\Logify.Alert.Core.dll" />
     <!--<file src="..\..\bin\net45\Logify.Alert.Core.dll" target="lib\portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\Logify.Alert.Core.dll" />-->
+    <file src="..\..\bin\net45\Logify.Alert.Core.dll" target="lib\net45\Logify.Alert.Core.dll" />
     <file src="..\..\bin\net45\Logify.Alert.Core.dll" target="lib\portable45-net45+win8+wp8+wpa81\Logify.Alert.Core.dll" />
     <!--<file src="..\..\bin\netstandard1.4\Logify.Alert.Core.dll" target="lib\netstandard1.4\Logify.Alert.Core.dll" />-->
   </files>
