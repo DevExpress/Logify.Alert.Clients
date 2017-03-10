@@ -37,7 +37,7 @@ try {
     RunYourCode();
 }
 catch (Exception e) {
-    Trace.TraceError("an exception occured", e);
+    Trace.TraceError("An exception occurred", e);
 }
 ```
 
