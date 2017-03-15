@@ -27,6 +27,8 @@ Currently, Logify Alert does not provide users with a standalone client for Delp
   
   ![EurekaLog settings](https://logify.devexpress.com/Content/documentation/EurekaOptions4.png)
   
+  8. Click **OK**.
+  
 Now, each time your application crashes unexpectedly, EurekaLog shows a dialog similar to the one below.
 
 ![madExcept dialog](https://logify.devexpress.com/Content/documentation/EurekaSendDialog.png)
