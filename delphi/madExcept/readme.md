@@ -1,10 +1,10 @@
 # madExcept Library for Delphi Applications
 
-Currently, Logify Alert does not provide users with a standalone client for Delphi. However, you can use the **madExcept** library to integrate Logify Alert into the crash reporting process. To do this, follow the steps below.
+Currently, Logify Alert does not provide users with a standalone client for Delphi applications. However, you can use the **madExcept** library to integrate Logify Alert into the crash reporting process. To do this, follow the steps below.
 
 1. Make sure you have at least one Logify Alert API key generated. Otherwise, log in to the Logify Alert web interface and follow the instructions from the [Generate the API Key](https://logify.devexpress.com/Documentation/GettingStarted/Step1) document.
 
-2. [Download](http://madshi.net/) and install madExcept library version 4+ into your VCL project.
+2. [Download](http://madshi.net/) and install madExcept library version 4+ into your Delphi project.
 
 3. Open the madExcept settings dialog. For this purpose, select **Project | madExcept settings** from the RAD studio's main menu.
 
@@ -17,6 +17,8 @@ Currently, Logify Alert does not provide users with a standalone client for Delp
   * **encrypt** - SSL
 
   ![madExcept settings](https://logify.devexpress.com/Content/documentation/madExOptions2.png)
+  
+  6. Click **OK**.
 
 Now, each time your application crashes unexpectedly, madExcept shows a dialog similar to the one below.
 
