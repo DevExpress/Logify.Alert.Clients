@@ -23,7 +23,7 @@ Currently, Logify Alert does not provide users with a standalone client for Delp
  7. Select **HTTP upload** and specify the following information on the corresponding tab:
 
   * check the **[V] SSL/TLS** box
-  * specify the following URL - logify.devexpress.com/api/madexcept/NewReport?apiKey=API_KEY_FROM_STEP_1
+  * specify the following URL - logify.devexpress.com/api/eurekalog/NewReport?apiKey=API_KEY_FROM_STEP_1
   
   ![EurekaLog settings](https://logify.devexpress.com/Content/documentation/EurekaOptions4.png)
   
@@ -31,7 +31,7 @@ Currently, Logify Alert does not provide users with a standalone client for Delp
   
 Now, each time your application crashes unexpectedly, EurekaLog shows a dialog similar to the one below.
 
-![madExcept dialog](https://logify.devexpress.com/Content/documentation/EurekaSendDialog.png)
+![EurekaLog dialog](https://logify.devexpress.com/Content/documentation/EurekaSendDialog.png)
 
 Once you click **Send Error Report** and go through all wizard steps, you will get the corresponding crash report in Logify Alert. Use the [logify.devexpress.com](logify.devexpress.com) page to explore these reports.
 
