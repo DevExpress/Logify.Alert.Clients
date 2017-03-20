@@ -92,6 +92,23 @@ String. Specifies the application version.
 client.AppVersion = "1.0.2";
 ```
 
+#### Attachments
+AttachmentCollection. Specifies a collection of files attached to a report. The total attachments size must not be more than **3 Mb** per one crash report. The attachment name must be unique within one crash report.
+```csharp
+using DevExpress.Logify.Core;
+using DevExpress.Logify.WPF;
+
+LogifyAlert client = LogifyAlert.Instance;
+client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
+
+Attachment newAt = new Attachment();
+newAt.Name = "My attachment's unique name per one report";
+newAt.Content = File.ReadAllBytes(@"C:\Work\Image_to_attach.jpg");
+// We strongly recommend that you specify the attachment type.
+newAt.MimeType = "image/jpeg";
+client.Attachments.Add(newAt);
+```
+
 #### CustomData
 IDictionary<String, String>. Gets the collection of custom data sent with generated reports.
 Use the **CustomData** property to attach additional information to the generated report. For instance, you can use this property to track additional metrics that are important in terms of your application: CPU usage, environment parameters, and so on.
