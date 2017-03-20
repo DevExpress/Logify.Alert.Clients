@@ -92,6 +92,22 @@ String. Specifies the application version.
 ```csharp
 client.AppVersion = "1.0.2";
 ```
+#### Attachments
+AttachmentCollection. Specifies a collection of files attached to a report. The total attachments size must not be more than **3 Mb** per one crash report. The attachment name must be unique within one crash report.
+```csharp
+using DevExpress.Logify.Core;
+using DevExpress.Logify.Win;
+
+LogifyAlert client = LogifyAlert.Instance;
+client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
+
+Attachment newAt = new Attachment();
+newAt.Name = "My attachment's unique name per one report";
+newAt.Content = File.ReadAllBytes(@"C:\Work\Image_to_attach.jpg");
+// We strongly recommend that you specify the attachment type.
+newAt.MimeType = "image/jpeg";
+client.Attachments.Add(newAt);
+```
 #### ConfirmSendReport
 Boolean. Specifies whether or not a user must confirm sending reports to the Logify Alert service.
 By default, the **ConfirmSendReport** property is set to **false** and all uncaught exceptions are automatically processed and sent to the Logify Alert service.
