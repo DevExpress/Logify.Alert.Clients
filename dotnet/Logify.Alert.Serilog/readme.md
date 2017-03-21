@@ -39,6 +39,9 @@ Log.Logger = new LoggerConfiguration()
 
 ... or in the **App.config** configuration file:
 
+```ps1
+Install-Package Serilog.Settings.AppSettings
+```
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
