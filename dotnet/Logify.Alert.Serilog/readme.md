@@ -27,7 +27,7 @@ Set up the Logify Alert client for your target platform. The **App.config** exam
 ```
 
 
-Register **LogifyAlert** target as a custom Serilog sink via code:
+Register **LogifyAlert** as a custom Serilog sink via code:
 
 ```csharp
 using Serilog;
