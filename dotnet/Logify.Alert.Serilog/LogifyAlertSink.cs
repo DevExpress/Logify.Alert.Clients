@@ -3,10 +3,10 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Configuration;
-using DevExpress.Logify.Serilog;
+using DevExpress.Logify.Alert.Serilog;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Serilog {
+namespace DevExpress.Logify.Alert.Serilog {
     public class LogifyAlertSink : ILogEventSink {
         public void Emit(LogEvent logEvent) {
             try {
