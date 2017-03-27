@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <!-- Remove logifyAlert section registration -->
+  <configSections>
+    <section name="logifyAlert" xdt:Transform="Remove" xdt:Locator="Match(name)" />
+  </configSections>
+  <configSections xdt:Transform="Remove" xdt:Locator="Condition(count(*)=0)" />
+
+  <!-- Remove logifyAlert section inself -->
+  <logifyAlert xdt:Transform="Remove" />
+  
+  <!-- Remove System.Diagnostics.Trace listener -->
+  <system.diagnostics>
+    <trace>
+      <listeners>
+        <add name="LogifyAlertTraceListener" xdt:Transform="Remove" xdt:Locator="Match(name)" />
+      </listeners>
+    </trace>
+  </system.diagnostics>
+  <system.diagnostics>
+    <trace>
+      <listeners xdt:Transform="Remove" xdt:Locator="Condition(count(*)=0)" />
+    </trace>
+  </system.diagnostics>
+
+  <!-- Remove Logify exception handler module -->
+  <system.webServer>
+    <modules>
+      <add name="Logify.Alert.Web" type="DevExpress.Logify.Web.AspExceptionHandler, Logify.Alert.Web" preCondition="managedHandler"  xdt:Transform="Remove" xdt:Locator="Match(name)" />
+    </modules>
+  </system.webServer>
+  <system.webServer>
+    <modules xdt:Transform="Remove" xdt:Locator="Condition(count(*)=0)" />
+  </system.webServer>
+</configuration>

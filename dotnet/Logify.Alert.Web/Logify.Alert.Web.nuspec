@@ -21,5 +21,7 @@
   <files>
     <file src="..\..\bin\net40\Logify.Alert.Web.dll" target="lib\net40\Logify.Alert.Web.dll" />
     <file src="..\..\bin\net45\Logify.Alert.Web.dll" target="lib\net45\Logify.Alert.Web.dll" />
+    <file src="web.config.install.xdt" target="content\web.config.install.xdt" />
+    <file src="web.config.uninstall.xdt" target="content\web.config.uninstall.xdt" />
   </files>
 </package>

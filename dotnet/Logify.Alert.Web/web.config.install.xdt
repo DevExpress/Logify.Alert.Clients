@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <!-- Insert configSections tag with content -->
+  <configSections xdt:Transform="InsertBefore(/configuration/*[1])" />
+  <configSections xdt:Locator="XPath(/configuration/configSections[last()])">
+    <section name="logifyAlert" type="DevExpress.Logify.WebLogifyConfigSection, Logify.Alert.Web" xdt:Locator="Match(name)" xdt:Transform="InsertIfMissing" />
+  </configSections>
+  <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
+
+  <!-- Insert logifyAlert section -->
+  <logifyAlert xdt:Transform="InsertIfMissing">
+    <apiKey value="YOUR_API_KEY" xdt:Transform="InsertIfMissing" />
+    <appName value="YOUR_APP_NAME" xdt:Transform="InsertIfMissing" />
+    <!--<version value="YOUR_APP_VERSION" xdt:Transform="InsertIfMissing" />-->
+    <customData xdt:Transform="InsertIfMissing">
+      <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" xdt:Transform="InsertIfMissing" />
+    </customData>
+  </logifyAlert>
+  
+  <!-- Insert System.Diagnostics.Trace listener -->
+  <system.diagnostics xdt:Transform="InsertIfMissing">
+    <trace autoflush="true" indentsize="4" xdt:Transform="InsertIfMissing">
+      <listeners xdt:Transform="InsertIfMissing">
+        <add name="LogifyAlertTraceListener" type="DevExpress.Logify.Web.LogifyAlertTraceListener, Logify.Alert.Web" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" />
+      </listeners>
+    </trace>
+  </system.diagnostics>
+
+  <!-- Insert Logify exception handler module -->
+  <system.webServer xdt:Transform="InsertIfMissing">
+    <modules xdt:Transform="InsertIfMissing">
+      <add name="Logify.Alert.Web" type="DevExpress.Logify.Web.AspExceptionHandler, Logify.Alert.Web" preCondition="managedHandler"  xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" />
+    </modules>
+  </system.webServer>
+</configuration>

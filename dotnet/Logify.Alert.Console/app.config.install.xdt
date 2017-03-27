@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <!-- Insert configSections tag with content -->
+  <configSections xdt:Transform="InsertBefore(/configuration/*[1])" />
+  <configSections xdt:Locator="XPath(/configuration/configSections[last()])">
+    <section name="logifyAlert" type="DevExpress.Logify.LogifyConfigSection, Logify.Alert.Console" xdt:Locator="Match(name)" xdt:Transform="InsertIfMissing" />
+  </configSections>
+  <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
+
+  <!-- Insert logifyAlert section -->
+  <logifyAlert xdt:Transform="InsertIfMissing">
+    <apiKey value="YOUR_API_KEY" xdt:Transform="InsertIfMissing" />
+    <confirmSend value="false" xdt:Transform="InsertIfMissing" />
+    <offlineReportsEnabled value="false" xdt:Transform="InsertIfMissing" />
+    <offlineReportsDirectory value="offlineReports" xdt:Transform="InsertIfMissing" />
+    <offlineReportsCount value="10" xdt:Transform="InsertIfMissing" />
+    <customData xdt:Transform="InsertIfMissing">
+      <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" xdt:Transform="InsertIfMissing" />
+    </customData>
+  </logifyAlert>
+  
+  <!-- Insert System.Diagnostics.Trace listener -->
+  <system.diagnostics xdt:Transform="InsertIfMissing">
+    <trace autoflush="true" indentsize="4" xdt:Transform="InsertIfMissing">
+      <listeners xdt:Transform="InsertIfMissing">
+        <add name="LogifyAlertTraceListener" type="DevExpress.Logify.Console.LogifyAlertTraceListener, Logify.Alert.Console" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" />
+      </listeners>
+    </trace>
+  </system.diagnostics>
+</configuration>

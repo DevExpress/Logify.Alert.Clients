@@ -21,5 +21,8 @@
   <files>
     <file src="..\..\bin\net40\Logify.Alert.Wpf.dll" target="lib\net40\Logify.Alert.Wpf.dll" />
     <file src="..\..\bin\net45\Logify.Alert.Wpf.dll" target="lib\net45\Logify.Alert.Wpf.dll" />
+    <file src="app.config.install.xdt" target="content\app.config.install.xdt" />
+    <file src="app.config.uninstall.xdt" target="content\app.config.uninstall.xdt" />
+    <file src="InitLogifyAlert.cs.pp" target="content\InitLogifyAlert.cs.pp" />
   </files>
 </package>
