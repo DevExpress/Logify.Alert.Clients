@@ -37,14 +37,30 @@ namespace DevExpress.Logify.Web {
             Collectors.Add(new WebApplicationCollector());
             Collectors.Add(new ExceptionObjectInfoCollector(config));
 
-            HttpContext context = HttpContext.Current;
-            if (context != null) {
-                if (context.Request != null)
-                    Collectors.Add(new RequestCollector(context.Request));
-                if (context.Response != null)
-                    Collectors.Add(new ResponseCollector(context.Response));
-                if (context.ApplicationInstance != null && context.ApplicationInstance.Modules != null)
-                    Collectors.Add(new ModulesCollector(context.ApplicationInstance.Modules));
+            try {
+                HttpContext context = HttpContext.Current;
+                if (context != null) {
+                    try {
+                        if (context.Request != null)
+                            Collectors.Add(new RequestCollector(context.Request));
+                    }
+                    catch {
+                    }
+                    try {
+                        if (context.Response != null)
+                            Collectors.Add(new ResponseCollector(context.Response));
+                    }
+                    catch {
+                    }
+                    try {
+                        if (context.ApplicationInstance != null && context.ApplicationInstance.Modules != null)
+                            Collectors.Add(new ModulesCollector(context.ApplicationInstance.Modules));
+                    }
+                    catch {
+                    }
+                }
+            }
+            catch {
             }
             Collectors.Add(new OperatingSystemCollector());
             Collectors.Add(new VirtualMachineCollector());

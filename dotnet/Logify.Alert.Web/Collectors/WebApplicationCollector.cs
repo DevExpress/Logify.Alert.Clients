@@ -8,9 +8,13 @@ namespace DevExpress.Logify.Web
     class WebApplicationCollector : ApplicationCollector {
         public override string AppName {
             get {
-                HttpContext current = HttpContext.Current;
-                if (current != null && current.Request != null && current.Request.Url != null)
-                    return current.Request.Url.AbsolutePath;
+                try {
+                    HttpContext current = HttpContext.Current;
+                    if (current != null && current.Request != null && current.Request.Url != null)
+                        return current.Request.Url.AbsolutePath;
+                }
+                catch {
+                }
                 return String.Empty;
             }
         }
@@ -46,19 +50,24 @@ namespace DevExpress.Logify.Web
         }
 
         string TryDetectVersion() {
-            HttpContext current = HttpContext.Current;
-            if (current == null)
+            try {
+                HttpContext current = HttpContext.Current;
+                if (current == null)
+                    return String.Empty;
+
+                object app = current.ApplicationInstance;
+                if (app == null)
+                    return String.Empty;
+
+                Type type = app.GetType();
+                while (type != null && type != typeof(object) && !type.BaseType.Name.Equals("HttpApplication"))
+                    type = type.BaseType;
+
+                return type.Assembly.GetName().Version.ToString();
+            }
+            catch {
                 return String.Empty;
-
-            object app = current.ApplicationInstance;
-            if (app == null)
-                return String.Empty;
-
-            Type type = app.GetType();
-            while (type != null && type != typeof(object) && !type.BaseType.Name.Equals("HttpApplication"))
-                type = type.BaseType;
-
-            return type.Assembly.GetName().Version.ToString();
+            }
         }
     }
 }
