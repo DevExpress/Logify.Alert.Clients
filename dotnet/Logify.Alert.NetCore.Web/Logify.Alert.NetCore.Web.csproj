@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.4</TargetFrameworks>
     <AssemblyName>Logify.Alert.Web</AssemblyName>
     <RootNamespace>DevExpress.Logify.Web</RootNamespace>
 
