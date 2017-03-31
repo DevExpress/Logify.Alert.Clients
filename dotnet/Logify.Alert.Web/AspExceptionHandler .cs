@@ -5,6 +5,14 @@ using System.Web.Configuration;
 namespace DevExpress.Logify.Web {
     public class AspExceptionHandler : HttpModuleBase {
         public override void OnInit(HttpApplication context) {
+            // Force init LogifyAlient client
+            try {
+                LogifyAlert client = LogifyAlert.Instance;
+                client = null;
+            }
+            catch {
+            }
+
             try {
                 context.Error += this.OnError;
             }
