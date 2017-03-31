@@ -38,6 +38,14 @@ Specifies the application version. This version is shown in generated reports.
 client.applicationVersion = '1.0.1';
 ```
 
+#### customData
+
+A dictionary that contains custom data sent with a generated report. 
+
+```javascript
+client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
+```
+
 #### userId
 
 Specifies a unique user identifier that corresponds to a sent report.
@@ -46,13 +54,6 @@ Specifies a unique user identifier that corresponds to a sent report.
 client.userId = 'unique user id';
 ```
 
-#### customData
-
-A dictionary that contains custom data sent with a generated report. 
-
-```javascript
-client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
-```
 
 ### Methods for automatic reporting
 
