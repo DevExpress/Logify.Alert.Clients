@@ -48,20 +48,12 @@ Specifies the application version. This version is shown in generated reports.
 client.applicationVersion = '1.0.1';
 ```
 
-#### userId
+#### collectCookies
 
-Specifies a unique user identifier that corresponds to a sent report.
-
-```javascript
-client.userId = 'unique user id';
-```
-
-#### customData
-
-A dictionary that contains custom data sent with a generated report. 
+Specifies whether or not the Logify Alert client will collect cookies. The default value is **true**.
 
 ```javascript
-client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
+client.collectCookies = false;
 ```
 
 #### collectInputs
@@ -88,12 +80,20 @@ Specifies if Logify Alert client will correct session storage data. The default 
 client.collectSessionStorage = false;
 ```
 
-#### collectCookies
+#### customData
 
-Specifies whether or not the Logify Alert client will collect cookies. The default value is **true**.
+A dictionary that contains custom data sent with a generated report. 
 
 ```javascript
-client.collectCookies = false;
+client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
+```
+
+#### userId
+
+Specifies a unique user identifier that corresponds to a sent report.
+
+```javascript
+client.userId = 'unique user id';
 ```
 
 ### Methods for automatic reporting
