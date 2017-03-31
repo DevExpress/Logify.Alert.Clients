@@ -14,12 +14,12 @@ namespace DevExpress.Logify.Core {
             //    return false;
             //}
             //protected bool SendExceptionReportCore2(LogifyClientExceptionReport report) {
-#if DEBUG
-            try {
-                System.IO.File.WriteAllText(@"C:\exception.log", report.ReportString);
-            } catch(Exception) { }
+//#if DEBUG
+//            try {
+//                System.IO.File.WriteAllText(@"C:\exception.log", report.ReportString);
+//            } catch(Exception) { }
 
-#endif
+//#endif
 #if NETSTANDARD
             return SendViaHttpClient(report);
 #else
@@ -72,12 +72,12 @@ namespace DevExpress.Logify.Core {
         }
 #if ALLOW_ASYNC
         protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
-#if DEBUG
-            try {
-                System.IO.File.WriteAllText(@"C:\exception.log", report.ReportString);
-            } catch(Exception) { }
+//#if DEBUG
+//            try {
+//                System.IO.File.WriteAllText(@"C:\exception.log", report.ReportString);
+//            } catch(Exception) { }
             
-#endif
+//#endif
             using (HttpClient client = CreateAndSetupHttpClient()) {
                 HttpRequestMessage request = CreateHttpRequest(report);
                 HttpResponseMessage message = await client.SendAsync(request);
