@@ -187,4 +187,33 @@ namespace DevExpress.Logify.Core {
             }
         }
     }
+
+    public abstract class ServiceWithConfirmationExceptionReportSender : ServiceExceptionReportSender {
+        static bool isFormShown;
+
+        public override bool SendExceptionReport(LogifyClientExceptionReport report) {
+            if (ConfirmSendReport && !isFormShown) {
+                try {
+                    ReportConfirmationModel model = new ReportConfirmationModel();
+                    model.Comments = String.Empty;
+                    model.Details = report.ReportString;
+                    model.InformationText = String.Empty;
+                    model.WindowCaption = String.Empty;
+                    model.OriginalReport = report;
+                    model.SendAction = (r) => { return base.SendExceptionReport(r); };
+
+                    isFormShown = true;
+                    return ShowConfirmSendForm(model);
+                }
+                catch {
+                }
+                finally {
+                    isFormShown = false;
+                }
+            }
+            return base.SendExceptionReport(report);
+        }
+
+        protected abstract bool ShowConfirmSendForm(ReportConfirmationModel model);
+    }
 }

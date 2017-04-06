@@ -4,31 +4,17 @@ using System.Windows;
 using System.Threading.Tasks;
 
 namespace DevExpress.Logify.WPF {
-    public class WPFExceptionReportSender : ServiceExceptionReportSender {
+    public class WPFExceptionReportSender : ServiceWithConfirmationExceptionReportSender {
         public override IExceptionReportSender CreateEmptyClone() {
             return new WPFExceptionReportSender();
         }
-        public override bool SendExceptionReport(LogifyClientExceptionReport report) {
-            if (ConfirmSendReport) {
-                try {
-                    ReportConfirmationModel model = new ReportConfirmationModel();
-                    model.Comments = String.Empty;
-                    model.Details = report.ReportString;
-                    model.InformationText = String.Empty;
-                    model.WindowCaption = String.Empty;
-                    model.OriginalReport = report;
-                    model.SendAction = (r) => { return base.SendExceptionReport(r); };
-                    ConfirmReportSendForm form = new ConfirmReportSendForm(model);
-                    Window activeWindow = GetActiveWindow();
-                    if (activeWindow != null)
-                        form.Owner = activeWindow;
-                    form.ShowDialog();
-                    return true; // report successful send
-                }
-                catch {
-                }
-            }
-            return base.SendExceptionReport(report);
+        protected override bool ShowConfirmSendForm(ReportConfirmationModel model) {
+            ConfirmReportSendForm form = new ConfirmReportSendForm(model);
+            Window activeWindow = GetActiveWindow();
+            if (activeWindow != null)
+                form.Owner = activeWindow;
+            form.ShowDialog();
+            return true;
         }
         Window GetActiveWindow() {
             try {
