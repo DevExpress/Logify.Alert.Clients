@@ -1,34 +1,37 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using DevExpress.Logify.Core;
 using System.Threading;
 
+#if NETSTANDARD
+using System.Net.Http;
+using System.Net.Http.Headers;
+#endif
+
 namespace DevExpress.Logify.Core {
     public abstract class ServiceExceptionReportSender : ExceptionReportSenderSkeleton {
         protected override bool SendExceptionReportCore(LogifyClientExceptionReport report) {
-            //    return false;
-            //}
-            //protected bool SendExceptionReportCore2(LogifyClientExceptionReport report) {
-//#if DEBUG
-//            try {
-//                System.IO.File.WriteAllText(@"C:\exception.log", report.ReportString);
-//            } catch(Exception) { }
-
-//#endif
 #if NETSTANDARD
             return SendViaHttpClient(report);
 #else
             return SendViaHttpWebRequest(report);
 #endif
-            
         }
+#if ALLOW_ASYNC
+        protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
+#if NETSTANDARD
+            return await SendViaHttpClientAsync(report);
+#else
+            return await SendViaHttpWebRequestAsync(report);
+#endif
+        }
+#endif
+
 #if !NETSTANDARD
-        bool SendViaHttpWebRequest(LogifyClientExceptionReport report) {
+        WebRequest CreateAndSetupHttpWebRequest(LogifyClientExceptionReport report) {
             string url = ServiceUrl;
             if (!string.IsNullOrEmpty(url)) {
                 if (url[url.Length - 1] != '/')
@@ -46,10 +49,22 @@ namespace DevExpress.Logify.Core {
                 content.Write(buffer, 0, buffer.Length);
                 content.Flush();
             }
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse() as HttpWebResponse;
+            return request;
+        }
+        bool SendViaHttpWebRequest(LogifyClientExceptionReport report) {
+            WebRequest request = CreateAndSetupHttpWebRequest(report);
+            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+            return response != null && response.StatusCode == HttpStatusCode.OK;
+        }
+#if ALLOW_ASYNC
+        async Task<bool> SendViaHttpWebRequestAsync(LogifyClientExceptionReport report) {
+            WebRequest request = CreateAndSetupHttpWebRequest(report);
+            HttpWebResponse response = await request.GetResponseAsync() as HttpWebResponse;
             return response != null && response.StatusCode == HttpStatusCode.OK;
         }
 #endif
+#endif
+#if NETSTANDARD
         bool SendViaHttpClient(LogifyClientExceptionReport report) {
             using (HttpClient client = CreateAndSetupHttpClient()) {
                 HttpRequestMessage request = CreateHttpRequest(report);
@@ -69,20 +84,6 @@ namespace DevExpress.Logify.Core {
                 Content = new StringContent(report.ReportString, Encoding.UTF8, "application/json")
             };
             return request;
-        }
-#if ALLOW_ASYNC
-        protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
-//#if DEBUG
-//            try {
-//                System.IO.File.WriteAllText(@"C:\exception.log", report.ReportString);
-//            } catch(Exception) { }
-            
-//#endif
-            using (HttpClient client = CreateAndSetupHttpClient()) {
-                HttpRequestMessage request = CreateHttpRequest(report);
-                HttpResponseMessage message = await client.SendAsync(request);
-                return message != null && message.StatusCode == HttpStatusCode.OK;
-            }
         }
 #endif
     }
