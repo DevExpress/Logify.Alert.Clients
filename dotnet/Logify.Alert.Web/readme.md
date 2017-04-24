@@ -224,6 +224,17 @@ Sends all reports saved in the *OfflineReportsDirectory* folder to the Logify Al
 
 ### Events
 
+#### AfterReportException
+Occurs after Logify Alert sends a new crash report to the service.
+
+```csharp
+LogifyAlert.Instance.AfterReportException += OnAfterReportException;
+
+void OnAfterReportException(object sender, EventArgs e) {
+  MessageBox.Show("A new crash report has been sent to Logify Alert", "Crash report", MessageBoxButtons.OK, MessageBoxIcon.Information);
+}
+```
+
 #### BeforeReportException
 Occurs before Logify Alert sends a new crash report to the service.
 
