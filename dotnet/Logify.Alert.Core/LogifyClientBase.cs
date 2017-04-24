@@ -109,9 +109,6 @@ namespace DevExpress.Logify.Core {
 
         CanReportExceptionEventHandler onCanReportException;
         public event CanReportExceptionEventHandler CanReportException { add { onCanReportException += value; } remove { onCanReportException -= value; } }
-        BeforeReportExceptionEventHandler onBeforeReportException;
-        public event BeforeReportExceptionEventHandler BeforeReportException { add { onBeforeReportException += value; } remove { onBeforeReportException -= value; } }
-
         bool RaiseCanReportException(Exception ex) {
             if (onCanReportException != null) {
                 CanReportExceptionEventArgs args = new CanReportExceptionEventArgs();
@@ -122,11 +119,23 @@ namespace DevExpress.Logify.Core {
             else
                 return true;
         }
+
+        BeforeReportExceptionEventHandler onBeforeReportException;
+        public event BeforeReportExceptionEventHandler BeforeReportException { add { onBeforeReportException += value; } remove { onBeforeReportException -= value; } }
         void RaiseBeforeReportException(Exception ex) {
             if (onBeforeReportException != null) {
                 BeforeReportExceptionEventArgs args = new BeforeReportExceptionEventArgs();
                 args.Exception = ex;
                 onBeforeReportException(this, args);
+            }
+        }
+        AfterReportExceptionEventHandler onAfterReportException;
+        public event AfterReportExceptionEventHandler AfterReportException { add { onAfterReportException += value; } remove { onAfterReportException -= value; } }
+        void RaiseAfterReportException(Exception ex) {
+            if (onAfterReportException != null) {
+                AfterReportExceptionEventArgs args = new AfterReportExceptionEventArgs();
+                args.Exception = ex;
+                onAfterReportException(this, args);
             }
         }
 
@@ -366,7 +375,9 @@ namespace DevExpress.Logify.Core {
 
                 RaiseBeforeReportException(ex);
 
-                return ExceptionLogger.ReportException(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
+                bool success = ExceptionLogger.ReportException(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
+                RaiseAfterReportException(ex);
+                return success;
             }
             catch {
                 return false;
@@ -384,7 +395,9 @@ namespace DevExpress.Logify.Core {
 
                 RaiseBeforeReportException(ex);
 
-                return await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
+                bool success = await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
+                RaiseAfterReportException(ex);
+                return success;
             }
             catch {
                 return false;
@@ -402,6 +415,11 @@ namespace DevExpress.Logify.Core {
 
     public delegate void BeforeReportExceptionEventHandler(object sender, BeforeReportExceptionEventArgs args);
     public class BeforeReportExceptionEventArgs : EventArgs {
+        public Exception Exception { get; internal set; }
+    }
+
+    public delegate void AfterReportExceptionEventHandler(object sender, AfterReportExceptionEventArgs args);
+    public class AfterReportExceptionEventArgs : EventArgs {
         public Exception Exception { get; internal set; }
     }
 
