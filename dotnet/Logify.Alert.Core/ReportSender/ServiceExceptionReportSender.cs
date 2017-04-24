@@ -72,6 +72,13 @@ namespace DevExpress.Logify.Core {
                 return message != null && message.StatusCode == HttpStatusCode.OK;
             }
         }
+        async Task<bool> SendViaHttpClientAsync(LogifyClientExceptionReport report) {
+            using (HttpClient client = CreateAndSetupHttpClient()) {
+                HttpRequestMessage request = CreateHttpRequest(report);
+                HttpResponseMessage message = await client.SendAsync(request);
+                return message != null && message.StatusCode == HttpStatusCode.OK;
+            }
+        }
         HttpClient CreateAndSetupHttpClient() {
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(ServiceUrl);
