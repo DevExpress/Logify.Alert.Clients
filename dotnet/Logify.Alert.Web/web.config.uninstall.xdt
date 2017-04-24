@@ -7,8 +7,19 @@
   <configSections xdt:Transform="Remove" xdt:Locator="Condition(count(*)=0)" />
 
   <!-- Remove logifyAlert section inself -->
-  <logifyAlert xdt:Transform="Remove" />
-  
+  <logifyAlert>
+    <apiKey value="YOUR_API_KEY" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <appName value="YOUR_APP_NAME" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <version value="YOUR_APP_VERSION" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <customData>
+      <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" xdt:Transform="Remove" xdt:Locator="Match(key)" />
+    </customData>
+  </logifyAlert>
+  <logifyAlert>
+    <customData xdt:Transform="Remove" xdt:Locator="Condition(count(*)=0)" />
+  </logifyAlert>
+  <logifyAlert xdt:Transform="Remove" xdt:Locator="Condition(count(*)=0)" />
+
   <!-- Remove System.Diagnostics.Trace listener -->
   <system.diagnostics>
     <trace>

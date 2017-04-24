@@ -9,13 +9,13 @@
 
   <!-- Insert logifyAlert section -->
   <logifyAlert xdt:Transform="InsertIfMissing">
-    <apiKey value="YOUR_API_KEY" xdt:Transform="InsertIfMissing" />
-    <confirmSend value="false" xdt:Transform="InsertIfMissing" />
-    <offlineReportsEnabled value="false" xdt:Transform="InsertIfMissing" />
-    <offlineReportsDirectory value="offlineReports" xdt:Transform="InsertIfMissing" />
-    <offlineReportsCount value="10" xdt:Transform="InsertIfMissing" />
-    <customData xdt:Transform="InsertIfMissing">
-      <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" xdt:Transform="InsertIfMissing" />
+    <apiKey value="YOUR_API_KEY" />
+    <confirmSend value="false" />
+    <offlineReportsEnabled value="false" />
+    <offlineReportsDirectory value="offlineReports" />
+    <offlineReportsCount value="10" />
+    <customData>
+      <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" />
     </customData>
   </logifyAlert>
   

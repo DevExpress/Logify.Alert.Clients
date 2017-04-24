@@ -9,11 +9,11 @@
 
   <!-- Insert logifyAlert section -->
   <logifyAlert xdt:Transform="InsertIfMissing">
-    <apiKey value="YOUR_API_KEY" xdt:Transform="InsertIfMissing" />
-    <appName value="YOUR_APP_NAME" xdt:Transform="InsertIfMissing" />
-    <!--<version value="YOUR_APP_VERSION" xdt:Transform="InsertIfMissing" />-->
-    <customData xdt:Transform="InsertIfMissing">
-      <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" xdt:Transform="InsertIfMissing" />
+    <apiKey value="YOUR_API_KEY" />
+    <appName value="YOUR_APP_NAME" />
+    <!--<version value="YOUR_APP_VERSION" />-->
+    <customData>
+      <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" />
     </customData>
   </logifyAlert>
   
