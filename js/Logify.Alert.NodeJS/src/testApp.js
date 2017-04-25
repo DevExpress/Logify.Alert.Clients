@@ -5,11 +5,11 @@ let client = new logifyAlert("B05B3BA1E17C4726ADEB59B3DB84967E");
 client.applicationName = "testApp";
 client.applicationVersion = "123";
 client.customData = {"Key1":  "Data1", "Key2": "Data2"};
-client.beforeReportException = function (data) {
-    data = new Object();
-    data["qwe"] = "sdfgjslg";
-    return data;
+
+let afterReportExceptionCallback = function (e) {
 };
+
+client.afterReportException = afterReportExceptionCallback.bind("qwe");
 client.startHandling();
 
 let qwe = undefined;

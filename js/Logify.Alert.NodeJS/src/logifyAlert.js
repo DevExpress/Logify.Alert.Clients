@@ -6,15 +6,19 @@ import nodeReportSender from "./reportSender/nodeReportSender.js";
 class logifyAlert {
     constructor(apiKey) {
         this._apiKey = apiKey;
-        this._handleReports = true;
+        this._handleReports = false;
         this.applicationName = undefined;
         this.applicationVersion = undefined;
         this.userId = undefined;
         this.customData = undefined;
         this.beforeReportException = undefined;
+        this.afterReportException = undefined;
     }
 
     startHandling() {
+        if(this._handleReports)
+            return;
+
         this._handleReports = true;
 
         process.on('uncaughtException', (error) => {
@@ -50,7 +54,7 @@ class logifyAlert {
     
     sendReportCore(reportData) {
         let sender = new nodeReportSender();
-        sender.sendReport(this._apiKey, reportData);
+        sender.sendReport(this._apiKey, reportData, this.afterReportException);
     }
     
     createCollector() {

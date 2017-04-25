@@ -3,23 +3,32 @@
 var request = require('request');
 
 export default class nodeReportSender {
-    sendReport(apiKey, reportData) {
+    sendReport(apiKey, reportData, sendCallback) {
         this._apiKey = apiKey;
         this._sendData = reportData;
-        this._sendingAttamptCount = 0;
+        this._sendCallback = sendCallback;
+        this._sendingAttemptCount = 0;
         this.sendReportCore();
+    }
+
+    callSendReportCallback(e) {
+        if(this._sendCallback != undefined)
+            this._sendCallback(e)
     }
 
     sendReportCore() {
         let callback =  function (error, response, body){
             if((response != null) && (response != undefined) && (response.statusCode != 200)) {
-                if(callback.owner._sendingAttamptCount < 3) {
-                    callback.owner._sendingAttamptCount++;
-                    callback.owner.sendReportCore();
+                if(this._sendingAttemptCount < 3) {
+                    this._sendingAttemptCount++;
+                    this.sendReportCore();
+                } else {
+                    this.callSendReportCallback("The report was not sent");
                 }
+            } else {
+                this.callSendReportCallback();
             }
         };
-        callback.owner = this;
 
         request({
             url: "https://logify.devexpress.com/api/report/newreport",
@@ -30,6 +39,6 @@ export default class nodeReportSender {
                 "Authorization": "amx " + this._apiKey,
                 "Content-Type": "application/json; charset=UTF-8"
             }
-        }, callback);
+        }, callback.bind(this));
     }
 }

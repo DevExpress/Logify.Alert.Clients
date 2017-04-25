@@ -2,37 +2,46 @@
 
 export default class jsReportSender {
 
-    sendReport(apiKey, reportData) {
+    sendReport(apiKey, reportData, sendCallback) {
         this._apiKey = apiKey;
         this._sendData = JSON.stringify(reportData);
-        this._sendingAttamptCount = 0;
+        this._sendingAttemptCount = 0;
+        this._sendCallback = sendCallback;
         this.sendReportCore();
     }
 
+    callSendReportCallback(e) {
+        if(this._sendCallback != undefined)
+            this._sendCallback(e)
+    }
+
     sendReportCore() {
-        let xhr = this.createCORSRequest("https://logify.devexpress.com/api/report/newreport");
-        if(xhr == null)
+        this._xhr = this.createCORSRequest("https://logify.devexpress.com/api/report/newreport");
+        if(this._xhr == null)
             return false;
 
-        xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-        xhr.setRequestHeader("Authorization", "amx " + this._apiKey);
+        this._xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+        this._xhr.setRequestHeader("Authorization", "amx " + this._apiKey);
 
         let callback = function() {
-            if(this.readyState != 4)
+            if(this._xhr.readyState != 4)
                 return;
 
-            callback.owner._sendingAttamptCount++;
-
-            if(this.status != 200) {
-                if(callback.owner._sendingAttamptCount < 3)
-                    callback.owner.sendReportCore();
+            if(this._xhr.status != 200) {
+                if(this._sendingAttemptCount < 3) {
+                    this._sendingAttemptCount++;
+                    this.sendReportCore();
+                } else {
+                    this.callSendReportCallback("The report was not sent");
+                }
+            } else {
+                this.callSendReportCallback();
             }
         };
-        callback.owner = this;
 
-        xhr.onreadystatechange = callback;
+        this._xhr.onreadystatechange = callback.bind(this);
 
-        xhr.send(this._sendData);
+        this._xhr.send(this._sendData);
     }
 
     createCORSRequest(url) {

@@ -5,7 +5,7 @@ import jsReportSender from "./reportSender/jsReportSender.js";
 class logifyAlert {
     constructor(apiKey) {
         this._apiKey = apiKey;
-        this._handleReports = true;
+        this._handleReports = false;
         this.applicationName = undefined;
         this.applicationVersion = undefined;
         this.userId = undefined;
@@ -15,6 +15,7 @@ class logifyAlert {
         this.collectCookies = true;
         this.collectInputs = false;
         this.beforeReportException = undefined;
+        this.afterReportException = undefined;
     }
 
     stopHandling() {
@@ -22,6 +23,9 @@ class logifyAlert {
     }
 
     startHandling() {
+        if(this._handleReports)
+            return;
+
         this._handleReports = true;
         
         window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
@@ -47,18 +51,19 @@ class logifyAlert {
         this.callBeforeReportExceptionCallback();
         let collector = this.createCollector(owner);
         collector.collectErrorData(errorMsg, url, lineNumber, column, errorObj);
-
-        let sender = new jsReportSender();
-        sender.sendReport(owner._apiKey, collector.reportData);
+        this.sendReportCore(collector.reportData);
     }
 
     sendRejection(reason, promise) {
         this.callBeforeReportExceptionCallback();
         let collector = this.createCollector(this);
         collector.collectRejectionData(reason, promise);
+        this.sendReportCore(collector.reportData);
+    }
 
+    sendReportCore(reportData) {
         let sender = new jsReportSender();
-        sender.sendReport(this._apiKey, collector.reportData);
+        sender.sendReport(this._apiKey, reportData, this.afterReportException);
     }
 
     createCollector(owner) {
