@@ -138,6 +138,24 @@ client.sendRejection(reason, promise);
 
 ### Callbacks
 
+#### afterReportException(error)
+
+Specifies a delegate to be called after sending exceptions and rejections to the Logify Alert server.
+
+The *error* parameter holds an error text that indicates the report sending result. The *undefined* value specifies that the crash report has been successfully sent. The "*The report was not sent*" value specifies that the crash report has not been sent.
+
+```javascript
+client.afterReportException = function (error) {
+        if (error == undefined) {
+            // The report has been successfully sent
+        }
+        
+        if (error == "The report was not sent") {
+            // The report has not been sent
+        }
+}
+```
+
 #### beforeReportException(customData)
 
 Specifies a delegate to be called before sending exceptions and rejections to the Logify Alert server.
