@@ -21,8 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Serilog", "Log
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Console", "Logify.Alert.Console\Logify.Alert.Console.csproj", "{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApplication2", "..\..\..\..\Temp\WpfApplication2\WpfApplication2\WpfApplication2.csproj", "{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,18 +139,6 @@ Global
 		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Release40|Any CPU.Build.0 = Release40|Any CPU
 		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Release45|Any CPU.ActiveCfg = Release45|Any CPU
 		{201AF3B1-DB1D-4CF0-85A3-E03295DBE36F}.Release45|Any CPU.Build.0 = Release45|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Debug40|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Debug40|Any CPU.Build.0 = Debug|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Debug45|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Debug45|Any CPU.Build.0 = Debug|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Release40|Any CPU.ActiveCfg = Release|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Release40|Any CPU.Build.0 = Release|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Release45|Any CPU.ActiveCfg = Release|Any CPU
-		{9E3F6452-A9F4-4AB5-93D7-F338A5A18C43}.Release45|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
