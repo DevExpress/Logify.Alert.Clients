@@ -98,5 +98,13 @@ namespace DevExpress.Logify.Console {
                 //do nothing
             }
         }
-   }
+
+        protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
+            return null;
+        }
+
+        protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
+            return false;
+        }
+    }
 }
