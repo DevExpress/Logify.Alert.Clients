@@ -9,7 +9,7 @@ namespace DevExpress.Logify.Win {
             return new WinFormsExceptionReportSender();
         }
 
-        protected override bool ShowConfirmSendForm(ReportConfirmationModel model) {
+        protected override bool ShowBuiltInConfirmSendForm(ReportConfirmationModel model) {
             ConfirmReportSendForm form = new ConfirmReportSendForm(model);
 
             Form activeForm = null;

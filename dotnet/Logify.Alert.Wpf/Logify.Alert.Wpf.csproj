@@ -7,7 +7,7 @@
     <ProjectGuid>{F6D512E9-D2FB-4EBE-BA0E-B7403CF99258}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevExpres.Logify.WPF</RootNamespace>
+    <RootNamespace>DevExpress.Logify.WPF</RootNamespace>
     <AssemblyName>Logify.Alert.Wpf</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -179,6 +179,8 @@
       <DependentUpon>ConfirmReportSendForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="LogifyClient.cs" />
+    <Compile Include="Utils\ConfirmationDialogEventArgs.cs" />
+    <Compile Include="Utils\ConfirmationDialogModel.cs" />
     <Compile Include="ReportSender\ReportSender.cs" />
     <Compile Include="CollectorFactory.cs" />
     <Compile Include="ReportSendProgressForm.xaml.cs">

@@ -8,7 +8,7 @@ namespace DevExpress.Logify.WPF {
         public override IExceptionReportSender CreateEmptyClone() {
             return new WPFExceptionReportSender();
         }
-        protected override bool ShowConfirmSendForm(ReportConfirmationModel model) {
+        protected override bool ShowBuiltInConfirmSendForm(ReportConfirmationModel model) {
             ConfirmReportSendForm form = new ConfirmReportSendForm(model);
             Window activeWindow = GetActiveWindow();
             if (activeWindow != null)

@@ -40,6 +40,7 @@ namespace DevExpress.Logify.Win {
             }
         }
 
+        public event ConfirmationDialogEventHandler ConfirmationDialogShowing;
         //public bool SendReportInSeparateProcess { get; set; }
 
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
@@ -127,6 +128,21 @@ namespace DevExpress.Logify.Win {
             }
         }
 
+        protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
+            return new ConfirmationDialogModel(report, sendAction);
+        }
+        protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
+            if(ConfirmationDialogShowing != null) {
+                ConfirmationDialogModel actualModel = model as ConfirmationDialogModel;
+                if(actualModel == null)
+                    return false;
+                ConfirmationDialogEventArgs args = new ConfirmationDialogEventArgs(actualModel);
+                ConfirmationDialogShowing(this, args);
+                return args.Handled;
+            }
+            return false;
+        }
+
         Mutex mutex;
         protected override bool DetectIfSecondaryInstance() {
             try {
@@ -179,4 +195,20 @@ namespace DevExpress.Logify.Win {
             }
         }
     }
+
+    public class ConfirmationDialogModel : ReportConfirmationModel {
+        internal ConfirmationDialogModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) : base(report, sendAction) {
+        }
+    }
+    public class ConfirmationDialogEventArgs : EventArgs {
+        public ConfirmationDialogModel Model { get; private set; }
+        public bool Handled { get; set; }
+
+        public ConfirmationDialogEventArgs(ConfirmationDialogModel model) {
+            this.Model = model;
+            Handled = false;
+        }
+    }
+
+    public delegate void ConfirmationDialogEventHandler(object sender, ConfirmationDialogEventArgs e);
 }

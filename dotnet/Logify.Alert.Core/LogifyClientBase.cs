@@ -198,6 +198,8 @@ namespace DevExpress.Logify.Core {
         protected abstract BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender);
         protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
         protected abstract ISavedReportSender CreateSavedReportsSender();
+        protected internal abstract ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction);
+        protected internal abstract bool RaiseConfirmationDialogShowing(ReportConfirmationModel model);
         public abstract void Run();
         public abstract void Stop();
 
@@ -444,4 +446,22 @@ namespace DevExpress.Logify.Core {
     public interface IExceptionIgnoreDetection {
         ShouldIgnoreResult ShouldIgnoreException(Exception ex);
     }
+}
+
+namespace DevExpress.Logify.Core.Internal {
+    public static class LogifyClientAccessor {
+        public static ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
+            if(LogifyClientBase.Instance != null)
+                return LogifyClientBase.Instance.CreateConfirmationModel(report, sendAction);
+            else
+                return null;
+        }
+        public static bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
+            if(LogifyClientBase.Instance != null)
+                return LogifyClientBase.Instance.RaiseConfirmationDialogShowing(model);
+            else
+                return false;
+        }
+    }
+
 }

@@ -38,39 +38,24 @@ namespace DevExpress.Logify.WPF {
 
             if (Model.Comments != null)
                 this.txtComments.Text = Model.Comments;
-
-            if (!String.IsNullOrEmpty(Model.WindowCaption))
-                this.Title = Model.WindowCaption;
-            //if (String.IsNullOrEmpty(Model.WindowCaption))
-            //    this.Title += " \"" + Application.ProductName + "\"";
-            //else
-            //    this.Title = Model.WindowCaption;
-
-            if (!String.IsNullOrEmpty(Model.InformationText))
-                lblInfo.Text = Model.InformationText;
         }
 
         void OnSendClick(object sender, RoutedEventArgs e) {
             try {
                 if (Model == null)
                     return;
-                if (Model.OriginalReport == null)
-                    return;
 
-                LogifyClientExceptionReport report = Model.CreateReportWithUserComments(txtComments.Text);
+                Model.Comments = txtComments.Text;
+                BackgroundSendModel sendModel = BackgroundSendModel.SendReportInBackgroundThread(Model.SendReport);
 
-                if (Model.SendAction != null) {
-                    BackgroundSendModel sendModel = BackgroundSendModel.SendReportInBackgroundThread(report, Model.SendAction);
-
-                    ReportSendProgressForm progressForm = new ReportSendProgressForm(sendModel);
-                    progressForm.Owner = this;
-                    progressForm.ShowDialog();
-                    ReportSendProgressDialogResult result = progressForm.Result;
-                    if (result == ReportSendProgressDialogResult.OK)
-                        this.DialogResult = true;
-                    else if (result == ReportSendProgressDialogResult.Retry)
-                        MessageBox.Show(this, "Unable to send, please try again", this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                ReportSendProgressForm progressForm = new ReportSendProgressForm(sendModel);
+                progressForm.Owner = this;
+                progressForm.ShowDialog();
+                ReportSendProgressDialogResult result = progressForm.Result;
+                if (result == ReportSendProgressDialogResult.OK)
+                    this.DialogResult = true;
+                else if (result == ReportSendProgressDialogResult.Retry)
+                    MessageBox.Show(this, "Unable to send, please try again", this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch {
             }

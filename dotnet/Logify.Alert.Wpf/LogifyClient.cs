@@ -15,6 +15,8 @@ namespace DevExpress.Logify.WPF {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
 
+        public event ConfirmationDialogEventHandler ConfirmationDialogShowing;
+
         [Obsolete("Please use the LogifyAlert.Instance property instead.", true)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public LogifyAlert() {
@@ -114,6 +116,21 @@ namespace DevExpress.Logify.WPF {
             if (e != null && e.Exception != null) {
                 ReportException(e.Exception, null, null);
             }
+        }
+
+        protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
+            return new ConfirmationDialogModel(report, sendAction);
+        }
+        protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
+            if(ConfirmationDialogShowing != null) {
+                ConfirmationDialogModel actualModel = model as ConfirmationDialogModel;
+                if(actualModel == null)
+                    return false;
+                ConfirmationDialogEventArgs args = new ConfirmationDialogEventArgs(actualModel);
+                ConfirmationDialogShowing(this, args);
+                return args.Handled;
+            }
+            return false;
         }
 
 

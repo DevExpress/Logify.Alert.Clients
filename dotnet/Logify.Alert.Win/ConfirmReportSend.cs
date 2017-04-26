@@ -28,35 +28,24 @@ namespace DevExpress.Logify.Win {
                 this.txtComments.Text = Model.Comments;
             if (Model.Details != null)
                 this.txtProblemDetails.Text = Model.Details;
-
-            if (String.IsNullOrEmpty(Model.WindowCaption))
-                this.Text += " \"" + Application.ProductName + "\"";
-            else
-                this.Text = Model.WindowCaption;
-
-            if (!String.IsNullOrEmpty(Model.InformationText))
-                lblInfo.Text = Model.InformationText;
+            this.Text += " \"" + Application.ProductName + "\"";
         }
 
         void btnSend_Click(object sender, EventArgs e) {
             try {
                 if (Model == null)
                     return;
-                if (Model.OriginalReport == null)
-                    return;
 
-                LogifyClientExceptionReport report = Model.CreateReportWithUserComments(txtComments.Text);
+                Model.Comments = txtComments.Text;
 
-                if (Model.SendAction != null) {
-                    BackgroundSendModel sendModel = BackgroundSendModel.SendReportInBackgroundThread(report, Model.SendAction);
+                BackgroundSendModel sendModel = BackgroundSendModel.SendReportInBackgroundThread(Model.SendReport);
 
-                    ReportSendProgressForm progressForm = new ReportSendProgressForm(sendModel);
-                    DialogResult result = progressForm.ShowDialog(this);
-                    if (result == DialogResult.OK)
-                        this.DialogResult = DialogResult.OK;
-                    else if (result == DialogResult.Retry)
-                        MessageBox.Show(this, "Unable to send, please try again", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                ReportSendProgressForm progressForm = new ReportSendProgressForm(sendModel);
+                DialogResult result = progressForm.ShowDialog(this);
+                if (result == DialogResult.OK)
+                    this.DialogResult = DialogResult.OK;
+                else if (result == DialogResult.Retry)
+                    MessageBox.Show(this, "Unable to send, please try again", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch {
             }

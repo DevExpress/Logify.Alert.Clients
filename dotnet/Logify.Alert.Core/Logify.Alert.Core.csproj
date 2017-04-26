@@ -88,6 +88,7 @@
     <Compile Include="LogifyClientBase.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportConfirmationModel.cs" />
     <Compile Include="ReportSender\BackgroundExceptionReportSender.cs">
       <SubType>Code</SubType>
     </Compile>
