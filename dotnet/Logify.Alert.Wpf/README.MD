@@ -109,6 +109,14 @@ newAt.MimeType = "image/jpeg";
 client.Attachments.Add(newAt);
 ```
 
+#### ConfirmSendReport
+Boolean. Specifies whether or not a user must confirm sending reports to the Logify Alert service.
+By default, the **ConfirmSendReport** property is set to **false** and all uncaught exceptions are automatically processed and sent to the Logify Alert service.
+```csharp
+client.ConfirmSendReport = true;
+```
+To customize the confirmation dialog apperance, handle the **ConfirmationDialogShowing** event.
+
 #### CustomData
 IDictionary<String, String>. Gets the collection of custom data sent with generated reports.
 Use the **CustomData** property to attach additional information to the generated report. For instance, you can use this property to track additional metrics that are important in terms of your application: CPU usage, environment parameters, and so on.
@@ -233,6 +241,26 @@ LogifyAlert.Instance.CanReportException += OnCanReportException;
 void OnCanReportException(object sender, CanReportExceptionEventArgs args) {
     if (args.Exception is MyCustomException)
         args.Cancel = true;
+}
+```
+
+#### ConfirmationDialogShowing
+
+If you set the **ConfirmSendReport** property to **true**, the ConfirmationDialogShowing event occurs before showing the confirmation dialog and allows you to customize the confirmation window's apperance.
+
+```csharp
+LogifyAlert.Instance.ConfirmationDialogShowing += Instance_ConfirmationDialogShowing;
+
+private void Instance_ConfirmationDialogShowing(object sender, ConfirmationDialogEventArgs e) {
+  ConfirmWindow w = new ConfirmWindow();
+  w.DataContext = e.Model;
+
+  // Commands Logify to not show the standart conformation dialog
+  e.Handled = true;
+  // Shows the custom confirmation window
+  w.ShowDialog();
+
+  Environment.Exit(1);
 }
 ```
 
