@@ -185,6 +185,74 @@ catch (Exception e) {
 }
 ```
 
+#### Send(Exception ex, IDictionary<String, String> additionalCustomData, AttachmentCollection additionalAttachments)
+Sends the caught exception with specified custom data and attachments to the Logify Alert service.
+```csharp
+try {
+  RunCode();
+}
+catch (Exception e) {
+  var data = new Dictionary<String, String>();
+  data["FailedOperation"] = "RunCode";
+
+  Attachment newAt = new Attachment();
+  newAt.Name = "My attachment's unique name per one report";
+  newAt.Content = File.ReadAllBytes(@"C:\Work\Image_to_attach.jpg");
+  // We strongly recommend that you specify the attachment type.
+  newAt.MimeType = "image/jpeg";
+  AttachmentCollection newCol = new AttachmentCollection();
+  newCol.Add(newAt);
+
+  client.Send(e, data, newCol);
+}
+```
+
+#### SendAsync(Exception e)
+Generates a crash report based on the caught exception and sends this report to the Logify Alert service asynchronously.
+```csharp
+try {
+    RunCode();
+}
+catch (Exception e) {
+    client.SendAsync(e);
+}
+```
+
+#### SendAsync(Exception e, IDictionary<String, String> additionalCustomData)
+Sends the caught exception with specified custom data to the Logify Alert service asynchronously.
+```csharp
+try {
+    RunCode();
+}
+catch (Exception e) {
+    var data = new Dictionary<String, String>();
+    data["FailedOperation"] = "RunCode";
+    client.SendAsync(e, data);
+}
+```
+
+#### SendAsync(Exception ex, IDictionary<String, String> additionalCustomData, AttachmentCollection additionalAttachments)
+Sends the caught exception with specified custom data and attachments to the Logify Alert service asynchronously.
+```csharp
+try {
+  RunCode();
+}
+catch (Exception e) {
+  var data = new Dictionary<String, String>();
+  data["FailedOperation"] = "RunCode";
+
+  Attachment newAt = new Attachment();
+  newAt.Name = "My attachment's unique name per one report";
+  newAt.Content = File.ReadAllBytes(@"C:\Work\Image_to_attach.jpg");
+  // We strongly recommend that you specify the attachment type.
+  newAt.MimeType = "image/jpeg";
+  AttachmentCollection newCol = new AttachmentCollection();
+  newCol.Add(newAt);
+
+  client.SendAsync(e, data, newCol);
+}
+```
+
 #### SendOfflineReports
 Sends all reports saved in the *OfflineReportsDirectory* folder to the Logify Alert service.
 
