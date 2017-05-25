@@ -305,8 +305,7 @@ If you set the **ConfirmSendReport** property to **true**, the ConfirmationDialo
 LogifyAlert.Instance.ConfirmationDialogShowing += Instance_ConfirmationDialogShowing;
 
 private void Instance_ConfirmationDialogShowing(object sender, ConfirmationDialogEventArgs e) {
-  ConfirmWindow w = new ConfirmWindow();
-  w.DataContext = e.Model;
+  ConfirmWindow w = new ConfirmWindow(e.Model);
 
   // Commands Logify to not show the standart conformation dialog
   e.Handled = true;
