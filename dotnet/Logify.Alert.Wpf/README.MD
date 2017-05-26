@@ -324,7 +324,7 @@ private void Instance_ConfirmationDialogShowing(object sender, ConfirmationDialo
   ConfirmWindow w = new ConfirmWindow();
   w.DataContext = e.Model;
 
-  // Commands Logify to not show the standart conformation dialog
+  // Commands Logify to not show the standard conformation dialog
   e.Handled = true;
   // Shows the custom confirmation window
   w.ShowDialog();
