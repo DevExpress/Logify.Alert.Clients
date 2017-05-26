@@ -322,7 +322,7 @@ LogifyAlert.Instance.ConfirmationDialogShowing += Instance_ConfirmationDialogSho
 private void Instance_ConfirmationDialogShowing(object sender, ConfirmationDialogEventArgs e) {
   ConfirmWindow w = new ConfirmWindow(e.Model);
 
-// Commands Logify to not show the standart conformation dialog
+// Commands Logify to not show the standard conformation dialog
   e.Handled = true;
   // Shows the custom confirmation window
   w.ShowDialog();
