@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace DevExpress.Logify.Core {
     public abstract class LogifyAlertTraceListenerBase : TraceListener {
+        public LogifyAlertTraceListenerBase() {
+            InitializeInstance();
+        }
         public override void Write(string message) {
             //do nothing
         }
@@ -88,5 +91,6 @@ namespace DevExpress.Logify.Core {
                 return null;
             }
         }
+        protected abstract void InitializeInstance();
     }
 }

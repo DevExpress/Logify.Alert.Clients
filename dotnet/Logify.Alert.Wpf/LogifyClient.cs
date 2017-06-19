@@ -33,15 +33,18 @@ namespace DevExpress.Logify.WPF {
             get {
                 if (instance != null)
                     return instance;
-
-                lock (typeof(LogifyAlert)) {
-                    if (instance != null)
-                        return instance;
-
-                    instance = new LogifyAlert(true);
-                    LogifyClientBase.Instance = instance;
-                }
+                InitializeInstance();
                 return instance;
+            }
+        }
+
+        internal static void InitializeInstance() {
+            lock (typeof(LogifyAlert)) {
+                if (instance != null)
+                    return;
+
+                instance = new LogifyAlert(true);
+                LogifyClientBase.Instance = instance;
             }
         }
 

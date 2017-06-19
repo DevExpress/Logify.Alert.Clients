@@ -13,6 +13,9 @@ namespace DevExpress.Logify.Web {
                     logger.BeginWriteObject("cookie");
                     foreach (string key in cookies.AllKeys) {
                         HttpCookie cookie = cookies.Get(key);
+                        if (String.IsNullOrEmpty(key)) 
+                            continue;
+                        
                         logger.BeginWriteObject(key);
                         logger.WriteValue("domain", cookie.Domain);
                         logger.WriteValue("expires", cookie.Expires.ToString());

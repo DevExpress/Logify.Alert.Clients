@@ -36,7 +36,7 @@ namespace DevExpress.Logify.Core {
         protected LogifyClientBase(Dictionary<string, string> config) {
             Init(config);
         }
-
+        
         public string ServiceUrl {
             get { return serviceUrl; }
             set {
