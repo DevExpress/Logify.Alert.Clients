@@ -132,7 +132,7 @@ LogifyAlert client = LogifyAlert.Instance;
 ```
 
 #### OfflineReportsCount
-Integer. Specifiies the number of last reports to be kept once an Internet connection is lost. Reports are only saved when the *OfflineReportsEnabled* property is set to **true**.
+Integer. Specifies the number of last reports to be kept once an Internet connection is lost. Reports are only saved when the *OfflineReportsEnabled* property is set to **true**.
 ```csharp
 client.OfflineReportsEnabled = true;
 client.OfflineReportsCount = 20; // Keeps the last 20 reports
