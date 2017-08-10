@@ -5,12 +5,12 @@
     "license": "MIT",
     "author": {
         "name": "Developer Express Inc.",
-        "url": "https://devexpress.com"
+        "homepage": "https://devexpress.com"
     },
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/php/Logify.Alert.PHP"
+            "url": "https://github.com/DevExpress/Logify.Alert.Clients.git/tree/develop/php/Logify.Alert.PHP"
         }
     ],
     "require": {
