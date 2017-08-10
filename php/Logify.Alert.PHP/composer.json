@@ -1,0 +1,12 @@
+﻿{
+    "name": "DevExpress/LogifyAlertClientForPHP",
+    "description": "A PHP client for reporting exceptions to Logify Alert.",
+    "version": "1.0.0",
+    "license": "GPL-3.0",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "classmap": ["Logify/"]
+    }
+}
