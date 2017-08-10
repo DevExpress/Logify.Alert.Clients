@@ -1,9 +1,6 @@
 # Logify Alert for PHP applications
 A PHP client to report exceptions to [Logify Alert](https://logify.devexpress.com).
 
-## Install 
-
-### Intall manually
 * Copy the [Logify](https://github.com/DevExpress/LogifyAlertClientforPHP/tree/master/Logify) folder to your PHP project.
 * Use the code below to include the **LoadHelper.php** file to the PHP script you use to call the Logify API. 
 ```require_once('/Logify/LoadHelper.php');```.
@@ -12,22 +9,6 @@ A PHP client to report exceptions to [Logify Alert](https://logify.devexpress.co
 spl_autoload_register(array("DevExpress\LoadHelper", "LoadModule"));
 ```
 All classes in the library are wrapped in the DevExpress\Logify namespace. Apply the [use](http://php.net/manual/en/language.namespaces.importing.php) operator as demonstrated below to get rid of long names in your code:
-```PHP
-use DevExpress\Logify\LogifyAlertClient;
-use DevExpress\Logify\Core\Attachment;
-```
-
-### Install with Composer
-* Create a ```composer.json``` file in your project's root folder or use an existing one.
-* Add the section below to the ```composer.json``` file.
-```JSON
-    "require": {
-        "devexpress/logifyalertclientforphp": "dev-stable"
-    }
-```
-* Execute the following command: ```php composer.phar install```
-* Add ```require __DIR__ . '/vendor/autoload.php';```, to your PHP project.
-All classes in the client library are wrapped in the **DevExpress\Logify** namespace. Apply the [use](http://php.net/manual/en/language.namespaces.importing.php) operator as demonstrated below to get rid of long names in your code:
 ```PHP
 use DevExpress\Logify\LogifyAlertClient;
 use DevExpress\Logify\Core\Attachment;
