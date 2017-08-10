@@ -1,5 +1,5 @@
 ﻿{
-    "name": "DevExpress/LogifyAlertClientForPHP",
+    "name": "DevExpress/Logify.Alert.PHP",
     "description": "A PHP client for reporting exceptions to Logify Alert.",
     "version": "1.0.0",
     "license": "MIT",
