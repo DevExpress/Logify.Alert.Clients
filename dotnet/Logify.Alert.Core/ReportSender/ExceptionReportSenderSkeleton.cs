@@ -10,7 +10,7 @@ namespace DevExpress.Logify.Core {
         public virtual int RetryCount { get; set; }
         public virtual int ReportTimeoutMilliseconds { get; set; }
 
-        public virtual string MiniDumpServiceUrl { get; set; }
+        //public virtual string MiniDumpServiceUrl { get; set; }
 
         protected ExceptionReportSenderSkeleton() {
             //this.ServiceUrl = "http://172.22.6.206:5001/api/report/";
@@ -63,7 +63,7 @@ namespace DevExpress.Logify.Core {
             this.ServiceUrl = instance.ServiceUrl;
             this.ApiKey = instance.ApiKey;
             this.ConfirmSendReport = instance.ConfirmSendReport;
-            this.MiniDumpServiceUrl = instance.MiniDumpServiceUrl;
+            //this.MiniDumpServiceUrl = instance.MiniDumpServiceUrl;
             //this.LogId = instance.LogId;
         }
     }

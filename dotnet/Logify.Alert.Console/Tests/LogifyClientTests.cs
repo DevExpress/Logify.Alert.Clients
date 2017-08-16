@@ -23,7 +23,8 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(null, client.AppName);
             Assert.AreEqual(null, client.AppVersion);
             Assert.AreEqual(false, client.ConfirmSendReport);
-            Assert.AreEqual(null, client.MiniDumpServiceUrl);
+            Assert.AreEqual(false, client.CollectMiniDump);
+            //Assert.AreEqual(null, client.MiniDumpServiceUrl);
             Assert.AreEqual("https://logify.devexpress.com/api/report/", client.ServiceUrl);
             Assert.AreEqual(null, client.UserId);
             Assert.AreEqual(true, client.CustomData != null);
@@ -68,6 +69,7 @@ namespace DevExpress.Logify.Core.Tests {
             };
             CheckDefaultStructureAndPredicate(client, predicate);
         }
+        /*
         [Test]
         public void MiniDumpServiceUrl() {
             Assert.AreEqual(null, client.MiniDumpServiceUrl);
@@ -79,6 +81,7 @@ namespace DevExpress.Logify.Core.Tests {
             };
             CheckDefaultStructureAndPredicate(client, predicate);
         }
+        */
         [Test]
         public void ConfirmSendReport() {
             Assert.AreEqual(false, client.ConfirmSendReport);
@@ -151,6 +154,14 @@ namespace DevExpress.Logify.Core.Tests {
             };
             CheckDefaultStructureAndPredicate(client, predicate);
         }
+        [Test]
+        public void CollectMiniDump() {
+            Assert.AreEqual(false, client.CollectMiniDump);
+            client.CollectMiniDump = true;
+            Assert.AreEqual(true, client.CollectMiniDump);
+            client.CollectMiniDump = false;
+            Assert.AreEqual(false, client.CollectMiniDump);
+        }
 
         static void CheckDefaultStructureAndPredicate(LogifyAlert client, Predicate<IExceptionReportSender> predicate) {
             IExceptionReportSender sender = ExceptionLoggerFactory.Instance.PlatformReportSender;
@@ -191,7 +202,7 @@ namespace DevExpress.Logify.Core.Tests {
         }
 
         static void CheckSenderConsistency(LogifyClientBase client, IExceptionReportSender sender) {
-            Assert.AreEqual(client.MiniDumpServiceUrl, sender.MiniDumpServiceUrl);
+            //Assert.AreEqual(client.MiniDumpServiceUrl, sender.MiniDumpServiceUrl);
             Assert.AreEqual(client.ServiceUrl, sender.ServiceUrl);
             Assert.AreEqual(client.ConfirmSendReport, sender.ConfirmSendReport);
             Assert.AreEqual(client.ApiKey, sender.ApiKey);

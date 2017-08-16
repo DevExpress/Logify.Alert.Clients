@@ -52,8 +52,8 @@ namespace DevExpress.Logify.Web {
             //return new WinFormsExceptionCollectorFactory();
             return new WebDefaultExceptionCollectorFactory(Platform.ASP);
         }
-        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            WebExceptionCollector result = new WebExceptionCollector(config, Platform.ASP);
+        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            WebExceptionCollector result = new WebExceptionCollector(Config, Platform.ASP);
             result.AppName = this.AppName;
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;

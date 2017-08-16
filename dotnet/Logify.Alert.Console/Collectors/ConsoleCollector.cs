@@ -19,7 +19,7 @@ namespace DevExpress.Logify.Console {
             base.Process(ex, logger);
         }
         protected override void RegisterCollectors(ILogifyClientConfiguration config) {
-            if (config.MakeMiniDump)
+            if (config.CollectMiniDump)
                 Collectors.Add(new MiniDumpCollector());
             Collectors.Add(new LogifyProtocolVersionCollector());
             Collectors.Add(new LogifyReportGenerationDateTimeCollector());
@@ -28,6 +28,8 @@ namespace DevExpress.Logify.Console {
             Collectors.Add(new ConsoleApplicationCollector());
             Collectors.Add(new ConsoleEnvironmentCollector(config)); // Environment info should go first, it may be used for further exception processing
             Collectors.Add(new ExceptionObjectInfoCollector(config));
+            if (config.CollectMiniDump)
+                Collectors.Add(new DeferredMiniDumpCollector());
         }
     }
 }

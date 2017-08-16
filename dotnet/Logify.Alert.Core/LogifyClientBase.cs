@@ -15,7 +15,7 @@ namespace DevExpress.Logify.Core {
         string serviceUrl = "https://logify.devexpress.com/api/report/";
         string apiKey;
         bool confirmSendReport;
-        string miniDumpServiceUrl;
+        //string miniDumpServiceUrl;
         string offlineReportsDirectory = "offline_reports";
         int offlineReportsCount = 100;
         bool offlineReportsEnabled;
@@ -64,6 +64,7 @@ namespace DevExpress.Logify.Core {
                     sender.ConfirmSendReport = value;
             }
         }
+        /*
         [EditorBrowsable(EditorBrowsableState.Never)]
         public string MiniDumpServiceUrl {
             get { return miniDumpServiceUrl; }
@@ -74,6 +75,7 @@ namespace DevExpress.Logify.Core {
                     sender.MiniDumpServiceUrl = value;
             }
         }
+        */
         
         public string OfflineReportsDirectory {
             get { return offlineReportsDirectory; }
@@ -103,7 +105,7 @@ namespace DevExpress.Logify.Core {
         public AttachmentCollection Attachments { get { return attachments; } }
         protected bool IsSecondaryInstance { get; set; }
 
-        internal ILogifyClientConfiguration Config { get { return config; } }
+        protected internal ILogifyClientConfiguration Config { get { return config; } }
 
         internal NetworkCredential ProxyCredentials { get; set; }
 
@@ -162,6 +164,7 @@ namespace DevExpress.Logify.Core {
 
         void Init(Dictionary<string, string> configDictionary) {
             this.IsSecondaryInstance = DetectIfSecondaryInstance();
+            //this.innerConfig = CreateClientConfiguration(); // new DefaultClientConfiguration();
             this.config = new DefaultClientConfiguration();
             this.ConfirmSendReport = false; // do not confirm by default
 
@@ -171,7 +174,7 @@ namespace DevExpress.Logify.Core {
             reportSender.ServiceUrl = this.ServiceUrl;
             reportSender.ApiKey = this.ApiKey;
             reportSender.ConfirmSendReport = this.ConfirmSendReport;
-            reportSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
+            //reportSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.IsEnabled = this.OfflineReportsEnabled; });
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.DirectoryName = this.OfflineReportsDirectory; });
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.ReportCount = this.OfflineReportsCount; });
@@ -193,8 +196,9 @@ namespace DevExpress.Logify.Core {
         protected abstract IInfoCollectorFactory CreateCollectorFactory();
         protected abstract IExceptionIgnoreDetection CreateIgnoreDetection();
         protected abstract string GetAssemblyVersionString(Assembly asm);
+        //protected abstract ILogifyClientConfiguration CreateClientConfiguration();
         protected abstract void Configure();
-        protected abstract IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments);
+        protected abstract IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments);
         protected abstract BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender);
         protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
         protected abstract ISavedReportSender CreateSavedReportsSender();
@@ -215,7 +219,7 @@ namespace DevExpress.Logify.Core {
                 innerSender.ConfirmSendReport = false;
                 innerSender.ApiKey = this.ApiKey;
                 innerSender.ServiceUrl = this.ServiceUrl;
-                innerSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
+                //innerSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
 
                 ISavedReportSender savedReportsSender = CreateSavedReportsSender();
                 if (savedReportsSender == null)
@@ -264,11 +268,11 @@ namespace DevExpress.Logify.Core {
                     this.ServiceUrl = "https://" + this.ServiceUrl.Substring("http://".Length);
                 }
             }
-            this.MiniDumpServiceUrl = "http://logifydump.devexpress.com/";
+            //this.MiniDumpServiceUrl = "http://logifydump.devexpress.com/";
             compositeSender.ServiceUrl = this.ServiceUrl;
             //compositeSender.ApiKey = "dx$" + logId;
             compositeSender.ApiKey = this.ApiKey;
-            compositeSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
+            //compositeSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
             this.AppName = "DevExpress Demo or Design Time";
             this.AppVersion = DetectDevExpressVersion(asm);
             this.UserId = uniqueUserId;
@@ -279,10 +283,7 @@ namespace DevExpress.Logify.Core {
                 this.customData = customData;
 
             //TODO:
-            DefaultClientConfiguration defaultConfig = Config as DefaultClientConfiguration;
-            if (defaultConfig != null) {
-                defaultConfig.MakeMiniDump = true;
-            }
+            Config.CollectMiniDump = true;
             //apply values to config
 
             ExceptionLoggerFactory.Instance.PlatformReportSender = CreateBackgroundExceptionReportSender(compositeSender);
@@ -377,7 +378,7 @@ namespace DevExpress.Logify.Core {
 
                 RaiseBeforeReportException(ex);
 
-                bool success = ExceptionLogger.ReportException(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
+                bool success = ExceptionLogger.ReportException(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments));
                 RaiseAfterReportException(ex);
                 return success;
             }
@@ -397,7 +398,7 @@ namespace DevExpress.Logify.Core {
 
                 RaiseBeforeReportException(ex);
 
-                bool success = await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(this.config, additionalCustomData, additionalAttachments));
+                bool success = await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments));
                 RaiseAfterReportException(ex);
                 return success;
             }

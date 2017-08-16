@@ -20,6 +20,8 @@ namespace DevExpress.Logify.Console {
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
 
+        public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
+
         public static new LogifyAlert Instance {
             get {
                 if (instance != null)
@@ -48,8 +50,8 @@ namespace DevExpress.Logify.Console {
         protected override IInfoCollectorFactory CreateCollectorFactory() {
             return new ConsoleExceptionCollectorFactory();
         }
-        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            ConsoleExceptionCollector result = new ConsoleExceptionCollector(config);
+        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            ConsoleExceptionCollector result = new ConsoleExceptionCollector(Config);
             result.AppName = this.AppName;
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;

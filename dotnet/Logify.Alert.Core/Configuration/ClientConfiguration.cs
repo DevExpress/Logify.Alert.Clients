@@ -1,10 +1,16 @@
-﻿namespace DevExpress.Logify {
+﻿namespace DevExpress.Logify.Core {
     public interface ILogifyClientConfiguration {
-        bool TakeScreenshot { get; }
-        bool MakeMiniDump { get; }
+        bool CollectScreenshot { get; set; }
+        bool CollectMiniDump { get; set; }
     }
-    public class DefaultClientConfiguration : ILogifyClientConfiguration {
-        public bool TakeScreenshot { get; set; }
-        public bool MakeMiniDump { get; set; }
+    class DefaultClientConfiguration : ILogifyClientConfiguration {
+        public bool CollectScreenshot { get; set; }
+        public bool CollectMiniDump { get; set; }
+    }
+
+    public static class ClientConfigHelper {
+        public static ILogifyClientConfiguration GetConfig(LogifyClientBase client) {
+            return client.Config;
+        }
     }
 }

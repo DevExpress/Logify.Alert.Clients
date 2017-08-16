@@ -7,9 +7,34 @@ namespace DevExpress.Logify.Core {
     public class MiniDumpCollector : IInfoCollector {
         public const string DumpGuidKey = "miniDumpGuid";
         public const string DumpFileNameKey = "miniDumpFileName";
+        public const string DumpAttachKey = "miniDumpAttach";
 
         [HandleProcessCorruptedStateExceptions]
         public virtual void Process(Exception ex, ILogger logger) {
+            try {
+                Guid dumpGuid = Guid.NewGuid();
+                string fileName = dumpGuid.ToString() + ".dmp";
+                fileName = Path.Combine(Path.GetTempPath(), fileName);
+                if (MiniDumpWriter.Write(fileName, MiniDumpType.Normal)) {
+                    byte[] content = File.ReadAllBytes(fileName);
+                    try {
+                        File.Delete(fileName);
+                    }
+                    catch {
+                    }
+
+                    Attachment attach = new Attachment();
+                    attach.Content = content;
+                    attach.MimeType = "application/vnd.tcpdump.pcap";
+                    attach.Name = "miniDump.dmp";
+
+                    logger.Data[DumpAttachKey] = attach;
+                }
+            }
+            catch {
+            }
+        }
+        void WriteMiniDumpExternally(Exception ex, ILogger logger) {
             logger.BeginWriteObject("miniDump");
             try {
                 Guid dumpGuid = Guid.NewGuid();
@@ -26,6 +51,19 @@ namespace DevExpress.Logify.Core {
             finally {
                 logger.EndWriteObject("miniDump");
             }
+        }
+    }
+    public class DeferredMiniDumpCollector : IInfoCollector {
+        public virtual void Process(Exception ex, ILogger logger) {
+            object attachObject;
+            if (!logger.Data.TryGetValue(MiniDumpCollector.DumpAttachKey, out attachObject))
+                return;
+            Attachment attach = attachObject as Attachment;
+            if (attach == null)
+                return;
+
+            AttachmentCollector collector = new AttachmentCollector(attach, 0, Int32.MaxValue, "miniDump");
+            collector.PerformProcess(ex, logger);
         }
     }
 

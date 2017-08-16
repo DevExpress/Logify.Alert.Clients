@@ -13,7 +13,7 @@ namespace DevExpress.Logify.Core {
 
         public override string ServiceUrl { get { return innerSender.ServiceUrl; } set { innerSender.ServiceUrl = value; } }
         public override string ApiKey { get { return innerSender.ApiKey; } set { innerSender.ApiKey = value; } }
-        public override string MiniDumpServiceUrl { get { return innerSender.MiniDumpServiceUrl; } set { innerSender.MiniDumpServiceUrl = value; } }
+        //public override string MiniDumpServiceUrl { get { return innerSender.MiniDumpServiceUrl; } set { innerSender.MiniDumpServiceUrl = value; } }
         public override bool ConfirmSendReport { get { return InnerSender.ConfirmSendReport; } set { InnerSender.ConfirmSendReport = value; } }
         //public override string LogId { get { return innerSender.LogId; } set { innerSender.LogId = value; } }
         public IExceptionReportSender InnerSender { get { return innerSender; } }

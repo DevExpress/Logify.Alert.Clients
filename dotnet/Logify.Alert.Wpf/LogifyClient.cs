@@ -29,6 +29,8 @@ namespace DevExpress.Logify.WPF {
             : base(config) {
         }
 
+        public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
+
         public static new LogifyAlert Instance {
             get {
                 if (instance != null)
@@ -51,8 +53,8 @@ namespace DevExpress.Logify.WPF {
         protected override IInfoCollectorFactory CreateCollectorFactory() {
             return new WPFExceptionCollectorFactory();
         }
-        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            WPFExceptionCollector result = new WPFExceptionCollector(config);
+        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            WPFExceptionCollector result = new WPFExceptionCollector(Config);
             result.AppName = this.AppName;
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;

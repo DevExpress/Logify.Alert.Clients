@@ -43,6 +43,7 @@ namespace DevExpress.Logify.Core {
                 }
             }
         }
+        /*
         public override string MiniDumpServiceUrl {
             get { return base.MiniDumpServiceUrl; }
             set {
@@ -54,6 +55,7 @@ namespace DevExpress.Logify.Core {
                 }
             }
         }
+        */
         public override int ReportTimeoutMilliseconds {
             get { return base.ReportTimeoutMilliseconds; }
             set {

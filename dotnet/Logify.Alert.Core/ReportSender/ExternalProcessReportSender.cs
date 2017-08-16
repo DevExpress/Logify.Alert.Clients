@@ -50,7 +50,7 @@ namespace DevExpress.Logify.Core {
             content.AppendLine("DeleteReportFile=1");
             content.AppendLine("DeleteConfigFile=1");
             content.AppendLine("Update=1");
-
+            /*
             object dumpGuidObject;
             reportData.TryGetValue(MiniDumpCollector.DumpGuidKey, out dumpGuidObject);
             object dumpFileNameObject;
@@ -62,7 +62,7 @@ namespace DevExpress.Logify.Core {
                 content.AppendLine("MiniDumpFileName=" + dumpFileName);
                 content.AppendLine("MiniDumpServiceUrl=" + this.MiniDumpServiceUrl);
             }
-
+            */
             string fileName = Path.GetTempFileName();
             File.WriteAllText(fileName, content.ToString(), Encoding.UTF8);
             return fileName;

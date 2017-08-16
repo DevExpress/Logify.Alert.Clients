@@ -9,9 +9,13 @@ namespace DevExpress.Logify.Core {
     public class ScreenshotCollector : IInfoCollector {
         [HandleProcessCorruptedStateExceptions]
         public virtual void Process(Exception ex, ILogger logger) {
+            string content= CreateScreenshotImageBytes();
+            if (String.IsNullOrEmpty(content))
+                return;
+
             logger.BeginWriteObject("screenshot");
             try {
-                logger.WriteValue("imageBytes", CreateScreenshotImageBytes());
+                logger.WriteValue("imageBytes", content);
             }
             finally {
                 logger.EndWriteObject("screenshot");
@@ -33,10 +37,15 @@ namespace DevExpress.Logify.Core {
             }
         }
         string CreateScreenshotImageBytes() {
-            Bitmap bitmap = CreateScreenshotBitmap();
-            byte[] bytes = GetImageBytes(bitmap);
-            bitmap.Dispose();
-            return Convert.ToBase64String(bytes);
+            try {
+                Bitmap bitmap = CreateScreenshotBitmap();
+                byte[] bytes = GetImageBytes(bitmap);
+                bitmap.Dispose();
+                return Convert.ToBase64String(bytes);
+            }
+            catch {
+                return null;
+            }
         }
     }
 }

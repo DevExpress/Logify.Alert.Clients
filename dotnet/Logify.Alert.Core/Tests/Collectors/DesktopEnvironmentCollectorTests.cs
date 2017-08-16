@@ -5,6 +5,10 @@ using System.Threading;
 using NUnit.Framework;
 
 namespace DevExpress.Logify.Core.Tests {
+    class DefaultTestClientConfiguration : ILogifyClientConfiguration {
+        public bool CollectScreenshot { get; set; }
+        public bool CollectMiniDump { get; set; }
+    }
     [TestFixture]
     public class DesktopEnvironmentCollectorTests : CollectorTestsBase {
         DesktopEnvironmentCollector collector;
@@ -17,7 +21,7 @@ namespace DevExpress.Logify.Core.Tests {
             this.uiCulture = CultureInfo.CurrentUICulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US", false);
-            this.collector = new DesktopEnvironmentCollector(new DefaultClientConfiguration());
+            this.collector = new DesktopEnvironmentCollector(new DefaultTestClientConfiguration());
             Assert.AreEqual(9, this.collector.Collectors.Count);
             Assert.AreEqual(typeof(FrameworkVersionsCollector), this.collector.Collectors[8].GetType());
             this.collector.Collectors.RemoveAt(8);

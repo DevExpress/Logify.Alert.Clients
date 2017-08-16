@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace DevExpress.Logify.Core {
     internal class LogifyAlertConfiguration {
         public string ServiceUrl { get; set; }
-        public string MiniDumpServiceUrl { get; set; }
+        //public string MiniDumpServiceUrl { get; set; }
         public string ApiKey { get; set; }
         public string AppName { get; set; }
         public string AppVersion { get; set; }
@@ -36,8 +36,8 @@ namespace DevExpress.Logify.Core {
                 client.AppVersion = config.AppVersion;
             client.ConfirmSendReport = config.ConfirmSend;
 
-            if (!String.IsNullOrEmpty(config.MiniDumpServiceUrl))
-                client.MiniDumpServiceUrl = config.MiniDumpServiceUrl;
+            //if (!String.IsNullOrEmpty(config.MiniDumpServiceUrl))
+            //    client.MiniDumpServiceUrl = config.MiniDumpServiceUrl;
 
             client.OfflineReportsEnabled = config.OfflineReportsEnabled;
             if (!String.IsNullOrEmpty(config.OfflineReportsDirectory))
@@ -78,6 +78,9 @@ namespace DevExpress.Logify {
         public ClientValueElement OfflineReportsDirectory { get { return (ClientValueElement)base["offlineReportsDirectory"]; } }
         [ConfigurationProperty("offlineReportsCount", IsRequired = false)]
         public ClientValueElement OfflineReportsCount { get { return (ClientValueElement)base["offlineReportsCount"]; } }
+
+        [ConfigurationProperty("collectMiniDump", IsRequired = false)]
+        public ClientValueElement CollectMiniDump { get { return (ClientValueElement)base["collectMiniDump"]; } }
     }
 
     public class ClientValueElement : ConfigurationElement {
@@ -131,8 +134,8 @@ namespace DevExpress.Logify.Core {
                 if (section.ConfirmSend != null)
                     client.ConfirmSendReport = section.ConfirmSend.ValueAsBool;
 
-                if (section.MiniDumpServiceUrl != null)
-                    client.MiniDumpServiceUrl = section.MiniDumpServiceUrl.Value;
+                //if (section.MiniDumpServiceUrl != null)
+                //    client.MiniDumpServiceUrl = section.MiniDumpServiceUrl.Value;
 
                 if (section.OfflineReportsEnabled != null)
                     client.OfflineReportsEnabled = section.OfflineReportsEnabled.ValueAsBool;
@@ -140,6 +143,9 @@ namespace DevExpress.Logify.Core {
                     client.OfflineReportsDirectory = section.OfflineReportsDirectory.Value;
                 if (section.OfflineReportsCount != null)
                     client.OfflineReportsCount = section.OfflineReportsCount.ValueAsInt;
+
+                if (section.CollectMiniDump != null)
+                    ClientConfigHelper.GetConfig(client).CollectMiniDump = section.CollectMiniDump.ValueAsBool;
 
                 if (section.CustomData != null && section.CustomData.Count > 0) {
                     foreach (KeyValueConfigurationElement element in section.CustomData)

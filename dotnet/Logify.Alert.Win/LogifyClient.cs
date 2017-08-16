@@ -24,6 +24,8 @@ namespace DevExpress.Logify.Win {
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
 
+        public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
+
         public static new LogifyAlert Instance {
             get {
                 if (instance != null)
@@ -52,8 +54,8 @@ namespace DevExpress.Logify.Win {
         protected override IInfoCollectorFactory CreateCollectorFactory() {
             return new WinFormsExceptionCollectorFactory();
         }
-        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            WinFormsExceptionCollector result = new WinFormsExceptionCollector(config);
+        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            WinFormsExceptionCollector result = new WinFormsExceptionCollector(Config);
             result.AppName = this.AppName;
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;
