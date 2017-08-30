@@ -14,9 +14,11 @@
     <offlineReportsEnabled value="false" />
     <offlineReportsDirectory value="offlineReports" />
     <offlineReportsCount value="10" />
+    <!--
     <customData>
       <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" />
     </customData>
+    -->
   </logifyAlert>
   
   <!-- Insert System.Diagnostics.Trace listener -->

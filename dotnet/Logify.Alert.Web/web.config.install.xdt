@@ -12,9 +12,11 @@
     <apiKey value="YOUR_API_KEY" />
     <appName value="YOUR_APP_NAME" />
     <!--<version value="YOUR_APP_VERSION" />-->
+    <!--
     <customData>
       <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" />
     </customData>
+    -->
   </logifyAlert>
   
   <!-- Insert System.Diagnostics.Trace listener -->
