@@ -40,8 +40,8 @@ namespace DevExpress.Logify.Console {
         protected override IInfoCollectorFactory CreateCollectorFactory() {
             return new NetCoreConsoleExceptionCollectorFactory();
         }
-        protected override IInfoCollector CreateDefaultCollector(ILogifyClientConfiguration config, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            NetCoreConsoleExceptionCollector result = new NetCoreConsoleExceptionCollector(config);
+        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            NetCoreConsoleExceptionCollector result = new NetCoreConsoleExceptionCollector(Config);
             result.AppName = this.AppName;
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;
