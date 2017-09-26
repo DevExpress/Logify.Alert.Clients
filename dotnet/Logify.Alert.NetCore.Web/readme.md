@@ -11,10 +11,12 @@ $ Install-Package Logify.Alert.Web
 #### Add LogifyAlert.json configuration File
 Add the Logify Alert settings to the application's **LogifyAlert.json** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Documentation/CreateApp) generated for it.
 ```json
-"LogifyAlert": {
-  "apiKey": "SPECIFY_YOUR_API_KEY_HERE",
-  "customData": {
-    "MACHINE_NAME": "My Machine"
+{
+  "LogifyAlert": {
+    "apiKey": "SPECIFY_YOUR_API_KEY_HERE",
+    "customData": {
+      "MACHINE_NAME": "My Machine"
+    }
   }
 }
 ```
