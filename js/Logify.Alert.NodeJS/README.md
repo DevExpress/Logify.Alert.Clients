@@ -40,7 +40,7 @@ client.applicationVersion = '1.0.1';
 
 #### customData
 
-A dictionary that contains custom data sent with a generated report. 
+A dictionary that contains custom data sent with a generated report. The first key can only consists of a-z, A-Z, 0-9, and _ characters.
 
 ```javascript
 client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
