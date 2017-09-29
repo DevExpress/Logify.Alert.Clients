@@ -108,7 +108,7 @@ client.AppVersion = "1.0.2";
 
 #### CustomData
 IDictionary<String, String>. Gets the collection of custom data sent with generated reports.
-Use the **CustomData** property to attach additional information to the generated report. For instance, you can use this property to track additional metrics that are important in terms of your application: CPU usage, environment parameters, and so on.
+Use the **CustomData** property to attach additional information to the generated report. For instance, you can use this property to track additional metrics that are important in terms of your application: CPU usage, environment parameters, and so on. The field name can only consists of a-z, A-Z, 0-9, and _ characters.
 
 ```csharp
 client.CustomData["CustomerName"] = "Mary";
