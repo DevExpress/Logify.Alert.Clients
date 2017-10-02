@@ -151,6 +151,9 @@
     <Compile Include="..\Logify.Alert.Core\Tests\Collectors\AttachmentsCollectorTests.cs">
       <Link>Tests\Collectors\AttachmentsCollectorTests.cs</Link>
     </Compile>
+    <Compile Include="..\Logify.Alert.Core\Tests\Collectors\BreadcrumbsCollectorTests.cs">
+      <Link>Tests\Collectors\BreadcrumbsCollectorTests.cs</Link>
+    </Compile>
     <Compile Include="..\Logify.Alert.Core\Tests\Collectors\CultureCollectorTests.cs">
       <Link>Tests\Collectors\CultureCollectorTests.cs</Link>
     </Compile>

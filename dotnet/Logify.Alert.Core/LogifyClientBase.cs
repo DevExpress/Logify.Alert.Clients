@@ -24,6 +24,7 @@ namespace DevExpress.Logify.Core {
 
         ILogifyClientConfiguration config;
         IDictionary<string, string> customData = new Dictionary<string, string>();
+        BreadcrumbCollection breadcrumbs = new BreadcrumbCollection();
         AttachmentCollection attachments = new AttachmentCollection();
 
         protected LogifyClientBase() {
@@ -103,6 +104,7 @@ namespace DevExpress.Logify.Core {
         public string UserId { get; set; }
         public IDictionary<string, string> CustomData { get { return customData; } }
         public AttachmentCollection Attachments { get { return attachments; } }
+        public BreadcrumbCollection Breadcrumbs { get { return breadcrumbs; } }
         protected bool IsSecondaryInstance { get; set; }
 
         protected internal ILogifyClientConfiguration Config { get { return config; } }
