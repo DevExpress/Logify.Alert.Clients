@@ -58,6 +58,7 @@ namespace DevExpress.Logify.Web {
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;
             result.Collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
+            result.Collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
             result.Collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
             return result;
         }
