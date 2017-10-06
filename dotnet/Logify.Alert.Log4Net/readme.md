@@ -6,6 +6,21 @@ The log4net logger client for [Logify Alert](https://logify.devexpress.com).
 ```ps1
 Install-Package Logify.Alert.Log4Net
 ```
+Also, execute the command below.
+
+WinForms and Console applications:
+```ps1
+Install-Package Logify.Alert.Win
+```
+Web applications:
+```ps1
+Install-Package Logify.Alert.Web
+```
+WPF applications:
+```ps1
+Install-Package Logify.Alert.Wpf
+```
+
 
 ## Quick Start
 
@@ -40,4 +55,12 @@ Register LogifyAlertAppender as a standard log4net appender, either in the appli
 </log4net>
 ```
 
-Now, the use of the log4net [ILog.Error](http://logging.apache.org/log4net/release/sdk/html/M_log4net_ILog_Error.htm) method sends a report to Logify Alert.
+Add the following code to your application's code. The example below demonstrates how to set up the plugin for a console or a WinForms application.
+
+```cs
+using DevExpress.Logify.Win;
+
+LogifyAlert client = LogifyAlert.Instance;
+```
+
+Now,  each time your application calls the [ILog.Error](http://logging.apache.org/log4net/release/sdk/html/M_log4net_ILog_Error.htm)  log4Net method with non-empty *LoggingEvent.ExceptionObject* parameter, a new report is generated and sent to Logify Alert.
