@@ -6,6 +6,20 @@ The Serilog logger client for [Logify Alert](https://logify.devexpress.com).
 ```ps1
 Install-Package Logify.Alert.Serilog
 ```
+Also, execute the command below.
+
+WinForms and Console applications:
+```ps1
+Install-Package Logify.Alert.Win
+```
+Web applications:
+```ps1
+Install-Package Logify.Alert.Web
+```
+WPF applications:
+```ps1
+Install-Package Logify.Alert.Wpf
+```
 
 ## Quick Start
 
@@ -27,14 +41,14 @@ Set up the Logify Alert client for your target platform. The **App.config** exam
 ```
 
 
-Register **LogifyAlert** as a custom Serilog sink via code:
+Register **LogifyAlert** as a custom Serilog sink in code. The example below is for a console or WinForms application.
 
 ```csharp
 using Serilog;
+using DevExpress.Logify.Win;
 
-Log.Logger = new LoggerConfiguration()
-  .WriteTo.LogifyAlert()
-  .CreateLogger();
+LogifyAlert client = LogifyAlert.Instance;
+Log.Logger = new LoggerConfiguration().WriteTo.LogifyAlert().CreateLogger();
 ```
 
 ... or in the **App.config** configuration file:
@@ -52,13 +66,12 @@ Install-Package Serilog.Settings.AppSettings
   </appSettings>
 </configuration>
 ```
-
 ```csharp
 using Serilog;
+using DevExpress.Logify.Win;
 
-Log.Logger = new LoggerConfiguration()
-  .ReadFrom.AppSettings()
-  .CreateLogger();
+LogifyAlert client = LogifyAlert.Instance;
+Log.Logger = new LoggerConfiguration().ReadFrom.AppSettings().CreateLogger();
 ```
 
-Now, the use of the Serilog [methods](https://github.com/serilog/serilog/wiki/Writing-Log-Events) sends a report to Logify Alert.
+Now, each time your application sends an [Error or a Fatal](https://github.com/serilog/serilog/wiki/Writing-Log-Events) message with non-empty *LogEvent.Exception* parameter to the Serilog system, a new report is generated and sent to Logify Alert.
