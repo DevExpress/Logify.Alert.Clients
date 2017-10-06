@@ -71,12 +71,12 @@ namespace DevExpress.Logify.Core.Internal {
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["mouseButton"] = button.ToString();
             data["action"] = isUp ? "up" : "down";
-            data["windowText"] = windowText;
+            data["windowCaption"] = windowText;
 
             Breadcrumb item = new Breadcrumb();
             item.Event = isUp ? BreadcrumbEvent.MouseUp : BreadcrumbEvent.MouseDown;
             item.CustomData = data;
-            item.Message = data["mouseButton"] + " mouse button " + data["action"] + " over [" + data["windowText"] + "]";
+            //item.Message = data["mouseButton"] + " mouse button " + data["action"] + " over [" + data["windowCaption"] + "]";
 
             AddBreadcrumb(item);
             return false;
@@ -87,12 +87,12 @@ namespace DevExpress.Logify.Core.Internal {
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["mouseButton"] = button.ToString();
             data["action"] = "doubleClick";
-            data["windowText"] = windowText;
+            data["windowCaption"] = windowText;
 
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.MouseDoubleClick;
             item.CustomData = data;
-            item.Message = data["mouseButton"] + " mouse button double click over[" + data["windowText"] + "]";
+            //item.Message = data["mouseButton"] + " mouse button double click over[" + data["windowCaption"] + "]";
 
             AddBreadcrumb(item);
             return false;
@@ -103,7 +103,7 @@ namespace DevExpress.Logify.Core.Internal {
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.MouseWheel;
             item.CustomData = data;
-            item.Message = "Mouse wheel";
+            //item.Message = "Mouse wheel";
 
             AddBreadcrumb(item);
             return false;
@@ -121,7 +121,7 @@ namespace DevExpress.Logify.Core.Internal {
             Breadcrumb item = new Breadcrumb();
             item.Event = isUp ? BreadcrumbEvent.KeyUp : BreadcrumbEvent.KeyDown;
             item.CustomData = data;
-            item.Message = "[" + data["key"] + "] " + data["action"];
+            //item.Message = "[" + data["key"] + "] " + data["action"];
 
             AddBreadcrumb(item);
             //if (isUp)
@@ -141,7 +141,7 @@ namespace DevExpress.Logify.Core.Internal {
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.KeyPress;
             item.CustomData = data;
-            item.Message = "Type '" + data["char"] + "'";
+            //item.Message = "Type '" + data["char"] + "'";
 
             AddBreadcrumb(item);
             return false;
@@ -164,7 +164,7 @@ namespace DevExpress.Logify.Core.Internal {
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.WindowActivate;
             item.CustomData = data;
-            item.Message = "Window activated [" + data["windowCaption"] + "]";
+            //item.Message = "Window activated [" + data["windowCaption"] + "]";
 
             AddBreadcrumb(item);
             return false;
@@ -178,7 +178,7 @@ namespace DevExpress.Logify.Core.Internal {
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.FocusChange;
             item.CustomData = data;
-            item.Message = "Keyboard focus changed to [" + data["windowCaption"] + "]";
+            //item.Message = "Keyboard focus changed to [" + data["windowCaption"] + "]";
 
             AddBreadcrumb(item);
             return false;
