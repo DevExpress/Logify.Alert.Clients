@@ -6,6 +6,20 @@ The NLog logger client for [Logify Alert](https://logify.devexpress.com).
 ```ps1
 Install-Package Logify.Alert.NLog
 ```
+Also, execute the command below.
+
+WinForms and Console applications:
+```ps1
+Install-Package Logify.Alert.Win
+```
+Web applications:
+```ps1
+Install-Package Logify.Alert.Web
+```
+WPF applications:
+```ps1
+Install-Package Logify.Alert.Wpf
+```
 
 ## Quick Start
 
@@ -45,4 +59,12 @@ Register **LogifyAlert** target as a custom NLog target in the NLog.config confi
 </nlog>
 ```
 
-Now, the use of the NLog [methods](https://github.com/NLog/NLog/wiki/Tutorial#writing-log-messages) sends a report to Logify Alert.
+Add the following code to your application's code. The example below demonstrates how to set up the plugin for a console or a WinForms application.
+
+```cs
+using DevExpress.Logify.Win;
+
+LogifyAlert client = LogifyAlert.Instance;
+```
+
+Now, each time your application sends an [methods](https://github.com/NLog/NLog/wiki/Tutorial#writing-log-messages) message with non-empty *LogEvent.Exception* parameter to the NLog system, a new report is generated and sent to Logify Alert.
