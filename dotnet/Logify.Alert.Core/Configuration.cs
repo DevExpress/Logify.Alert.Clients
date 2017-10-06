@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace DevExpress.Logify.Core {
     internal class LogifyAlertConfiguration {
+        public LogifyAlertConfiguration() {
+            this.BreadcrumbsMaxCount = 1000;
+        }
         public string ServiceUrl { get; set; }
         //public string MiniDumpServiceUrl { get; set; }
         public string ApiKey { get; set; }
@@ -15,6 +18,8 @@ namespace DevExpress.Logify.Core {
         public string OfflineReportsDirectory { get; set; }
         public int OfflineReportsCount { get; set; }
         public Dictionary<string, string> CustomData { get; set; }
+        public bool CollectBreadcrumbs { get; set; }
+        public int BreadcrumbsMaxCount { get; set; }
     }
 
     public static class ClientConfigurationLoader {
@@ -43,6 +48,9 @@ namespace DevExpress.Logify.Core {
             if (!String.IsNullOrEmpty(config.OfflineReportsDirectory))
                 client.OfflineReportsDirectory = config.OfflineReportsDirectory;
             client.OfflineReportsCount = config.OfflineReportsCount;
+            ClientConfigHelper.GetConfig(client).CollectBreadcrumbs = config.CollectBreadcrumbs;
+            if (config.BreadcrumbsMaxCount > 1)
+                ClientConfigHelper.GetConfig(client).BreadcrumbsMaxCount = config.BreadcrumbsMaxCount;
 
             if (config.CustomData != null && config.CustomData.Count > 0) {
                 foreach (string key in config.CustomData.Keys)
@@ -81,6 +89,10 @@ namespace DevExpress.Logify {
 
         [ConfigurationProperty("collectMiniDump", IsRequired = false)]
         public ClientValueElement CollectMiniDump { get { return (ClientValueElement)base["collectMiniDump"]; } }
+        [ConfigurationProperty("collectBreadcrumbs", IsRequired = false)]
+        public ClientValueElement CollectBreadcrumbs { get { return (ClientValueElement)base["collectBreadcrumbs"]; } }
+        [ConfigurationProperty("breadcrumbsMaxCount", IsRequired = false)]
+        public ClientValueElement BreadcrumbsMaxCount { get { return (ClientValueElement)base["breadcrumbsMaxCount"]; } }
     }
 
     public class ClientValueElement : ConfigurationElement {
@@ -146,6 +158,13 @@ namespace DevExpress.Logify.Core {
 
                 if (section.CollectMiniDump != null)
                     ClientConfigHelper.GetConfig(client).CollectMiniDump = section.CollectMiniDump.ValueAsBool;
+                if (section.CollectBreadcrumbs != null)
+                    ClientConfigHelper.GetConfig(client).CollectBreadcrumbs = section.CollectBreadcrumbs.ValueAsBool;
+                if (section.BreadcrumbsMaxCount != null) {
+                    int value = section.BreadcrumbsMaxCount.ValueAsInt;
+                    if (value > 1)
+                        ClientConfigHelper.GetConfig(client).BreadcrumbsMaxCount = value;
+                }
 
                 if (section.CustomData != null && section.CustomData.Count > 0) {
                     foreach (KeyValueConfigurationElement element in section.CustomData)

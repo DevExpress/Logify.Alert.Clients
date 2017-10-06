@@ -8,6 +8,8 @@ namespace DevExpress.Logify.Core.Tests {
     class DefaultTestClientConfiguration : ILogifyClientConfiguration {
         public bool CollectScreenshot { get; set; }
         public bool CollectMiniDump { get; set; }
+        public bool CollectBreadcrumbs { get; set; }
+        public int BreadcrumbsMaxCount { get; set; }
     }
     [TestFixture]
     public class DesktopEnvironmentCollectorTests : CollectorTestsBase {

@@ -30,6 +30,8 @@ namespace DevExpress.Logify.WPF {
         }
 
         public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
+        internal bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
+        internal int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
@@ -94,6 +96,7 @@ namespace DevExpress.Logify.WPF {
         }
         protected override void Configure() {
             ClientConfigurationLoader.ApplyClientConfiguration(this);
+            ForceUpdateBreadcrumbsMaxCount();
         }
 
         public override void Run() {

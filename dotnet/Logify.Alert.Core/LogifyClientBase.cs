@@ -37,7 +37,7 @@ namespace DevExpress.Logify.Core {
         protected LogifyClientBase(Dictionary<string, string> config) {
             Init(config);
         }
-        
+
         public string ServiceUrl {
             get { return serviceUrl; }
             set {
@@ -77,7 +77,7 @@ namespace DevExpress.Logify.Core {
             }
         }
         */
-        
+
         public string OfflineReportsDirectory {
             get { return offlineReportsDirectory; }
             set {
@@ -105,6 +105,31 @@ namespace DevExpress.Logify.Core {
         public IDictionary<string, string> CustomData { get { return customData; } }
         public AttachmentCollection Attachments { get { return attachments; } }
         public BreadcrumbCollection Breadcrumbs { get { return breadcrumbs; } }
+        protected internal bool CollectBreadcrumbsCore {
+            get { return Config.CollectBreadcrumbs; }
+            set {
+                Config.CollectBreadcrumbs = value;
+                EndCollectBreadcrumbs();
+                BeginCollectBreadcrumbs();
+            }
+        }
+        protected internal int BreadcrumbsMaxCountCore {
+            get { return Config.BreadcrumbsMaxCount; }
+            set {
+                if (this.BreadcrumbsMaxCountCore == value)
+                    return;
+
+                if (BreadcrumbsMaxCountCore <= 1)
+                    throw new ArgumentException();
+
+                Config.BreadcrumbsMaxCount = value;
+                ForceUpdateBreadcrumbsMaxCount();
+            }
+        }
+        protected void ForceUpdateBreadcrumbsMaxCount() {
+            this.breadcrumbs = BreadcrumbCollection.ChangeSize(this.breadcrumbs, Config.BreadcrumbsMaxCount);
+            
+        }
         protected bool IsSecondaryInstance { get; set; }
 
         protected internal ILogifyClientConfiguration Config { get { return config; } }
@@ -205,7 +230,20 @@ namespace DevExpress.Logify.Core {
         protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
         protected abstract ISavedReportSender CreateSavedReportsSender();
         protected internal abstract ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction);
+
         protected internal abstract bool RaiseConfirmationDialogShowing(ReportConfirmationModel model);
+        protected void BeginCollectBreadcrumbs() {
+            if (CollectBreadcrumbsCore)
+                BeginCollectBreadcrumbsCore();
+        }
+        protected void EndCollectBreadcrumbs() {
+            EndCollectBreadcrumbsCore();
+        }
+
+        protected virtual void BeginCollectBreadcrumbsCore() {
+        }
+        protected virtual void EndCollectBreadcrumbsCore() {
+        }
         public abstract void Run();
         public abstract void Stop();
 
@@ -279,13 +317,14 @@ namespace DevExpress.Logify.Core {
             this.AppVersion = DetectDevExpressVersion(asm);
             this.UserId = uniqueUserId;
             this.ConfirmSendReport = false;
-
+            this.CollectBreadcrumbsCore = false;
 
             if (customData != null)
                 this.customData = customData;
 
             //TODO:
             Config.CollectMiniDump = true;
+
             //apply values to config
 
             ExceptionLoggerFactory.Instance.PlatformReportSender = CreateBackgroundExceptionReportSender(compositeSender);

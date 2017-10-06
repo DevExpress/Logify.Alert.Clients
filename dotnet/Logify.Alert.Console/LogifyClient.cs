@@ -21,6 +21,8 @@ namespace DevExpress.Logify.Console {
         }
 
         public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
+        internal bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
+        internal int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
@@ -93,6 +95,7 @@ namespace DevExpress.Logify.Console {
         }
         protected override void Configure() {
             ClientConfigurationLoader.ApplyClientConfiguration(this);
+            ForceUpdateBreadcrumbsMaxCount();
         }
 
         public override void Run() {

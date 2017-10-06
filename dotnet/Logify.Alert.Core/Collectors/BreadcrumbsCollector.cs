@@ -18,8 +18,9 @@ namespace DevExpress.Logify.Core {
             int totalBreadcrumbsize = 0;
             const int maxTotalBreadcrumbsize = 3 * 1024 * 1024; // 3Mb
             logger.BeginWriteArray("breadcrumbs");
-            for (int i = breadcrumbs.Count - 1; i >= 0; i--) { // write breadcrumbs from end to beginning, keeping latest items
-                Breadcrumb item = breadcrumbs[i];
+            //for (int i = breadcrumbs.Count - 1; i >= 0; i--) { // write breadcrumbs from end to beginning, keeping latest items
+            foreach (Breadcrumb item in breadcrumbs) { // time backward order
+                //Breadcrumb item = breadcrumbs[i];
                 BreadcrumbCollector collector = new BreadcrumbCollector(item, totalBreadcrumbsize, maxTotalBreadcrumbsize, String.Empty);
                 int writtenContentSize = collector.PerformProcess(ex, logger);
                 totalBreadcrumbsize += writtenContentSize;

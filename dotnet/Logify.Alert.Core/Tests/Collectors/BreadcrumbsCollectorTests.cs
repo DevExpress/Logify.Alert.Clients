@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using NUnit.Framework;
 using System.Collections.Generic;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Core.Tests {
     [TestFixture]
@@ -31,7 +32,7 @@ namespace DevExpress.Logify.Core.Tests {
         }
         [Test]
         public void SimpleEmptyBreadcrumb() {
-            breadcrumbs.Add(new Breadcrumb() {
+            breadcrumbs.AddSimple(new Breadcrumb() {
                 DateTime = new DateTime(2017, 9, 1, 20, 18, 36, DateTimeKind.Utc),
             });
             this.collector = new BreadcrumbsCollector(breadcrumbs);
@@ -48,7 +49,7 @@ namespace DevExpress.Logify.Core.Tests {
         public void SimpleFullBreadcrumb() {
             var customFields = new Dictionary<string, string>();
             customFields.Add("my_custom_field", "testvalue");
-            breadcrumbs.Add(new Breadcrumb() {
+            breadcrumbs.AddSimple(new Breadcrumb() {
                 DateTime = new DateTime(2017, 9, 1, 20, 18, 36, DateTimeKind.Utc),
                 Event = BreadcrumbEvent.MouseClick,
                 Level = BreadcrumbLevel.Info,
@@ -83,10 +84,10 @@ namespace DevExpress.Logify.Core.Tests {
         }
         [Test]
         public void SeveralBreadcrumbs_BackwardOrder() {
-            breadcrumbs.Add(new Breadcrumb() {
+            breadcrumbs.AddSimple(new Breadcrumb() {
                 DateTime = new DateTime(2017, 9, 1, 20, 18, 36, DateTimeKind.Utc),
             });
-            breadcrumbs.Add(new Breadcrumb() {
+            breadcrumbs.AddSimple(new Breadcrumb() {
                 DateTime = new DateTime(2018, 9, 1, 20, 18, 36, DateTimeKind.Utc),
             });
             this.collector = new BreadcrumbsCollector(breadcrumbs);

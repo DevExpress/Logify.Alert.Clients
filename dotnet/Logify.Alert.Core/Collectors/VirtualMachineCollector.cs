@@ -15,23 +15,35 @@ namespace DevExpress.Logify.Core {
                 logger.EndWriteObject("vm");
             }
         }
+        bool reentrance;
         string DetectVm() {
-             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("Select * from Win32_ComputerSystem")) {
-                using (var items = searcher.Get()) {
-                    foreach (var item in items) {
-                        
-                        string manufacturer = item["Manufacturer"].ToString().ToLower();
-                        string model = item["Model"].ToString();
-                        if (IsMSVm(manufacturer, model))
-                            return "HyperV";
-                        if (IsVmwareVm(manufacturer, model))
-                            return "VMWare";
-                        if (IsVirtualBoxVm(manufacturer, model))
-                            return "VirtualBox";
+            if (reentrance)
+                return String.Empty;
+            reentrance = true;
+            try {
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("Select * from Win32_ComputerSystem")) {
+                    using (var items = searcher.Get()) {
+                        foreach (var item in items) {
+
+                            string manufacturer = item["Manufacturer"].ToString().ToLower();
+                            string model = item["Model"].ToString();
+                            if (IsMSVm(manufacturer, model))
+                                return "HyperV";
+                            if (IsVmwareVm(manufacturer, model))
+                                return "VMWare";
+                            if (IsVirtualBoxVm(manufacturer, model))
+                                return "VirtualBox";
+                        }
                     }
                 }
+                return String.Empty;
             }
-            return String.Empty;
+            catch {
+                return String.Empty;
+            }
+            finally {
+                reentrance = false;
+            }
         }
         bool IsMSVm(string manufacturer, string model) {
             return (manufacturer == "microsoft corporation") && model.ToLowerInvariant().Contains("virtual");

@@ -10,10 +10,13 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.ComponentModel;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Win {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
+
+        IMessageFilterEx breadcrumbsRecorder = new WinFormsBreadcrumsRecorder();
 
         [Obsolete("Please use the LogifyAlert.Instance property instead.", true)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -24,7 +27,10 @@ namespace DevExpress.Logify.Win {
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
 
+        
         public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
+        public bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
+        public int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
@@ -97,6 +103,7 @@ namespace DevExpress.Logify.Win {
         }
         protected override void Configure() {
             ClientConfigurationLoader.ApplyClientConfiguration(this);
+            ForceUpdateBreadcrumbsMaxCount();
         }
 
         public override void Run() {
@@ -104,12 +111,16 @@ namespace DevExpress.Logify.Win {
                 //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
                 Application.ThreadException += OnApplicationThreadException;
+
+                EndCollectBreadcrumbs();
+                BeginCollectBreadcrumbs();
                 //AppDomain.CurrentDomain.FirstChanceException
                 //SendOfflineReports();
             }
         }
         public override void Stop() {
             if (!IsSecondaryInstance) {
+                EndCollectBreadcrumbs();
                 //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.Automatic);
                 AppDomain.CurrentDomain.UnhandledException -= OnCurrentDomainUnhandledException;
                 Application.ThreadException -= OnApplicationThreadException;
@@ -132,6 +143,14 @@ namespace DevExpress.Logify.Win {
             if (e != null && e.Exception != null) {
                 ReportException(e.Exception, null, null);
             }
+        }
+
+        protected override void BeginCollectBreadcrumbsCore() {
+            Win32HookManager.Instance.RemoveHook();
+            Win32HookManager.Instance.AddHook(breadcrumbsRecorder);
+        }
+        protected override void EndCollectBreadcrumbsCore() {
+            Win32HookManager.Instance.RemoveHook();
         }
 
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {

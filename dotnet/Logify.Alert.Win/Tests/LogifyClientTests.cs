@@ -25,6 +25,7 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(false, client.ConfirmSendReport);
             //Assert.AreEqual(null, client.MiniDumpServiceUrl);
             Assert.AreEqual(false, client.CollectMiniDump);
+            Assert.AreEqual(false, client.CollectBreadcrumbs);
             Assert.AreEqual("https://logify.devexpress.com/api/report/", client.ServiceUrl);
             Assert.AreEqual(null, client.UserId);
             Assert.AreEqual(true, client.CustomData != null);
@@ -162,6 +163,15 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(true, client.CollectMiniDump);
             client.CollectMiniDump = false;
             Assert.AreEqual(false, client.CollectMiniDump);
+        }
+
+        [Test]
+        public void CollectBreadcrumbs() {
+            Assert.AreEqual(false, client.CollectBreadcrumbs);
+            client.CollectBreadcrumbs = true;
+            Assert.AreEqual(true, client.CollectBreadcrumbs);
+            client.CollectBreadcrumbs = false;
+            Assert.AreEqual(false, client.CollectBreadcrumbs);
         }
 
         static void CheckDefaultStructureAndPredicate(LogifyAlert client, Predicate<IExceptionReportSender> predicate) {

@@ -94,6 +94,7 @@ namespace DevExpress.Logify.Web {
         }
         protected override void Configure() {
             ClientConfigurationLoader.ApplyClientConfiguration(this);
+            ForceUpdateBreadcrumbsMaxCount();
         }
 
         public override void Run() {

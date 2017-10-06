@@ -1,8 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace DevExpress.Logify.Core {
-    public class BreadcrumbCollection : List<Breadcrumb> {
+    public class BreadcrumbCollection : IEnumerable<Breadcrumb> {
+        readonly Breadcrumb[] items;
+        int maxSize;
+        int spaceLeft;
+        int nextIndex = 0;
+
+        public int Count {
+            get {
+                if (spaceLeft > 0)
+                    return maxSize - spaceLeft;
+                else
+                    return maxSize;
+            }
+        }
+        internal int MaxSize { get { return maxSize; } }
+
+        public BreadcrumbCollection(int maxSize = 1000) {
+            if (maxSize < 1)
+                throw new ArgumentException();
+            this.maxSize = maxSize;
+            this.items = new Breadcrumb[maxSize];
+            this.spaceLeft = maxSize;
+        }
+
+        internal static BreadcrumbCollection ChangeSize(BreadcrumbCollection sourceCollection, int newSize) {
+            if (sourceCollection == null || sourceCollection.MaxSize == newSize || newSize <= 1)
+                return sourceCollection;
+
+            BreadcrumbCollection result = new BreadcrumbCollection(newSize);
+            IEnumerator<Breadcrumb> forward = result.GetEnumerator();
+            while (forward.MoveNext())
+                result.Add(forward.Current);
+            return result;
+        }
+
+        internal void AddCore(Breadcrumb item) {
+            items[nextIndex] = item;
+            nextIndex = (nextIndex + 1) % maxSize;
+            if (spaceLeft > 0)
+                spaceLeft--;
+        }
+
+        public IEnumerator<Breadcrumb> GetEnumerator() {
+            if (spaceLeft > 0) {
+                for (int i = nextIndex - 1; i >= 0; i--)
+                    yield return items[i];
+            }
+            else {
+                for (int i = maxSize - 1; i >= 0; i--)
+                    yield return items[(nextIndex + i) % maxSize];
+            }
+        }
+
+        internal IEnumerator<Breadcrumb> GetForwardEnumerator() {
+            if (spaceLeft > 0) {
+                for (int i = 0; i < nextIndex; i++)
+                    yield return items[i];
+            }
+            else {
+                for (int i = 0; i < maxSize; i++)
+                    yield return items[(nextIndex + i) % maxSize];
+            }
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+            return this.GetEnumerator();
+        }
+
+#if ALLOW_ASYNC
+        public void Add(Breadcrumb item, [CallerMemberName] string methodName = "", [CallerLineNumber] int line = 0) {
+            if (item != null) {
+                if (String.IsNullOrEmpty(item.MethodName) && !String.IsNullOrEmpty(methodName))
+                    item.MethodName = methodName;
+                if (item.Line == 0)
+                    item.Line = line;
+            }
+            AddCore(item);
+        }
+#else
+        public void Add(Breadcrumb item) {
+            AddCore(item);
+        }
+#endif
     }
     public enum BreadcrumbLevel {
         None = 0,
@@ -14,6 +97,9 @@ namespace DevExpress.Logify.Core {
     public struct BreadcrumbEvent {
         static readonly BreadcrumbEvent none = new BreadcrumbEvent("none");
         public static BreadcrumbEvent None { get { return none; } }
+
+        static readonly BreadcrumbEvent manual = new BreadcrumbEvent("manual");
+        public static BreadcrumbEvent Manual { get { return manual; } }
 
         static readonly BreadcrumbEvent mouseDown = new BreadcrumbEvent("mouseDown");
         public static BreadcrumbEvent MouseDown { get { return mouseDown; } }
@@ -54,6 +140,8 @@ namespace DevExpress.Logify.Core {
         static readonly BreadcrumbEvent windowActivate = new BreadcrumbEvent("windowActivate");
         public static BreadcrumbEvent WindowActivate { get { return windowActivate; } }
 
+        static readonly BreadcrumbEvent focusChange = new BreadcrumbEvent("focusChange");
+        public static BreadcrumbEvent FocusChange { get { return focusChange; } }
 
         readonly string id;
 
@@ -101,5 +189,14 @@ namespace DevExpress.Logify.Core {
         public int Line { get; set; }
         public string ThreadId { get; set; }
         public IDictionary<string, string> CustomData { get; set; }
+    }
+}
+
+namespace DevExpress.Logify.Core.Internal {
+    //public void Add(Breadcrumb item, [CallerMember])
+    public static class BreadcrumbCollectionExtensions {
+        public static void AddSimple(this BreadcrumbCollection items, Breadcrumb item) {
+            items.AddCore(item);
+        }
     }
 }
