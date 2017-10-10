@@ -18,6 +18,10 @@ export default class nodeReportSender {
 
     sendReportCore() {
         let callback =  function (error, response, body){
+            if(error) {
+                this.callSendReportCallback(error);
+                return;
+            }
             if((response != null) && (response != undefined) && (response.statusCode != 200)) {
                 if(this._sendingAttemptCount < 3) {
                     this._sendingAttemptCount++;
