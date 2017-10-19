@@ -172,7 +172,7 @@ namespace DevExpress.Logify.Win {
         protected override bool DetectIfSecondaryInstance() {
             try {
                 int pid = Process.GetCurrentProcess().Id;
-                string name = "logifypid" + pid.ToString();
+                string name = "Global\\logifypid" + pid.ToString();
                 if (mutex == null) {
                     mutex = OpenExistingMutex(name);
                     if (mutex != null)
