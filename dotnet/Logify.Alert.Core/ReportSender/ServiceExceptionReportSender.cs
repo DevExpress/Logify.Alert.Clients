@@ -56,7 +56,7 @@ namespace DevExpress.Logify.Core {
             return request;
         }
         void SetupProxy(WebRequest request) {
-            if (this.ProxyCredentials != null) {
+            if (this.ProxyCredentials != null && WebRequest.DefaultWebProxy != null) {
                 Uri proxyUri = WebRequest.DefaultWebProxy.GetProxy(new Uri(ServiceUrl));
                 if (proxyUri != null) {
                     request.Proxy = new WebProxy(proxyUri, false);
