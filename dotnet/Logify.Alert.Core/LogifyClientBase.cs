@@ -19,6 +19,10 @@ namespace DevExpress.Logify.Core {
         string offlineReportsDirectory = "offline_reports";
         int offlineReportsCount = 100;
         bool offlineReportsEnabled;
+        ICredentials proxyCredentials;
+#if NETSTANDARD
+        IWebProxy proxy;
+#endif
 
         public static LogifyClientBase Instance { get; protected set; }
 
@@ -65,6 +69,29 @@ namespace DevExpress.Logify.Core {
                     sender.ConfirmSendReport = value;
             }
         }
+#if NETSTANDARD
+        public IWebProxy Proxy {
+            get { return proxy; }
+            set {
+                proxy = value;
+                IExceptionReportSender sender = ExceptionLoggerFactory.Instance.PlatformReportSender;
+                if (sender != null)
+                    sender.Proxy = value;
+            }
+        }
+#endif
+#if !NETSTANDARD
+        public 
+#endif
+        ICredentials ProxyCredentials {
+            get { return proxyCredentials; }
+            set {
+                proxyCredentials = value;
+                IExceptionReportSender sender = ExceptionLoggerFactory.Instance.PlatformReportSender;
+                if (sender != null)
+                    sender.ProxyCredentials = value;
+            }
+        }
         /*
         [EditorBrowsable(EditorBrowsableState.Never)]
         public string MiniDumpServiceUrl {
@@ -99,6 +126,7 @@ namespace DevExpress.Logify.Core {
                 ApplyRecursively<IOfflineDirectoryExceptionReportSender>(ExceptionLoggerFactory.Instance.PlatformReportSender, (s) => { s.IsEnabled = value; });
             }
         }
+
         public string AppName { get; set; }
         public string AppVersion { get; set; }
         public string UserId { get; set; }
@@ -134,7 +162,7 @@ namespace DevExpress.Logify.Core {
 
         protected internal ILogifyClientConfiguration Config { get { return config; } }
 
-        internal NetworkCredential ProxyCredentials { get; set; }
+        //internal NetworkCredential ProxyCredentials { get; set; }
 
         CanReportExceptionEventHandler onCanReportException;
         public event CanReportExceptionEventHandler CanReportException { add { onCanReportException += value; } remove { onCanReportException -= value; } }
@@ -144,8 +172,7 @@ namespace DevExpress.Logify.Core {
                 args.Exception = ex;
                 onCanReportException(this, args);
                 return !args.Cancel;
-            }
-            else
+            } else
                 return true;
         }
 
@@ -201,6 +228,10 @@ namespace DevExpress.Logify.Core {
             reportSender.ServiceUrl = this.ServiceUrl;
             reportSender.ApiKey = this.ApiKey;
             reportSender.ConfirmSendReport = this.ConfirmSendReport;
+            reportSender.ProxyCredentials = this.ProxyCredentials;
+#if NETSTANDARD
+            reportSender.Proxy = this.Proxy;
+#endif
             //reportSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.IsEnabled = this.OfflineReportsEnabled; });
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.DirectoryName = this.OfflineReportsDirectory; });
@@ -257,6 +288,10 @@ namespace DevExpress.Logify.Core {
                     return;
 
                 innerSender.ConfirmSendReport = false;
+                innerSender.ProxyCredentials = this.proxyCredentials;
+#if NETSTANDARD
+                innerSender.Proxy = this.Proxy;
+#endif
                 innerSender.ApiKey = this.ApiKey;
                 innerSender.ServiceUrl = this.ServiceUrl;
                 //innerSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
@@ -268,8 +303,7 @@ namespace DevExpress.Logify.Core {
                 savedReportsSender.Sender = innerSender;
                 savedReportsSender.DirectoryName = this.OfflineReportsDirectory;
                 savedReportsSender.TrySendOfflineReports();
-            }
-            catch {
+            } catch {
             }
         }
 
@@ -318,7 +352,6 @@ namespace DevExpress.Logify.Core {
             this.UserId = uniqueUserId;
             this.ConfirmSendReport = false;
             this.CollectBreadcrumbsCore = false;
-
             if (customData != null)
                 this.customData = customData;
 
@@ -422,8 +455,7 @@ namespace DevExpress.Logify.Core {
                 bool success = ExceptionLogger.ReportException(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments));
                 RaiseAfterReportException(ex);
                 return success;
-            }
-            catch {
+            } catch {
                 return false;
             }
         }
@@ -442,8 +474,7 @@ namespace DevExpress.Logify.Core {
                 bool success = await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments));
                 RaiseAfterReportException(ex);
                 return success;
-            }
-            catch {
+            } catch {
                 return false;
             }
         }
@@ -493,13 +524,13 @@ namespace DevExpress.Logify.Core {
 namespace DevExpress.Logify.Core.Internal {
     public static class LogifyClientAccessor {
         public static ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
-            if(LogifyClientBase.Instance != null)
+            if (LogifyClientBase.Instance != null)
                 return LogifyClientBase.Instance.CreateConfirmationModel(report, sendAction);
             else
                 return null;
         }
         public static bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
-            if(LogifyClientBase.Instance != null)
+            if (LogifyClientBase.Instance != null)
                 return LogifyClientBase.Instance.RaiseConfirmationDialogShowing(model);
             else
                 return false;

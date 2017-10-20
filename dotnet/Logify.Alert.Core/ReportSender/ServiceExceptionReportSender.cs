@@ -41,6 +41,8 @@ namespace DevExpress.Logify.Core {
                 url += "newreport";
             }
             WebRequest request = WebRequest.Create(url);
+            SetupProxy(request);
+
             request.Method = "POST";
             request.Headers.Add("Authorization", "amx " + this.ApiKey);
             request.ContentType = "application/json";
@@ -52,6 +54,17 @@ namespace DevExpress.Logify.Core {
                 content.Flush();
             }
             return request;
+        }
+        void SetupProxy(WebRequest request) {
+            if (this.ProxyCredentials != null) {
+                Uri proxyUri = WebRequest.DefaultWebProxy.GetProxy(new Uri(ServiceUrl));
+                if (proxyUri != null) {
+                    request.Proxy = new WebProxy(proxyUri, false);
+
+                    request.UseDefaultCredentials = false;
+                    request.Proxy.Credentials = ProxyCredentials;
+                }
+            }
         }
         bool SendViaHttpWebRequest(LogifyClientExceptionReport report) {
             WebRequest request = CreateAndSetupHttpWebRequest(report);
@@ -82,18 +95,34 @@ namespace DevExpress.Logify.Core {
             }
         }
         HttpClient CreateAndSetupHttpClient() {
-            HttpClient client = new HttpClient();
+            HttpClient client = CreateClientWithProxy();
             client.BaseAddress = new Uri(ServiceUrl);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("amx", this.ApiKey);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             return client;
         }
+
+        HttpClient CreateClientWithProxy() {
+            if (this.Proxy == null)
+                return new HttpClient();
+            
+            HttpClientHandler httpClientHandler = new HttpClientHandler();
+            
+            httpClientHandler.Proxy = this.Proxy;
+            httpClientHandler.UseProxy = true;
+            httpClientHandler.PreAuthenticate = true;
+            httpClientHandler.UseDefaultCredentials = false;
+            
+            return new HttpClient(httpClientHandler);
+        }
+
         HttpRequestMessage CreateHttpRequest(LogifyClientExceptionReport report) {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "newreport") {
                 Content = new StringContent(report.ReportString, Encoding.UTF8, "application/json")
             };
             return request;
         }
+        
 #endif
     }
 

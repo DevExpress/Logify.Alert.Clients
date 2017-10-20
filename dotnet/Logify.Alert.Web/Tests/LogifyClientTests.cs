@@ -26,6 +26,7 @@ namespace DevExpress.Logify.Core.Tests {
             //Assert.AreEqual(null, client.MiniDumpServiceUrl);
             Assert.AreEqual("https://logify.devexpress.com/api/report/", client.ServiceUrl);
             Assert.AreEqual(null, client.UserId);
+            Assert.AreEqual(null, client.ProxyCredentials);
             Assert.AreEqual(true, client.CustomData != null);
             Assert.AreEqual(0, client.CustomData.Count);
             Assert.AreEqual(true, client.Attachments != null);
@@ -97,6 +98,28 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(false, client.ConfirmSendReport);
             predicate = (s) => {
                 Assert.AreEqual(false, s.ConfirmSendReport);
+                return true;
+            };
+            CheckDefaultStructureAndPredicate(client, predicate);
+        }
+        [Test]
+        public void ProxyCredentials() {
+            Assert.AreEqual(null, client.ProxyCredentials);
+
+            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("test-username", "test-password");
+            client.ProxyCredentials = credentials;
+            Assert.AreNotEqual(null, client.ProxyCredentials);
+            Predicate<IExceptionReportSender> predicate = (s) => {
+                Assert.AreNotEqual(null, s.ProxyCredentials);
+                Assert.AreEqual(credentials, s.ProxyCredentials);
+                return true;
+            };
+            CheckDefaultStructureAndPredicate(client, predicate);
+
+            client.ProxyCredentials = null;
+            Assert.AreEqual(null, client.ProxyCredentials);
+            predicate = (s) => {
+                Assert.AreEqual(null, s.ProxyCredentials);
                 return true;
             };
             CheckDefaultStructureAndPredicate(client, predicate);

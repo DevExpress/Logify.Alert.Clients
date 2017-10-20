@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
@@ -10,6 +11,10 @@ namespace DevExpress.Logify.Core {
         public virtual int RetryCount { get; set; }
         public virtual int ReportTimeoutMilliseconds { get; set; }
 
+        public virtual ICredentials ProxyCredentials { get; set; }
+#if NETSTANDARD
+        public virtual IWebProxy Proxy { get; set; }
+#endif
         //public virtual string MiniDumpServiceUrl { get; set; }
 
         protected ExceptionReportSenderSkeleton() {
@@ -30,8 +35,7 @@ namespace DevExpress.Logify.Core {
                 try {
                     if (SendExceptionReportCore(report))
                         return true;
-                }
-                catch {
+                } catch {
                 }
             }
             return false;
@@ -63,6 +67,10 @@ namespace DevExpress.Logify.Core {
             this.ServiceUrl = instance.ServiceUrl;
             this.ApiKey = instance.ApiKey;
             this.ConfirmSendReport = instance.ConfirmSendReport;
+            this.ProxyCredentials = instance.ProxyCredentials;
+#if NETSTANDARD
+            this.Proxy = instance.Proxy;
+#endif
             //this.MiniDumpServiceUrl = instance.MiniDumpServiceUrl;
             //this.LogId = instance.LogId;
         }

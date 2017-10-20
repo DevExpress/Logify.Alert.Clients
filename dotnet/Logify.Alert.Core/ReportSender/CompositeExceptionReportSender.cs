@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
@@ -24,6 +25,24 @@ namespace DevExpress.Logify.Core {
                     sender.ServiceUrl = value;
             }
         }
+        public override ICredentials ProxyCredentials {
+            get { return base.ProxyCredentials; }
+            set {
+                base.ProxyCredentials = value;
+                foreach (IExceptionReportSender sender in Senders)
+                    sender.ProxyCredentials = value;
+            }
+        }
+#if NETSTANDARD
+        public override IWebProxy Proxy {
+            get { return base.Proxy; }
+            set {
+                base.Proxy = value;
+                foreach (IExceptionReportSender sender in Senders)
+                    sender.Proxy = value;
+            }
+        }
+#endif
         public override bool ConfirmSendReport {
             get { return base.ConfirmSendReport; }
             set {
@@ -107,8 +126,7 @@ namespace DevExpress.Logify.Core {
                             break;
 
                     }
-                }
-                catch {
+                } catch {
                 }
             }
             return result;

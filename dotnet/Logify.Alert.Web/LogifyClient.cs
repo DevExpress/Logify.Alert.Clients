@@ -65,6 +65,7 @@ namespace DevExpress.Logify.Web {
         protected override IExceptionReportSender CreateExceptionReportSender() {
             WebExceptionReportSender defaultSender = new WebExceptionReportSender();
             defaultSender.ConfirmSendReport = ConfirmSendReport;
+            defaultSender.ProxyCredentials = ProxyCredentials;
             if (ConfirmSendReport)
                 return defaultSender;
 

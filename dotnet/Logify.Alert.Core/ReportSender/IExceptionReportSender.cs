@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
@@ -7,6 +8,10 @@ namespace DevExpress.Logify.Core {
         string ApiKey { get; set; }
         //string LogId { get; set; }
         bool ConfirmSendReport { get; set; }
+        ICredentials ProxyCredentials { get; set; }
+#if NETSTANDARD
+        IWebProxy Proxy { get; set; }
+#endif
         //string MiniDumpServiceUrl { get; set; }
 
         bool CanSendExceptionReport();

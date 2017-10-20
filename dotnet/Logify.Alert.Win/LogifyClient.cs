@@ -73,6 +73,7 @@ namespace DevExpress.Logify.Win {
         protected override IExceptionReportSender CreateExceptionReportSender() {
             WinFormsExceptionReportSender defaultSender = new WinFormsExceptionReportSender();
             defaultSender.ConfirmSendReport = ConfirmSendReport;
+            defaultSender.ProxyCredentials = ProxyCredentials;
             if (ConfirmSendReport)
                 return defaultSender;
 

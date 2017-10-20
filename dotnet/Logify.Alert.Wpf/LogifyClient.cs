@@ -68,6 +68,7 @@ namespace DevExpress.Logify.WPF {
         protected override IExceptionReportSender CreateExceptionReportSender() {
             WPFExceptionReportSender defaultSender = new WPFExceptionReportSender();
             defaultSender.ConfirmSendReport = ConfirmSendReport;
+            defaultSender.ProxyCredentials = ProxyCredentials;
             if (ConfirmSendReport)
                 return defaultSender;
 

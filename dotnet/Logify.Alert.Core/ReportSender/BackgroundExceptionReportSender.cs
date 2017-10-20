@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,6 +16,10 @@ namespace DevExpress.Logify.Core {
         public override string ApiKey { get { return innerSender.ApiKey; } set { innerSender.ApiKey = value; } }
         //public override string MiniDumpServiceUrl { get { return innerSender.MiniDumpServiceUrl; } set { innerSender.MiniDumpServiceUrl = value; } }
         public override bool ConfirmSendReport { get { return InnerSender.ConfirmSendReport; } set { InnerSender.ConfirmSendReport = value; } }
+        public override ICredentials ProxyCredentials { get { return InnerSender.ProxyCredentials; } set { InnerSender.ProxyCredentials = value; } }
+#if NETSTANDARD
+        public override IWebProxy Proxy { get { return InnerSender.Proxy; } set { InnerSender.Proxy = value; } }
+#endif
         //public override string LogId { get { return innerSender.LogId; } set { innerSender.LogId = value; } }
         public IExceptionReportSender InnerSender { get { return innerSender; } }
 
