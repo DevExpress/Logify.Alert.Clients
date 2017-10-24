@@ -153,6 +153,12 @@ client.OfflineReportsCount = 20; // Keeps the last 20 reports
 client.OfflineReportsDirectory = "<directory-for-offline-reports>";
 ```
 
+#### ProxyCredentials
+ICredentials. Specifies proxy credentials (a user name and a password) to be used by Logify Alert to authenticate within your system proxy server. The use of this property resolves the "*407 Proxy Authentication Required*" proxy error.
+```csharp
+client.ProxyCredentials = new NetworkCredential("MyProxyUserName", "MyProxyPassword");
+```
+
 #### UserId
 String. Specifies a unique user identifier that corresponds to the sent report.
 ```csharp
