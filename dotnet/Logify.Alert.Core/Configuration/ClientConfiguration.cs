@@ -1,4 +1,4 @@
-﻿namespace DevExpress.Logify.Core {
+﻿namespace DevExpress.Logify.Core.Internal {
     public interface ILogifyClientConfiguration {
         bool CollectScreenshot { get; set; }
         bool CollectMiniDump { get; set; }

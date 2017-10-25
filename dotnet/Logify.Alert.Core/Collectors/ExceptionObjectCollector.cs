@@ -3,8 +3,9 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 using System.Threading;
+using DevExpress.Logify.Core.Internal;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class ExceptionObjectInfoCollector : CompositeInfoCollector {
         public ExceptionObjectInfoCollector(ILogifyClientConfiguration config)
             : base(config) {
@@ -57,20 +58,42 @@ namespace DevExpress.Logify.Core {
     //TODO: move to platform specific assembly
     public class ExceptionStackCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
-            logger.WriteValue("stackTrace", ex.StackTrace);
+            logger.WriteValue("stackTrace", GetFullStackTrace(ex, ex.StackTrace, OuterStackKeys.Stack));
+        }
+
+        internal static string GetFullStackTrace(Exception ex, string innerStackTrace, string outerStackKey) {
+            string fullStackTrace = innerStackTrace;
+
+            if (ex.Data != null && ex.Data.Contains(outerStackKey)) {
+                string outerStack = ex.Data[outerStackKey] as string;
+                if (!String.IsNullOrEmpty(outerStack))
+                    fullStackTrace += outerStack;
+            }
+            return fullStackTrace;
         }
     }
     //TODO: move to platform specific assembly
     public class ExceptionDataCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
             IDictionary data = ex.Data;
-            if (data == null || data.Count <= 0)
+            if (data == null)
+                return;
+
+            int count = data.Count;
+            if (data.Contains(OuterStackKeys.Stack))
+                count--;
+            if (data.Contains(OuterStackKeys.StackNormalized))
+                count--;
+
+            if (count <= 0)
                 return;
 
             logger.BeginWriteArray("data");
             try {
 
                 foreach (object key in data.Keys) {
+                    if (Object.Equals(key, OuterStackKeys.Stack) || Object.Equals(key, OuterStackKeys.StackNormalized))
+                        continue;
                     object value = data[key];
                     logger.BeginWriteObject(String.Empty);
                     try {
@@ -107,7 +130,7 @@ namespace DevExpress.Logify.Core {
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 #endif
 
-                string normalizedStackTrace = NormalizeStackTrace(ex.StackTrace);
+                string normalizedStackTrace = ExceptionStackCollector.GetFullStackTrace(ex, NormalizeStackTrace(ex.StackTrace), OuterStackKeys.StackNormalized);
                 logger.WriteValue("normalizedStackTrace", normalizedStackTrace);
             }
             finally {
@@ -121,7 +144,7 @@ namespace DevExpress.Logify.Core {
             }
         }
 
-        string NormalizeStackTrace(string stackTrace) {
+        internal static string NormalizeStackTrace(string stackTrace) {
             if (String.IsNullOrEmpty(stackTrace))
                 return String.Empty;
             string[] frames = stackTrace.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -131,7 +154,7 @@ namespace DevExpress.Logify.Core {
             return result.ToString();
         }
 
-        string NormalizeStackFrame(string frame) {
+        static string NormalizeStackFrame(string frame) {
             const string prefix = "   at ";
             const string suffix = ") in ";
             if (frame.StartsWith(prefix))

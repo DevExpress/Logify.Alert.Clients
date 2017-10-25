@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class CompositeExceptionReportSender : ExceptionReportSenderSkeleton {
         readonly List<IExceptionReportSender> senders = new List<IExceptionReportSender>();
         public IList<IExceptionReportSender> Senders { get { return senders; } }

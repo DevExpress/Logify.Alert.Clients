@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.ComponentModel;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Console {
     public class LogifyAlert : LogifyClientBase {
@@ -114,6 +115,9 @@ namespace DevExpress.Logify.Console {
                 AppDomain.CurrentDomain.UnhandledException -= OnCurrentDomainUnhandledException;
                 Application.ThreadException -= OnApplicationThreadException;
             }
+        }
+        protected override IStackTraceHelper CreateStackTraceHelper() {
+            return new StackTraceHelper();
         }
 
         [SecurityCritical]

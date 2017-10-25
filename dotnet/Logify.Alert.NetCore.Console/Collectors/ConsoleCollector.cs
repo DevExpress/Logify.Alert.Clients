@@ -1,7 +1,7 @@
 using System;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Console {
+namespace DevExpress.Logify.Core.Internal {
     public class NetCoreConsoleExceptionCollector : CompositeInfoCollector {
         LogifyAppInfoCollector logifyAppInfoCollector;
 

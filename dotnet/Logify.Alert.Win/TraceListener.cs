@@ -1,4 +1,5 @@
 ﻿using DevExpress.Logify.Core;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Win {
     public class LogifyAlertTraceListener : LogifyAlertTraceListenerBase {

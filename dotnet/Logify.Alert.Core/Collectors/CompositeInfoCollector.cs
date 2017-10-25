@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public abstract class CompositeInfoCollector : IInfoCollector {
         readonly List<IInfoCollector> collectors = new List<IInfoCollector>();
 

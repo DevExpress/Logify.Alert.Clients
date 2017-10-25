@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public abstract class ApplicationCollectorBase : IInfoCollector, ILogifyAppInfo {
 
         public abstract string AppName { get; }

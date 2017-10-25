@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     [CLSCompliant(false)]
     public class CRC32custom {
         uint[] tab;

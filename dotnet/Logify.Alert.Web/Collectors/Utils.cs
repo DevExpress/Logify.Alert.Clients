@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     static class Utils {
         public static void SerializeCookieInfo(HttpCookieCollection cookies, ILogger logger) {
             if (cookies != null && cookies.Count != 0) {

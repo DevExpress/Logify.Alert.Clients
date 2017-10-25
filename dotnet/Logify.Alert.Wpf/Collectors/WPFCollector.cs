@@ -1,7 +1,7 @@
 ﻿using System;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.WPF {
+namespace DevExpress.Logify.Core.Internal {
     public class WPFExceptionCollector : CompositeInfoCollector {
         readonly LogifyAppInfoCollector logifyAppInfoCollector = new LogifyAppInfoCollector(new WpfApplicationCollector());
 

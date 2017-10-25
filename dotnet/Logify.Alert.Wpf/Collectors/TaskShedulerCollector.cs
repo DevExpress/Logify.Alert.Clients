@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevExpress.Logify.WPF
-{
+namespace DevExpress.Logify.Core.Internal {
     class TaskShedulerCollector : WpfApplicationCollector
     {
         public override void Process(Exception ex, ILogger logger)

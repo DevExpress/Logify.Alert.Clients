@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public interface IExceptionReportSender {
         string ServiceUrl { get; set; }
         string ApiKey { get; set; }

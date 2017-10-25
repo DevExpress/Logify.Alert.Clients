@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.ExceptionServices;
 using System.Windows.Forms;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class ScreenshotCollector : IInfoCollector {
         [HandleProcessCorruptedStateExceptions]
         public virtual void Process(Exception ex, ILogger logger) {

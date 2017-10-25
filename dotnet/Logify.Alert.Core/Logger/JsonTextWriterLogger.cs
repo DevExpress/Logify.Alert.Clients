@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using DevExpress.Office.Utils;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class TextWriterLogger : ILogger {
         static readonly Dictionary<char, string> replaceTable = CreateReplaceTable();
         readonly Dictionary<string, object> data = new Dictionary<string, object>();

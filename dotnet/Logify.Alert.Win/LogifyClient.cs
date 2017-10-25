@@ -127,6 +127,9 @@ namespace DevExpress.Logify.Win {
                 Application.ThreadException -= OnApplicationThreadException;
             }
         }
+        protected override IStackTraceHelper CreateStackTraceHelper() {
+            return new StackTraceHelper();
+        }
 
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]

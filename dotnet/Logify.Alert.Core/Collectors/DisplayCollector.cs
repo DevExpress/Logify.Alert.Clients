@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class DisplayCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
             //Size size = System.Windows.Forms.SystemInformation.WorkingArea.Size;

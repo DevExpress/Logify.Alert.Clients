@@ -1,7 +1,7 @@
 ﻿using System;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     class NetCoreWebDefaultExceptionCollectorFactory : IInfoCollectorFactory {
 
         readonly Platform platform;

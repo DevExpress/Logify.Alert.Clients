@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.ComponentModel;
 using System.Windows;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.WPF {
     public class LogifyAlert : LogifyClientBase {
@@ -120,6 +121,9 @@ namespace DevExpress.Logify.WPF {
                 if (Application.Current != null)
                     Application.Current.DispatcherUnhandledException -= OnCurrentDispatcherUnhandledException;
             }
+        }
+        protected override IStackTraceHelper CreateStackTraceHelper() {
+            return new StackTraceHelper();
         }
 
         void OnCurrentDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     static class Utils {
         public static void SerializeCookieInfo(IRequestCookieCollection cookies, ILogger logger) {
             if (cookies != null && cookies.Count != 0) {

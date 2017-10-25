@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using NUnit.Framework;
 
-namespace DevExpress.Logify.Core.Tests {
+namespace DevExpress.Logify.Core.Internal.Tests {
     public class CollectorTestsBase {
         TextWriter writer;
         StringBuilder content;

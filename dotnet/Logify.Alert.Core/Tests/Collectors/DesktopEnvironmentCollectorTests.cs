@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Threading;
 using NUnit.Framework;
 
-namespace DevExpress.Logify.Core.Tests {
+namespace DevExpress.Logify.Core.Internal.Tests {
     class DefaultTestClientConfiguration : ILogifyClientConfiguration {
         public bool CollectScreenshot { get; set; }
         public bool CollectMiniDump { get; set; }

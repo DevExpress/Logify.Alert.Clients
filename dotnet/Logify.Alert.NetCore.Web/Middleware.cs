@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DevExpress.Logify.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Web {
     internal class LogifyAlertMiddleware {

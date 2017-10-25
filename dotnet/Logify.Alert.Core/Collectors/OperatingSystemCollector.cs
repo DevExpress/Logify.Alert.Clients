@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
 #if NETSTANDARD
     public class OperatingSystemCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {

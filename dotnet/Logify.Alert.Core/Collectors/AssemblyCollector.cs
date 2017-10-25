@@ -7,7 +7,7 @@ using DevExpress.Logify.Core;
 using Microsoft.Extensions.DependencyModel;
 #endif
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class AssemblyCollector : IInfoCollector {
         readonly Assembly asm;
         readonly string name;

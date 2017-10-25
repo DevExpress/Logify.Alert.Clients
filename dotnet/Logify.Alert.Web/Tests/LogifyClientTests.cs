@@ -2,6 +2,7 @@
 using System;
 using DevExpress.Logify.Web;
 using NUnit.Framework;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Core.Tests {
     [TestFixture]

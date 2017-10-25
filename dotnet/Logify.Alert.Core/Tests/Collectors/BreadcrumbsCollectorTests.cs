@@ -8,7 +8,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using DevExpress.Logify.Core.Internal;
 
-namespace DevExpress.Logify.Core.Tests {
+namespace DevExpress.Logify.Core.Internal.Tests {
     [TestFixture]
     public class BreadcrumbsCollectorTests : CollectorTestsBase {
         BreadcrumbsCollector collector;

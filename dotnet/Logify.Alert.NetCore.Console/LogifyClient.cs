@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Console {
     public class LogifyAlert : LogifyClientBase {
@@ -97,6 +98,9 @@ namespace DevExpress.Logify.Console {
             if (!IsSecondaryInstance) {
                 //do nothing
             }
+        }
+        protected override IStackTraceHelper CreateStackTraceHelper() {
+            return new StackTraceHelper();
         }
 
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public static class AssemblyInfo {
         public const string AssemblyCopyright = "Copyright (c) 2000-2017 Developer Express Inc.";
         public const string AssemblyCompany = "Developer Express Inc.";

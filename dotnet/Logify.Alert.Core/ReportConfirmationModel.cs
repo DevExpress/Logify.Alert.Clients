@@ -3,17 +3,16 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Core {
     public class ReportConfirmationModel : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         string comments = "";
-        public string Comments
-        {
+        public string Comments {
             get { return comments; }
-            set
-            {
-                if(comments != value) {
+            set {
+                if (comments != value) {
                     comments = value;
                     OnPropertyChanged("Comments");
                 }
@@ -23,13 +22,13 @@ namespace DevExpress.Logify.Core {
         string details = null;
         public string Details {
             get {
-                if(details == null) {
+                if (details == null) {
                     details = OriginalReport != null ? OriginalReport.ReportString : "";
                 }
                 return details;
             }
             set {
-                if(details != value) {
+                if (details != value) {
                     details = value;
                     OnPropertyChanged("Details");
                 }
@@ -45,19 +44,20 @@ namespace DevExpress.Logify.Core {
 
         public bool SendReport() {
             LogifyClientExceptionReport resultReport = ReportCommentAppender.CreateReportWithUserComments(OriginalReport, Comments);
-            if(SendAction != null)
+            if (SendAction != null)
                 return SendAction(resultReport);
 
             return false;
         }
 
         void OnPropertyChanged(string name) {
-            if(PropertyChanged != null) {
+            if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
             }
         }
     }
-
+}
+namespace DevExpress.Logify.Core.Internal {
     public class ReportCommentAppender {
         public static LogifyClientExceptionReport CreateReportWithUserComments(LogifyClientExceptionReport originalReport, string userComments) {
             if(originalReport == null)

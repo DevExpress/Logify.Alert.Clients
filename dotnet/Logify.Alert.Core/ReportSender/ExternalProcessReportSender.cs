@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class ExternalProcessExceptionReportSender : ExceptionReportSenderSkeleton {
         public override int RetryCount { get { return 1; } set {} }
         

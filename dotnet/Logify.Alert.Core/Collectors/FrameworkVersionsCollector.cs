@@ -2,8 +2,7 @@
 using System;
 using System.Runtime.ExceptionServices;
 
-namespace DevExpress.Logify.Core
-{
+namespace DevExpress.Logify.Core.Internal {
     public class FrameworkVersionsCollector : IInfoCollector
     {
         [HandleProcessCorruptedStateExceptions]

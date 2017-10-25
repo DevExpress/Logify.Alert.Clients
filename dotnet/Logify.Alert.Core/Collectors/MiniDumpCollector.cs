@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class MiniDumpCollector : IInfoCollector {
         public const string DumpGuidKey = "miniDumpGuid";
         public const string DumpFileNameKey = "miniDumpFileName";

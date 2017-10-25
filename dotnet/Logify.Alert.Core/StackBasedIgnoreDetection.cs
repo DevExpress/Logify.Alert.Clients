@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class StackBasedExceptionIgnoreDetection : IExceptionIgnoreDetection {
         #region ShouldIgnoreException
         public ShouldIgnoreResult ShouldIgnoreException(Exception ex) {

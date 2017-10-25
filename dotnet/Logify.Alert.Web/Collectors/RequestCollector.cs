@@ -6,7 +6,7 @@ using System.Web;
 
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     class RequestCollector : IInfoCollector {
 
         readonly HttpRequest request;

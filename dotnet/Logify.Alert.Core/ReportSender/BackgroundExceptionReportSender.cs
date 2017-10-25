@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public abstract class BackgroundExceptionReportSender : ExceptionReportSenderSkeleton, IExceptionReportSenderWrapper {
         readonly IExceptionReportSender innerSender;
 

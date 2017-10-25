@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Reflection;
 using DevExpress.Logify.Core;
+using DevExpress.Logify.Core.Internal;
 using System.ComponentModel;
 
 namespace DevExpress.Logify.Win {

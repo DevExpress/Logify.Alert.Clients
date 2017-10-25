@@ -155,6 +155,9 @@
     <Compile Include="..\Logify.Alert.Core\StackBasedIgnoreDetection.cs">
       <Link>StackBasedIgnoreDetection.cs</Link>
     </Compile>
+    <Compile Include="..\Logify.Alert.Core\StackTraceHelper.cs">
+      <Link>StackTraceHelper.cs</Link>
+    </Compile>
     <Compile Include="..\Logify.Alert.Core\Tests\Collectors\BreadcrumbsCollectorTests.cs">
       <Link>Tests\Collectors\BreadcrumbsCollectorTests.cs</Link>
     </Compile>

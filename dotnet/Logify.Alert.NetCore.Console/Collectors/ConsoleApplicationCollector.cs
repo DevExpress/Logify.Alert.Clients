@@ -2,7 +2,7 @@
 using DevExpress.Logify.Core;
 using System.Reflection;
 
-namespace DevExpress.Logify.Console {
+namespace DevExpress.Logify.Core.Internal {
     class NetCoreConsoleApplicationCollector : ApplicationCollector {
         public override string AppName {
             get {

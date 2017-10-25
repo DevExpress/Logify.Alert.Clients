@@ -2,7 +2,7 @@
 using System.Web;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     public class WebExceptionCollector : CompositeInfoCollector {
         LogifyAppInfoCollector logifyAppInfoCollector;
 

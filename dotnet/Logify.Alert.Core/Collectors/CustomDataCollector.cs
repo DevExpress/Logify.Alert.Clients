@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class CustomDataCollector : IInfoCollector {
         readonly IDictionary<string, string> customData;
 

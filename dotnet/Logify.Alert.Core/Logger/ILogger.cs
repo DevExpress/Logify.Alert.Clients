@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public interface ILogger {
         TextWriter Writer { get; }
         Dictionary<string, object> Data { get; }

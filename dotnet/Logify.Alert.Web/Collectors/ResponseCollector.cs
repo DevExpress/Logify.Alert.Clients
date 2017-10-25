@@ -6,7 +6,7 @@ using System.Web;
 
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     class ResponseCollector: IInfoCollector {
         readonly HttpResponse response;
         readonly string name;

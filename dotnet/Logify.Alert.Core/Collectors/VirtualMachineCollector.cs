@@ -2,7 +2,7 @@
 using System.Management;
 using System.Runtime.ExceptionServices;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class VirtualMachineCollector : IInfoCollector {
         [HandleProcessCorruptedStateExceptions]
         public virtual void Process(Exception ex, ILogger logger) {

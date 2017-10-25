@@ -6,7 +6,7 @@ using System.Management;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class MemoryCollector : CompositeInfoCollector {
         public MemoryCollector(ILogifyClientConfiguration config)
             : base(config) {

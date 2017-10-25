@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public interface ILogifyAppInfo {
         string AppName { get; }
         string AppVersion { get; }

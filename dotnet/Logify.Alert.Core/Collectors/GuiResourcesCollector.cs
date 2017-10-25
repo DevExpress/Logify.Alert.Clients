@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class Win32GuiResourcesCollector : IInfoCollector {
         [HandleProcessCorruptedStateExceptions]
         public virtual void Process(Exception ex, ILogger logger) {

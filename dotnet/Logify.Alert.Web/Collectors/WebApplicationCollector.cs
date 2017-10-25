@@ -3,8 +3,7 @@ using System.Web;
 using System.Web.Configuration;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Web
-{
+namespace DevExpress.Logify.Core.Internal {
     class WebApplicationCollector : ApplicationCollector {
         public override string AppName {
             get {

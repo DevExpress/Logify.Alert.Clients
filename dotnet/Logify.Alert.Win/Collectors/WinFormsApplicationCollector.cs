@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class WinFormsApplicationCollector : ApplicationCollector {
         public override string AppName { get { return Application.ProductName; } }
         public override string AppVersion { get { return Application.ProductVersion; } }

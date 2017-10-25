@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class LogifyReportGenerationDateTimeCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
             DateTime utcNow = DateTime.UtcNow;

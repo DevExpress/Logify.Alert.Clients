@@ -5,7 +5,7 @@ using System.Text;
 using DevExpress.Logify.Core;
 using Microsoft.AspNetCore.Http;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     class ResponseCollector: IInfoCollector {
         readonly HttpResponse response;
         readonly string name;

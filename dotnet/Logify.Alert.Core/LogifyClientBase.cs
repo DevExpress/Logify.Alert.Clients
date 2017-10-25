@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Logify.Core.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -28,6 +29,7 @@ namespace DevExpress.Logify.Core {
 
         ILogifyClientConfiguration config;
         IDictionary<string, string> customData = new Dictionary<string, string>();
+        IStackTraceHelper stackTraceHelper;
         BreadcrumbCollection breadcrumbs = new BreadcrumbCollection();
         AttachmentCollection attachments = new AttachmentCollection();
 
@@ -219,6 +221,7 @@ namespace DevExpress.Logify.Core {
         void Init(Dictionary<string, string> configDictionary) {
             this.IsSecondaryInstance = DetectIfSecondaryInstance();
             //this.innerConfig = CreateClientConfiguration(); // new DefaultClientConfiguration();
+            this.stackTraceHelper = CreateStackTraceHelper();
             this.config = new DefaultClientConfiguration();
             this.ConfirmSendReport = false; // do not confirm by default
 
@@ -261,6 +264,7 @@ namespace DevExpress.Logify.Core {
         protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
         protected abstract ISavedReportSender CreateSavedReportsSender();
         protected internal abstract ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction);
+        protected abstract IStackTraceHelper CreateStackTraceHelper();
 
         protected internal abstract bool RaiseConfirmationDialogShowing(ReportConfirmationModel model);
         protected void BeginCollectBreadcrumbs() {
@@ -421,24 +425,96 @@ namespace DevExpress.Logify.Core {
             return Encoding.UTF8.GetString(bytes).Split('$');
         }
         */
+        string GetOuterStackTrace(int skipFrames) {
+            if (stackTraceHelper != null)
+                return stackTraceHelper.GetOuterStackTrace(skipFrames + 1); // remove GetOuterStackTrace call from stack trace
+            else
+                return String.Empty;
+        }
+        string GetOuterNormalizedStackTrace(int skipFrames) {
+            if (stackTraceHelper != null)
+                return stackTraceHelper.GetOuterNormalizedStackTrace(skipFrames + 1); // remove GetOuterNormalizedStackTrace call from stack trace
+            else
+                return String.Empty;
+        }
+        void AppendOuterStack(Exception ex, int skipFrames) {
+            try {
+                if (ex != null && ex.Data != null) {
+                    ex.Data[OuterStackKeys.Stack] = GetOuterStackTrace(skipFrames + 1); // remove AppendOuterStack from stacktrace
+                    ex.Data[OuterStackKeys.StackNormalized] = GetOuterNormalizedStackTrace(skipFrames + 1); // remove AppendOuterStack from stacktrace
+                }
+            }
+            catch {
+            }
+        }
+        void RemoveOuterStack(Exception ex) {
+            try {
+                if (ex != null && ex.Data != null) {
+                    if (ex.Data.Contains(OuterStackKeys.Stack))
+                        ex.Data.Remove(OuterStackKeys.Stack);
+                    if (ex.Data.Contains(OuterStackKeys.StackNormalized))
+                        ex.Data.Remove(OuterStackKeys.StackNormalized);
+                }
+            }
+            catch {
+            }
+        }
+
+        const int skipFramesForAppendOuterStackRootMethod = 2; // remove from stacktrace Send call and calling method
         public void Send(Exception ex) {
-            Send(ex, null);
+            AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
+            try {
+                ReportException(ex, null, null);
+            }
+            finally {
+                RemoveOuterStack(ex);
+            }
         }
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData) {
-            ReportException(ex, additionalCustomData, null);
+            AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
+            try {
+                ReportException(ex, additionalCustomData, null);
+            }
+            finally {
+                RemoveOuterStack(ex);
+            }
         }
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            ReportException(ex, additionalCustomData, additionalAttachments);
+            AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
+            try {
+                ReportException(ex, additionalCustomData, additionalAttachments);
+            }
+            finally {
+                RemoveOuterStack(ex);
+            }
         }
 #if ALLOW_ASYNC
         public async Task<bool> SendAsync(Exception ex) {
-            return await SendAsync(ex, null);
+            AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
+            try {
+                return await ReportExceptionAsync(ex, null, null);
+            }
+            finally {
+                RemoveOuterStack(ex);
+            }
         }
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData) {
-            return await ReportExceptionAsync(ex, additionalCustomData, null);
+            AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
+            try {
+                return await ReportExceptionAsync(ex, additionalCustomData, null);
+            }
+            finally {
+                RemoveOuterStack(ex);
+            }
         }
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            return await ReportExceptionAsync(ex, additionalCustomData, additionalAttachments);
+            AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
+            try {
+                return await ReportExceptionAsync(ex, additionalCustomData, additionalAttachments);
+            }
+            finally {
+                RemoveOuterStack(ex);
+            }
         }
 #endif
         protected bool ReportException(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
@@ -509,7 +585,9 @@ namespace DevExpress.Logify.Core {
 
         public bool Ignore { get; set; }
     }
+}
 
+namespace DevExpress.Logify.Core.Internal {
     public enum ShouldIgnoreResult {
         Unknown,
         Ignore,
@@ -519,9 +597,7 @@ namespace DevExpress.Logify.Core {
     public interface IExceptionIgnoreDetection {
         ShouldIgnoreResult ShouldIgnoreException(Exception ex);
     }
-}
 
-namespace DevExpress.Logify.Core.Internal {
     public static class LogifyClientAccessor {
         public static ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
             if (LogifyClientBase.Instance != null)
@@ -537,4 +613,12 @@ namespace DevExpress.Logify.Core.Internal {
         }
     }
 
+    public interface IStackTraceHelper {
+        string GetOuterStackTrace(int skipFrames);
+        string GetOuterNormalizedStackTrace(int skipFrames);
+    }
+    public static class OuterStackKeys {
+        public const string Stack = "#logify_outer_stack";
+        public const string StackNormalized = "#logify_outer_stack_normalized";
+    }
 }

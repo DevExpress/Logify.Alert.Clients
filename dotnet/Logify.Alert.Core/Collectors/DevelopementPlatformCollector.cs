@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class DevelopementPlatformCollector : IInfoCollector {
 
         readonly Platform platform;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public abstract class LogifyAlertTraceListenerBase : TraceListener {
         public LogifyAlertTraceListenerBase() {
             InitializeInstance();

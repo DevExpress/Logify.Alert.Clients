@@ -9,6 +9,7 @@ using System.Reflection;
 using DevExpress.Logify.Web;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Web {
     public class LogifyAlert : LogifyClientBase {
@@ -97,6 +98,9 @@ namespace DevExpress.Logify.Web {
         }
         public override void Stop() {
             //do nothing
+        }
+        protected override IStackTraceHelper CreateStackTraceHelper() {
+            return new StackTraceHelper();
         }
 
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {

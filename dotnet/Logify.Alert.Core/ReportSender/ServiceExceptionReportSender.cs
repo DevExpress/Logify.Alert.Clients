@@ -14,6 +14,45 @@ using System.Net.Http.Headers;
 #endif
 
 namespace DevExpress.Logify.Core {
+    public class BackgroundSendModel {
+        public Func<bool> SendAction { get; set; }
+        //public LogifyClientExceptionReport Report { get; set; }
+        public Thread Thread { get; set; }
+        public bool SendComplete { get; set; }
+        public bool SendResult { get; set; }
+
+        internal static BackgroundSendModel SendReportInBackgroundThread(Func<bool> sendAction) {
+            Thread thread = new Thread(BackgroundSend);
+            BackgroundSendModel sendModel = new BackgroundSendModel();
+            sendModel.SendAction = sendAction;
+            sendModel.Thread = thread;
+            thread.Start(sendModel);
+            return sendModel;
+        }
+
+        static void BackgroundSend(object obj) {
+            BackgroundSendModel model = obj as BackgroundSendModel;
+            if (model == null)
+                return;
+
+            try {
+                if (model.SendAction == null) {
+                    model.SendResult = false;
+                    //model.SendComplete = true;
+                    return;
+                }
+
+                model.SendResult = model.SendAction();
+                //model.SendComplete = true;
+            }
+            finally {
+                model.SendComplete = true;
+            }
+        }
+    }
+}
+
+namespace DevExpress.Logify.Core.Internal {
     public abstract class ServiceExceptionReportSender : ExceptionReportSenderSkeleton {
         protected override bool SendExceptionReportCore(LogifyClientExceptionReport report) {
 #if NETSTANDARD
@@ -126,41 +165,6 @@ namespace DevExpress.Logify.Core {
 #endif
     }
 
-    public class BackgroundSendModel {
-        public Func<bool> SendAction { get; set; }
-        //public LogifyClientExceptionReport Report { get; set; }
-        public Thread Thread { get; set; }
-        public bool SendComplete { get; set; }
-        public bool SendResult { get; set; }
-
-        internal static BackgroundSendModel SendReportInBackgroundThread(Func<bool> sendAction) {
-            Thread thread = new Thread(BackgroundSend);
-            BackgroundSendModel sendModel = new BackgroundSendModel();
-            sendModel.SendAction = sendAction;
-            sendModel.Thread = thread;
-            thread.Start(sendModel);
-            return sendModel;
-        }
-
-        static void BackgroundSend(object obj) {
-            BackgroundSendModel model = obj as BackgroundSendModel;
-            if(model == null)
-                return;
-
-            try {
-                if(model.SendAction == null) {
-                    model.SendResult = false;
-                    //model.SendComplete = true;
-                    return;
-                }
-
-                model.SendResult = model.SendAction();
-                //model.SendComplete = true;
-            } finally {
-                model.SendComplete = true;
-            }
-        }
-    }
 
     public abstract class ServiceWithConfirmationExceptionReportSender : ServiceExceptionReportSender {
         static bool isFormShown;

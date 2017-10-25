@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class SavedExceptionReportSender : ISavedReportSender {
         public string DirectoryName { get; set; }
         public IExceptionReportSender Sender { get; set; }

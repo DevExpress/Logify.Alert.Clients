@@ -2,8 +2,9 @@
 using DevExpress.Logify.Core;
 using System.Windows;
 using System.Threading.Tasks;
+using DevExpress.Logify.WPF;
 
-namespace DevExpress.Logify.WPF {
+namespace DevExpress.Logify.Core.Internal {
     public class WPFExceptionReportSender : ServiceWithConfirmationExceptionReportSender {
         public override IExceptionReportSender CreateEmptyClone() {
             return new WPFExceptionReportSender();

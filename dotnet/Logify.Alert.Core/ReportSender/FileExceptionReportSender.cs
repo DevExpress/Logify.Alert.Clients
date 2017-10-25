@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class FileExceptionReportSender : ExceptionReportSenderSkeleton {
         public string FileName { get; set; }
         public bool Append { get; set; }

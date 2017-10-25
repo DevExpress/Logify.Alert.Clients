@@ -6,7 +6,7 @@ using DevExpress.Logify.Core;
 using Microsoft.Extensions.DependencyModel;
 #endif
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
 #if NETSTANDARD
     public class AppDomainCollector : IInfoCollector {
         readonly string name;
@@ -55,7 +55,7 @@ namespace DevExpress.Logify.Core {
 #endif
         }
 #else
-        public class AppDomainCollector : IInfoCollector {
+    public class AppDomainCollector : IInfoCollector {
         readonly AppDomain domain;
         readonly string name;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class DevExpressVersionsInStackCollector : IInfoCollector {
         public void Process(Exception ex, ILogger logger) {
             List<string> versions = new List<string>();

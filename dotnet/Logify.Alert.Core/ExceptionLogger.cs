@@ -47,6 +47,8 @@ namespace DevExpress.Logify.Core {
             }
         }
     }
+}
+namespace DevExpress.Logify.Core.Internal {
     public class ExceptionLogger {
         public IExceptionReportSender ReportSender { get; set; }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using DevExpress.Logify.Core;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Send {
     class Program {

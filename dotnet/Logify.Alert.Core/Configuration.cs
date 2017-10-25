@@ -3,7 +3,7 @@ using System;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     internal class LogifyAlertConfiguration {
         public LogifyAlertConfiguration() {
             this.BreadcrumbsMaxCount = 1000;
@@ -132,7 +132,7 @@ namespace DevExpress.Logify {
     }
 }
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public static class ClientConfigurationLoader {
         public static void ApplyClientConfiguration(LogifyClientBase client) {
             LogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as LogifyConfigSection;

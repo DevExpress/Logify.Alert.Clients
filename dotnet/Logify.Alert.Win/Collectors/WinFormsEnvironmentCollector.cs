@@ -1,7 +1,7 @@
 ﻿using System;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.Win {
+namespace DevExpress.Logify.Core.Internal {
     public class WinFormsEnvironmentCollector : DesktopEnvironmentCollector {
         public WinFormsEnvironmentCollector(ILogifyClientConfiguration config)
             : base(config) {

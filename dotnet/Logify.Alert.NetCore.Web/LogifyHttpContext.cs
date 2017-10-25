@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     internal static class LogifyHttpContext {
         [ThreadStatic]
         static HttpContext current;

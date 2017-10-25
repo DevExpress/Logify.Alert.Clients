@@ -3,7 +3,7 @@
 using DevExpress.Logify.Core;
 using Microsoft.AspNetCore.Http;
 
-namespace DevExpress.Logify.Web
+namespace DevExpress.Logify.Core.Internal
 {
     class NetCoreWebApplicationCollector : ApplicationCollector {
         public override string AppName {

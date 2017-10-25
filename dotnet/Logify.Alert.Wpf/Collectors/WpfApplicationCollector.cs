@@ -7,8 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using DevExpress.Logify.Core;
 
-namespace DevExpress.Logify.WPF
-{
+namespace DevExpress.Logify.Core.Internal {
     class WpfApplicationCollector : ApplicationCollector {
         public override string AppName { get { return Application.ResourceAssembly.GetName().Name; } }
         public override string AppVersion { get { return System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString(); } }

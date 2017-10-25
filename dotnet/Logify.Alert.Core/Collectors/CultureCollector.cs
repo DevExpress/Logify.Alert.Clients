@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     //TODO: move to platform specific assembly
     public class CultureBaseCollector : IInfoCollector {
         readonly CultureInfo culture;

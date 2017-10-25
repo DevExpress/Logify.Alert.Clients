@@ -1,4 +1,4 @@
-﻿using DevExpress.Logify.Core;
+﻿using DevExpress.Logify.Core.Internal;
 using System;
 using System.Reflection;
 using System.Resources;

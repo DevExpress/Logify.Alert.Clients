@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class BackgroundThreadExceptionReportSender : BackgroundExceptionReportSender {
         public BackgroundThreadExceptionReportSender(IExceptionReportSender innerSender)
             : base(innerSender) {

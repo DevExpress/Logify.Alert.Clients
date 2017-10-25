@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public class BreadcrumbsCollector : IInfoCollector {
         readonly BreadcrumbCollection breadcrumbs;
 
@@ -14,6 +15,8 @@ namespace DevExpress.Logify.Core {
         public void Process(Exception ex, ILogger logger) {
             if (breadcrumbs == null || breadcrumbs.Count <= 0)
                 return;
+
+            //string dump = DumpBreadcrumbs(breadcrumbs);
 
             int totalBreadcrumbsize = 0;
             const int maxTotalBreadcrumbsize = 3 * 1024 * 1024; // 3Mb
@@ -27,6 +30,49 @@ namespace DevExpress.Logify.Core {
             }
             logger.EndWriteArray("breadcrumbs");
         }
+#if DEBUG
+        string DumpBreadcrumbs(BreadcrumbCollection breadcrumbs) {
+            StringBuilder content = new StringBuilder();
+            content.AppendLine("BreadcrumbCollection breadcrumbs = new BreadcrumbCollection();");
+            foreach (Breadcrumb item in breadcrumbs) {
+                DumpBreadcrumb(item, content);
+            }
+            return content.ToString();
+        }
+
+        void DumpBreadcrumb(Breadcrumb item, StringBuilder content) {
+            content.AppendLine("breadcrumbs.Add(");
+            content.AppendLine("    new Breadcrumb() {");
+            if (item.Event != BreadcrumbEvent.None) {
+                string text = item.Event.ToString();
+                text = Char.ToUpper(text[0]) + text.Substring(1);
+                content.AppendFormat("        Event = BreadcrumbEvent.{0},\r\n", text);
+            }
+            if (item.Level != BreadcrumbLevel.None)
+                content.AppendFormat("        Level = BreadcrumbLevel.{0},\r\n", item.Level);
+            if (!String.IsNullOrEmpty(item.ThreadId))
+                content.AppendFormat("        ThreadId = \"{0}\",\r\n", item.ThreadId);
+            if (!String.IsNullOrEmpty(item.Category))
+                content.AppendFormat("        Category = \"{0}\",\r\n", item.Category);
+            if (!String.IsNullOrEmpty(item.ClassName))
+                content.AppendFormat("        ClassName = \"{0}\",\r\n", item.ClassName);
+            if (!String.IsNullOrEmpty(item.MethodName))
+                content.AppendFormat("        MethodName = \"{0}\",\r\n", item.MethodName);
+            if (item.Line != 0)
+                content.AppendFormat("        Line = {0},\r\n", item.Line);
+            if (item.DateTime != DateTime.Now)
+                content.AppendFormat("        DateTime = DateTime.ParseExact(\"{0}\", \"o\", CultureInfo.InvariantCulture),\r\n", item.DateTime.ToString("o", CultureInfo.InvariantCulture));
+            if (item.CustomData != null && item.CustomData.Count > 0) {
+                content.AppendLine("        CustomData = new Dictionary<string, string>() {");
+                foreach (string key in item.CustomData.Keys) {
+                    content.AppendFormat("            {{ \"{0}\", \"{1}\" }},\r\n", key, item.CustomData[key]);
+                }
+                content.AppendLine("        }");
+            }
+            content.AppendLine("    }");
+            content.AppendLine(");");
+        }
+#endif
     }
     public class BreadcrumbCollector : IInfoCollector {
         readonly Breadcrumb item;
