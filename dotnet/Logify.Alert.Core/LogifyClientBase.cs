@@ -72,7 +72,7 @@ namespace DevExpress.Logify.Core {
             }
         }
 #if NETSTANDARD
-        public IWebProxy Proxy {
+        /*public*/ IWebProxy Proxy {
             get { return proxy; }
             set {
                 proxy = value;
@@ -82,10 +82,7 @@ namespace DevExpress.Logify.Core {
             }
         }
 #endif
-#if !NETSTANDARD
-        public 
-#endif
-        ICredentials ProxyCredentials {
+        public ICredentials ProxyCredentials {
             get { return proxyCredentials; }
             set {
                 proxyCredentials = value;

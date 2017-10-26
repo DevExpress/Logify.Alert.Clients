@@ -55,23 +55,14 @@ namespace DevExpress.Logify.Core {
 namespace DevExpress.Logify.Core.Internal {
     public abstract class ServiceExceptionReportSender : ExceptionReportSenderSkeleton {
         protected override bool SendExceptionReportCore(LogifyClientExceptionReport report) {
-#if NETSTANDARD
-            return SendViaHttpClient(report);
-#else
             return SendViaHttpWebRequest(report);
-#endif
         }
 #if ALLOW_ASYNC
         protected override async Task<bool> SendExceptionReportCoreAsync(LogifyClientExceptionReport report) {
-#if NETSTANDARD
-            return await SendViaHttpClientAsync(report);
-#else
             return await SendViaHttpWebRequestAsync(report);
-#endif
         }
 #endif
 
-#if !NETSTANDARD
         WebRequest CreateAndSetupHttpWebRequest(LogifyClientExceptionReport report) {
             string url = ServiceUrl;
             if (!string.IsNullOrEmpty(url)) {
@@ -116,52 +107,6 @@ namespace DevExpress.Logify.Core.Internal {
             HttpWebResponse response = await request.GetResponseAsync() as HttpWebResponse;
             return response != null && response.StatusCode == HttpStatusCode.OK;
         }
-#endif
-#endif
-#if NETSTANDARD
-        bool SendViaHttpClient(LogifyClientExceptionReport report) {
-            using (HttpClient client = CreateAndSetupHttpClient()) {
-                HttpRequestMessage request = CreateHttpRequest(report);
-                HttpResponseMessage message = client.SendAsync(request).Result;
-                return message != null && message.StatusCode == HttpStatusCode.OK;
-            }
-        }
-        async Task<bool> SendViaHttpClientAsync(LogifyClientExceptionReport report) {
-            using (HttpClient client = CreateAndSetupHttpClient()) {
-                HttpRequestMessage request = CreateHttpRequest(report);
-                HttpResponseMessage message = await client.SendAsync(request);
-                return message != null && message.StatusCode == HttpStatusCode.OK;
-            }
-        }
-        HttpClient CreateAndSetupHttpClient() {
-            HttpClient client = CreateClientWithProxy();
-            client.BaseAddress = new Uri(ServiceUrl);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("amx", this.ApiKey);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            return client;
-        }
-
-        HttpClient CreateClientWithProxy() {
-            if (this.Proxy == null)
-                return new HttpClient();
-            
-            HttpClientHandler httpClientHandler = new HttpClientHandler();
-            
-            httpClientHandler.Proxy = this.Proxy;
-            httpClientHandler.UseProxy = true;
-            httpClientHandler.PreAuthenticate = true;
-            httpClientHandler.UseDefaultCredentials = false;
-            
-            return new HttpClient(httpClientHandler);
-        }
-
-        HttpRequestMessage CreateHttpRequest(LogifyClientExceptionReport report) {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "newreport") {
-                Content = new StringContent(report.ReportString, Encoding.UTF8, "application/json")
-            };
-            return request;
-        }
-        
 #endif
     }
 
