@@ -6,9 +6,6 @@ using System.Threading;
 namespace DevExpress.Logify.Core.Internal {
     public class StackTraceHelper : IStackTraceHelper {
         public string GetOuterStackTrace(int skipFrames) {
-#if NETSTANDARD
-            return String.Empty;
-#else
             try {
                 StackTrace trace = new StackTrace(skipFrames + 1, true); // remove GetOuterStackTrace call from stack trace
                 return trace.ToString();
@@ -16,13 +13,7 @@ namespace DevExpress.Logify.Core.Internal {
             catch {
                 return String.Empty;
             }
-#endif
         }
-#if NETSTANDARD
-        public string GetOuterNormalizedStackTrace(int skipFrames) {
-            return String.Empty;
-        }
-#else
         public string GetOuterNormalizedStackTrace(int skipFrames) {
             CultureInfo prevCulture = Thread.CurrentThread.CurrentCulture;
             CultureInfo prevUICulture = Thread.CurrentThread.CurrentUICulture;
@@ -41,6 +32,5 @@ namespace DevExpress.Logify.Core.Internal {
                 Thread.CurrentThread.CurrentUICulture = prevUICulture;
             }
         }
-#endif
-        }
+    }
 }

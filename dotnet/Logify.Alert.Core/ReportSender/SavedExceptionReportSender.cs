@@ -22,9 +22,11 @@ namespace DevExpress.Logify.Core.Internal {
                     return;
 
                 Thread thread = new Thread(TrySendSavedReportsWorker);
-#if !NETSTANDARD
-                thread.Priority = ThreadPriority.Lowest;
-#endif
+                try {
+                    thread.Priority = ThreadPriority.Lowest;
+                }
+                catch {
+                }
                 thread.Start();
             }
             catch {

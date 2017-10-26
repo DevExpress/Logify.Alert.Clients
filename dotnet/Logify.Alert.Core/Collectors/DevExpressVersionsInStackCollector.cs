@@ -22,29 +22,16 @@ namespace DevExpress.Logify.Core.Internal {
         }
 
         void TryDetectDxVersion(StackTrace trace, List<string> versions) {
-#if NETSTANDARD
-            StackFrame[] frames = trace.GetFrames();
-            if (frames == null || frames.Length <= 0)
-                return;
-            int count = frames.Length;
-            for (int i = 0; i < count; i++)
-                TryDetectDxVersion(frames[i], versions);
-#else
             int count = trace.FrameCount;
             for (int i = 0; i < count; i++)
                 TryDetectDxVersion(trace.GetFrame(i), versions);
-#endif
         }
         void TryDetectDxVersion(StackFrame frame, List<string> versions) {
             MethodBase method = frame.GetMethod();
             if (method == null)
                 return;
 
-#if NETSTANDARD
-            Assembly asm = method.DeclaringType.GetTypeInfo().Assembly;
-#else
             Assembly asm = method.DeclaringType.Assembly;
-#endif
             if (!IsSignedDevExpressAssembly(asm))
                 return;
 

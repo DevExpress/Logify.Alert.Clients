@@ -29,19 +29,7 @@ namespace DevExpress.Logify.Core.Internal {
 
         protected abstract void SerializeCurrentDomainInfo(Exception ex, ILogger logger, string name);
     }
-#if NETSTANDARD
     public abstract class ApplicationCollector : ApplicationCollectorBase {
-        protected override void SerializeCurrentDomainInfo(Exception ex, ILogger logger, string name) {
-            try {
-                AppDomainCollector domain = new AppDomainCollector(name);
-                domain.Process(ex, logger);
-            }
-            catch {
-            }
-        }
-    }
-#else
-        public abstract class ApplicationCollector : ApplicationCollectorBase {
         protected override void SerializeCurrentDomainInfo(Exception ex, ILogger logger, string name) {
             try {
                 AppDomainCollector domain = new AppDomainCollector(AppDomain.CurrentDomain, name);
@@ -51,5 +39,4 @@ namespace DevExpress.Logify.Core.Internal {
             }
         }
     }
-#endif
 }

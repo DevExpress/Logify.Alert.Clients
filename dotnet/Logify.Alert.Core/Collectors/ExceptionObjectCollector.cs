@@ -114,33 +114,17 @@ namespace DevExpress.Logify.Core.Internal {
     //TODO: move to platform specific assembly
     public class ExceptionNormalizedStackCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
-#if NETSTANDARD
-            CultureInfo prevCulture = CultureInfo.CurrentCulture;
-            CultureInfo prevUICulture = CultureInfo.CurrentUICulture;
-#else
             CultureInfo prevCulture = Thread.CurrentThread.CurrentCulture;
             CultureInfo prevUICulture = Thread.CurrentThread.CurrentUICulture;
-#endif
             try {
-#if NETSTANDARD
-                CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-                CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
-#else
                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-#endif
-
                 string normalizedStackTrace = ExceptionStackCollector.GetFullStackTrace(ex, NormalizeStackTrace(ex.StackTrace), OuterStackKeys.StackNormalized);
                 logger.WriteValue("normalizedStackTrace", normalizedStackTrace);
             }
             finally {
-#if NETSTANDARD
-                CultureInfo.CurrentCulture = prevCulture;
-                CultureInfo.CurrentUICulture = prevUICulture;
-#else
                 Thread.CurrentThread.CurrentCulture = prevCulture;
                 Thread.CurrentThread.CurrentUICulture = prevUICulture;
-#endif
             }
         }
 

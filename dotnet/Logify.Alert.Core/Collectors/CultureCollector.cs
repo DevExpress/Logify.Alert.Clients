@@ -22,13 +22,9 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.WriteValue("name", Culture.Name);
                 logger.WriteValue("englishName", Culture.EnglishName);
                 logger.WriteValue("displayName", Culture.DisplayName);
-#if !NETSTANDARD
                 logger.WriteValue("isCultureCustomize", Culture.UseUserOverride);
-#endif
                 try {
-#if !NETSTANDARD
                     if (Culture.UseUserOverride)
-#endif
                         SerializeCultureDetails(logger);
                 }
                 catch {
@@ -49,10 +45,8 @@ namespace DevExpress.Logify.Core.Internal {
 
                 logger.WriteValue("isNeutralCulture", Culture.IsNeutralCulture);
                 logger.WriteValue("ISO2", Culture.TwoLetterISOLanguageName);
-#if !NETSTANDARD
                 logger.WriteValue("ISO1", Culture.ThreeLetterISOLanguageName);
                 logger.WriteValue("WinAPI", Culture.ThreeLetterWindowsLanguageName);
-#endif
             }
             finally {
                 logger.EndWriteObject("details");
@@ -63,13 +57,11 @@ namespace DevExpress.Logify.Core.Internal {
             TextInfo textInfo = Culture.TextInfo;
             logger.WriteValue("listSeparator", textInfo.ListSeparator);
             logger.WriteValue("isRightToLeft", textInfo.IsRightToLeft);
-#if !NETSTANDARD
             logger.WriteValue("ANSICodePage", textInfo.ANSICodePage);
             logger.WriteValue("EBCDICCodePage", textInfo.EBCDICCodePage);
             logger.WriteValue("LCID", textInfo.LCID);
             logger.WriteValue("MacCodePage", textInfo.MacCodePage);
             logger.WriteValue("OEMCodePage", textInfo.OEMCodePage);
-#endif
         }
 
         void SerializeDateTimeInfo(ILogger logger) {
@@ -78,20 +70,8 @@ namespace DevExpress.Logify.Core.Internal {
 
             logger.BeginWriteObject("dateTime");
 
-#if NETSTANDARD
-            try {
-                DateTime today = DateTime.Today;
-                string dateSeparator = today.ToString("%/", culture);
-                string timeSeparator = today.ToString("%:", culture);
-                logger.WriteValue("dateSeparator", dateSeparator);
-                logger.WriteValue("timeSeparator", timeSeparator);
-            }
-            catch {
-            }
-#else
             logger.WriteValue("dateSeparator", formatInfo.DateSeparator);
             logger.WriteValue("timeSeparator", formatInfo.TimeSeparator);
-#endif
             logger.WriteValue("firstDayOfWeek", formatInfo.FirstDayOfWeek.ToString());
             logger.WriteValue("am", formatInfo.AMDesignator);
             logger.WriteValue("pm", formatInfo.PMDesignator);
@@ -163,10 +143,8 @@ namespace DevExpress.Logify.Core.Internal {
 
             logger.WriteValue("perMilleSymbol", formatInfo.PerMilleSymbol);
             logger.WriteValue("NaNSymbol", formatInfo.NaNSymbol);
-#if !NETSTANDARD
             logger.WriteValue("digitShapes", formatInfo.DigitSubstitution.ToString());
             logger.WriteValue("nativeDigits", formatInfo.NativeDigits);
-#endif
 
             logger.EndWriteObject("numberFormat");
         }
