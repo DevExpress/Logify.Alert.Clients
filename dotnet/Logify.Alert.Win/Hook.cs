@@ -173,12 +173,12 @@ namespace DevExpress.Logify.Core.Internal {
                 if (hookInfo.GetMsgHookHandle != IntPtr.Zero) {
                     IntPtr handle = hookInfo.GetMsgHookHandle;
                     hookInfo.GetMsgHookHandle = IntPtr.Zero;
-                    isOk = isOk || Win32.UnhookWindowsHookEx(handle);
+                    isOk = Win32.UnhookWindowsHookEx(handle) || isOk;
                 }
                 if (hookInfo.CbtHookHandle != IntPtr.Zero) {
                     IntPtr handle = hookInfo.CbtHookHandle;
                     hookInfo.CbtHookHandle = IntPtr.Zero;
-                    isOk = isOk || Win32.UnhookWindowsHookEx(handle);
+                    isOk = Win32.UnhookWindowsHookEx(handle) || isOk;
                 }
 
                 //if (hookInfo.MouseHandle != IntPtr.Zero)
