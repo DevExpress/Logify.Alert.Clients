@@ -21,7 +21,7 @@ https://logifyjs.devexpress.com/0.0.4/logifyAlert.min.js - minified version
 ```javascript
 <script type="text/javascript" src="https://logifyjs.devexpress.com/logifyAlert.min.js"/>
 
-<script type="text/javascript"/>
+<script type="text/javascript">
 	var client = new logifyAlert("SPECIFY_YOUR_API_KEY_HERE");
 	client.applicationName = "Test application";
 	client.startHandling();
