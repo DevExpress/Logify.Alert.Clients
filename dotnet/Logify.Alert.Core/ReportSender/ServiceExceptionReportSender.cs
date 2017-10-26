@@ -44,8 +44,7 @@ namespace DevExpress.Logify.Core {
 
                 model.SendResult = model.SendAction();
                 //model.SendComplete = true;
-            }
-            finally {
+            } finally {
                 model.SendComplete = true;
             }
         }
@@ -87,14 +86,23 @@ namespace DevExpress.Logify.Core.Internal {
         }
         void SetupProxy(WebRequest request) {
             if (this.ProxyCredentials != null && WebRequest.DefaultWebProxy != null) {
-                Uri proxyUri = WebRequest.DefaultWebProxy.GetProxy(new Uri(ServiceUrl));
-                if (proxyUri != null) {
-                    request.Proxy = new WebProxy(proxyUri, false);
-
+                WebProxy proxy = GetProxy();
+                if (proxy != null) {
+                    proxy.Credentials = ProxyCredentials;
+                    request.Proxy = proxy;
                     request.UseDefaultCredentials = false;
-                    request.Proxy.Credentials = ProxyCredentials;
                 }
             }
+        }
+        WebProxy GetProxy() {
+#if NETSTANDARD
+            return new WebProxy();
+#else
+            Uri proxyUri = WebRequest.DefaultWebProxy.GetProxy(new Uri(ServiceUrl));
+            if (proxyUri == null)
+                return null;
+            return new WebProxy(proxyUri, false);
+#endif
         }
         bool SendViaHttpWebRequest(LogifyClientExceptionReport report) {
             WebRequest request = CreateAndSetupHttpWebRequest(report);
@@ -114,13 +122,13 @@ namespace DevExpress.Logify.Core.Internal {
     public abstract class ServiceWithConfirmationExceptionReportSender : ServiceExceptionReportSender {
         static bool isFormShown;
         public override bool SendExceptionReport(LogifyClientExceptionReport report) {
-            if(ConfirmSendReport && !isFormShown && LogifyClientBase.Instance != null) {
+            if (ConfirmSendReport && !isFormShown && LogifyClientBase.Instance != null) {
                 try {
                     ReportConfirmationModel model = LogifyClientAccessor.CreateConfirmationModel(report, (r) => { return base.SendExceptionReport(r); });
-                    if(model == null)
+                    if (model == null)
                         return false;
                     isFormShown = true;
-                    if(ShowCustomConfirmSendForm(model))
+                    if (ShowCustomConfirmSendForm(model))
                         return true;
                     return ShowBuiltInConfirmSendForm(model);
                 } catch {
@@ -132,7 +140,7 @@ namespace DevExpress.Logify.Core.Internal {
                 return base.SendExceptionReport(report);
         }
         bool ShowCustomConfirmSendForm(ReportConfirmationModel model) {
-            if((LogifyClientBase.Instance != null) && LogifyClientAccessor.RaiseConfirmationDialogShowing(model)) {
+            if ((LogifyClientBase.Instance != null) && LogifyClientAccessor.RaiseConfirmationDialogShowing(model)) {
                 return true;
             }
             return false;
