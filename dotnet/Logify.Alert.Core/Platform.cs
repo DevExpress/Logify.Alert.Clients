@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public enum Platform {
         WIN,
         WPF,
