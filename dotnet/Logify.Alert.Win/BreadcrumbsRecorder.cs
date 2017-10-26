@@ -72,6 +72,8 @@ namespace DevExpress.Logify.Core.Internal {
             data["mouseButton"] = button.ToString();
             data["action"] = isUp ? "up" : "down";
             data["windowCaption"] = windowText;
+            data["x"] = GetMouseX(m.LParam).ToString();
+            data["y"] = GetMouseY(m.LParam).ToString();
 
             Breadcrumb item = new Breadcrumb();
             item.Event = isUp ? BreadcrumbEvent.MouseUp : BreadcrumbEvent.MouseDown;
@@ -88,6 +90,8 @@ namespace DevExpress.Logify.Core.Internal {
             data["mouseButton"] = button.ToString();
             data["action"] = "doubleClick";
             data["windowCaption"] = windowText;
+            data["x"] = GetMouseX(m.LParam).ToString();
+            data["y"] = GetMouseY(m.LParam).ToString();
 
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.MouseDoubleClick;
@@ -98,6 +102,7 @@ namespace DevExpress.Logify.Core.Internal {
             return false;
         }
         bool ProcessMouseWheelMessage(ref Message m) {
+            /*
             Dictionary<string, string> data = new Dictionary<string, string>();
 
             Breadcrumb item = new Breadcrumb();
@@ -106,6 +111,7 @@ namespace DevExpress.Logify.Core.Internal {
             //item.Message = "Mouse wheel";
 
             AddBreadcrumb(item);
+            */
             return false;
         }
         bool ProcessKeyMessage(ref Message m, bool isUp) {
@@ -145,6 +151,14 @@ namespace DevExpress.Logify.Core.Internal {
 
             AddBreadcrumb(item);
             return false;
+        }
+        int GetMouseX(IntPtr param) {
+            int value = param.ToInt32();
+            return value & 0xFFFF;
+        }
+        int GetMouseY(IntPtr param) {
+            int value = param.ToInt32();
+            return (value >> 16) & 0xFFFF;
         }
         int GetScanCode(IntPtr param) {
             int value = param.ToInt32();
