@@ -185,7 +185,7 @@ class keyboardEventsListener extends eventsListenerBase {
     }
     parseEventData(event, breadcrumb) {
         super.parseEventData(event, breadcrumb);
-        breadcrumb.customData["scanCode"] = event.keyCode;
+        breadcrumb.customData["scanCode"] = event.code;
         breadcrumb.customData["action"] = event.type.replace("key", "");
 
         breadcrumb.customData["char"] = super.isSecureElement(event.target) ? "*" : event.key;
