@@ -9,6 +9,7 @@ import logifyInfoCollector from "./logifyInfoCollector.js";
 import customDataCollector from "./customDataCollector.js";
 import scriptsCollector from "./scriptsCollector.js";
 import domStateCollector from "./domStateCollector.js";
+import breadcrumbsCollector from "./breadcrumbsCollector.js";
 
 export default class jsCollector extends compositeCollector {
     constructor(_owner, isTest = false) {
@@ -20,6 +21,8 @@ export default class jsCollector extends compositeCollector {
 
         this._reportData = new Object();
 
+        this.breadcrumbsCollector = new breadcrumbsCollector(this.owner);
+
         this.collectors.push(new browserVersionCollector(this.owner));
         this.collectors.push(new osVersionCollector(this.owner));
         this.collectors.push(new screenSizeCollector(this.owner));
@@ -29,6 +32,7 @@ export default class jsCollector extends compositeCollector {
         this.collectors.push(new customDataCollector(this.owner));
         this.collectors.push(new scriptsCollector(this.owner));
         this.collectors.push(new domStateCollector(this.owner));
+        this.collectors.push(this.breadcrumbsCollector);
 
         if(!isTest) {
             this._window = window;

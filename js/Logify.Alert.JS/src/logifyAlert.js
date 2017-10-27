@@ -1,11 +1,15 @@
 'use strict';
 import jsCollector from "./collectors/jsCollector.js";
+import breadcrumbsListeners from "./breadcrumbs/breadcrumbsListeners.js";
 import jsReportSender from "./reportSender/jsReportSender.js";
 
 class logifyAlert {
     constructor(apiKey) {
         this._apiKey = apiKey;
         this._handleReports = false;
+        this._breadcrumbs = undefined;
+        this._maxBreadcrumbsCount = 1000;
+
         this.applicationName = undefined;
         this.applicationVersion = undefined;
         this.userId = undefined;
@@ -14,8 +18,13 @@ class logifyAlert {
         this.collectSessionStorage = true;
         this.collectCookies = true;
         this.collectInputs = false;
+        
+        this.collectBreadcrumbs = false;
+
         this.beforeReportException = undefined;
         this.afterReportException = undefined;
+
+        this.initBreadcrumbs();
     }
 
     stopHandling() {
@@ -77,6 +86,21 @@ class logifyAlert {
     callBeforeReportExceptionCallback() {
         if(this.beforeReportException != undefined) {
             this.customData = this.beforeReportException(this.customData);
+        }
+    }
+
+    initBreadcrumbs() {
+        const breadcrumbsListener = new breadcrumbsListeners(window, this);
+        breadcrumbsListener.startListening();
+    }
+
+    addBreadcrumbs(breadcrumb) {
+        if(this._breadcrumbs === undefined) {
+            this._breadcrumbs = [];
+        }
+        this._breadcrumbs.push(breadcrumb);
+        if (this._breadcrumbs.length > this._maxBreadcrumbsCount) {
+            this._breadcrumbs.shift();
         }
     }
 }
