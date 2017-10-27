@@ -177,8 +177,8 @@ class keyboardEventsListener extends eventsListenerBase {
 
         this._eventNames = {
             "keydown": "keyDown",
-            "keypress": "keyUp",
-            "keyup": "keyPress"
+            "keypress": "keyPress",
+            "keyup": "keyUp"
         }
 
         this._events = Object.keys(this._eventNames);
@@ -189,7 +189,7 @@ class keyboardEventsListener extends eventsListenerBase {
         breadcrumb.customData["action"] = event.type.replace("key", "");
 
         breadcrumb.customData["char"] = super.isSecureElement(event.target) ? "*" : event.key;
-        breadcrumb.customData["key"] = super.isSecureElement(event.target) ? "*" : event.key;
+        breadcrumb.customData["key"] = super.isSecureElement(event.target) ? "Multiply" : event.code;
     }
 
     getEventName(eventType) {
@@ -266,20 +266,9 @@ class ajaxEventsListener {
     startListening(win, eventCallback) {
         this.addXMLRequestListenerCallback(
             function (request) {
-                if ( !request.onreadystatechange ) {
-                    request.onreadystatechange = function(stateChangedEvent) {
-                        this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback);
-                    }.bind(this);
-                } else {
-                    const oldEvent =  request.onreadystatechange;
-                    var callbackStateChanged = this.collectBreadcrumb;
-                    let instance = this;
-                    request.onreadystatechange = function() {
-                        callbackStateChanged(arguments[0].currentTarget, eventCallback).bind(instance);
-                        oldSend.apply(this, arguments);
-                    }
-                }
-            }.bind(this));
+                this.onStateChangeCallback(request, eventCallback);
+            }.bind(this)
+        );
     }
     addXMLRequestListenerCallback(callback) {
         if (XMLHttpRequest.callbacks) {
@@ -293,6 +282,21 @@ class ajaxEventsListener {
                 }
                 oldSend.apply(this, arguments);
             }
+        }
+    }
+    onStateChangeCallback(request, eventCallback) {
+        if ( !request.onreadystatechange ) {
+            request.onreadystatechange = function(stateChangedEvent) {
+                this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback).bind(this);
+            }.bind(this);
+        } else {
+            const oldEvent =  request.onreadystatechange;
+            var callbackStateChanged = this.collectBreadcrumb;
+            let instance = this;
+            request.onreadystatechange = function(stateChangedEvent) {
+                this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback);
+                oldEvent.apply(this, arguments);
+            }.bind(this)
         }
     }
     collectBreadcrumb(request, eventCallback) {
