@@ -132,7 +132,7 @@ namespace DevExpress.Logify.WPF {
         [HandleProcessCorruptedStateExceptions]
         void OnCurrentDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {
             if (e != null && e.Exception != null) {
-                if (!Object.Equals(e.Exception, lastReportedException)) {
+                if (!Object.ReferenceEquals(e.Exception, lastReportedException)) {
                     lastReportedException = e.Exception;
                     ReportException(e.Exception, null, null);
                 }
@@ -164,7 +164,7 @@ namespace DevExpress.Logify.WPF {
             Exception ex = e.ExceptionObject as Exception;
 
             if (ex != null) {
-                if (!Object.Equals(ex, lastReportedException)) {
+                if (!Object.ReferenceEquals(ex, lastReportedException)) {
                     lastReportedException = ex;
                     ReportException(ex, null, null);
                 }
