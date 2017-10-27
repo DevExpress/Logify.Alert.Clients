@@ -117,7 +117,7 @@ namespace DevExpress.Logify.Core.Internal {
         bool ProcessKeyMessage(ref Message m, bool isUp) {
             string key = ((Keys)m.WParam).ToString();
             if (ShouldMaskMessage(ref m))
-                key = "*";
+                key = Keys.Multiply.ToString();
 
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["key"] = key;
