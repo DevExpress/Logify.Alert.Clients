@@ -126,9 +126,16 @@ namespace DevExpress.Logify.WPF {
             return new StackTraceHelper();
         }
 
+        Exception lastReportedException;
+
+        [SecurityCritical]
+        [HandleProcessCorruptedStateExceptions]
         void OnCurrentDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {
             if (e != null && e.Exception != null) {
-                ReportException(e.Exception, null, null);
+                if (!Object.Equals(e.Exception, lastReportedException)) {
+                    lastReportedException = e.Exception;
+                    ReportException(e.Exception, null, null);
+                }
             }
         }
 
@@ -153,10 +160,15 @@ namespace DevExpress.Logify.WPF {
         void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
+
             Exception ex = e.ExceptionObject as Exception;
 
-            if (ex != null)
-                ReportException(ex, null, null);
+            if (ex != null) {
+                if (!Object.Equals(ex, lastReportedException)) {
+                    lastReportedException = ex;
+                    ReportException(ex, null, null);
+                }
+            }
         }
 
         Mutex mutex;
