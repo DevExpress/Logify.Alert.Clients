@@ -25,14 +25,17 @@ namespace DevExpress.Logify.Web {
                 if (instance != null)
                     return instance;
 
-                lock (typeof(LogifyAlert)) {
-                    if (instance != null)
-                        return instance;
-
-                    instance = new LogifyAlert(true);
-                    LogifyClientBase.Instance = instance;
-                }
+                InitializeInstance();
                 return instance;
+            }
+        }
+        internal static void InitializeInstance() {
+            lock (typeof(LogifyAlert)) {
+                if (instance != null)
+                    return;
+
+                instance = new LogifyAlert(true);
+                LogifyClientBase.Instance = instance;
             }
         }
 
@@ -51,12 +54,14 @@ namespace DevExpress.Logify.Web {
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;
             result.Collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
+            result.Collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
             result.Collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
             return result;
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
             WebExceptionReportSender defaultSender = new WebExceptionReportSender();
             defaultSender.ConfirmSendReport = ConfirmSendReport;
+            defaultSender.ProxyCredentials = ProxyCredentials;
             if (ConfirmSendReport)
                 return defaultSender;
 
@@ -90,6 +95,7 @@ namespace DevExpress.Logify.Web {
         }
         internal void Configure(IConfigurationSection section) {
             ClientConfigurationLoader.ApplyClientConfiguration(this, section);
+            ForceUpdateBreadcrumbsMaxCount();
         }
 
         public override void Run() {
@@ -106,7 +112,6 @@ namespace DevExpress.Logify.Web {
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
             return null;
         }
-
         protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
             return false;
         }

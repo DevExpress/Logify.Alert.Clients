@@ -19,19 +19,27 @@ namespace DevExpress.Logify.Console {
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
 
+        internal bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
+        internal bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
+        internal int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
+
         public static new LogifyAlert Instance {
             get {
                 if (instance != null)
                     return instance;
 
-                lock (typeof(LogifyAlert)) {
-                    if (instance != null)
-                        return instance;
-
-                    instance = new LogifyAlert(true);
-                    LogifyClientBase.Instance = instance;
-                }
+                InitializeInstance();
                 return instance;
+            }
+        }
+
+        internal static void InitializeInstance() {
+            lock (typeof(LogifyAlert)) {
+                if (instance != null)
+                    return;
+
+                instance = new LogifyAlert(true);
+                LogifyClientBase.Instance = instance;
             }
         }
 
@@ -47,12 +55,14 @@ namespace DevExpress.Logify.Console {
             result.AppVersion = this.AppVersion;
             result.UserId = this.UserId;
             result.Collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
+            result.Collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
             result.Collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
             return result;
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
             NetCoreConsoleExceptionReportSender defaultSender = new NetCoreConsoleExceptionReportSender();
             defaultSender.ConfirmSendReport = ConfirmSendReport;
+            defaultSender.ProxyCredentials = ProxyCredentials;
             if (ConfirmSendReport)
                 return defaultSender;
 
@@ -77,6 +87,7 @@ namespace DevExpress.Logify.Console {
         protected override string GetAssemblyVersionString(Assembly asm) {
             return asm.GetName().Version.ToString();
         }
+
         protected override IExceptionIgnoreDetection CreateIgnoreDetection() {
             return new StackBasedExceptionIgnoreDetection();
         }
@@ -86,18 +97,34 @@ namespace DevExpress.Logify.Console {
         [CLSCompliant(false)]
         public void Configure(IConfigurationSection section) {
             ClientConfigurationLoader.ApplyClientConfiguration(this, section);
+            ForceUpdateBreadcrumbsMaxCount();
         }
 
         public override void Run() {
             if (!IsSecondaryInstance) {
-                //do nothing
+                //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+                AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
+                //Application.ThreadException += OnApplicationThreadException;
+                //AppDomain.CurrentDomain.FirstChanceException
                 //SendOfflineReports();
             }
         }
         public override void Stop() {
             if (!IsSecondaryInstance) {
-                //do nothing
+                //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.Automatic);
+                AppDomain.CurrentDomain.UnhandledException -= OnCurrentDomainUnhandledException;
+                //Application.ThreadException -= OnApplicationThreadException;
             }
+        }
+        [SecurityCritical]
+        [HandleProcessCorruptedStateExceptions]
+        void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
+            if (e == null)
+                return;
+            Exception ex = e.ExceptionObject as Exception;
+
+            if (ex != null)
+                ReportException(ex, null, null);
         }
         protected override IStackTraceHelper CreateStackTraceHelper() {
             return new StackTraceHelper();
