@@ -306,7 +306,7 @@ class ajaxEventsListener {
     onStateChangeCallback(request, eventCallback) {
         if (!request.onreadystatechange) {
             request.onreadystatechange = function (stateChangedEvent) {
-                this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback).bind(this);
+                this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback);
             }.bind(this);
         } else {
             const oldEvent = request.onreadystatechange;
@@ -365,7 +365,7 @@ class consoleEventListeners {
         breadcrumbModel.level = "Info";
         if (values != undefined && values.length > 0) {
             breadcrumbModel.customData = {};
-            breadcrumbModel.customData["values"] = values;
+            breadcrumbModel.customData["value"] = values.join(", ");
         }
 
         callback(breadcrumbModel);
