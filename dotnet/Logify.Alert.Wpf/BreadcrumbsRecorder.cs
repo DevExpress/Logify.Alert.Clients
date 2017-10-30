@@ -70,12 +70,12 @@ namespace DevExpress.Logify.WPF {
         void FocusObserverOnFocusChanged(object sender, ValueChangedEventArgs<IInputElement> e) {
             if(e.OldValue is FrameworkElement oldFocus) {
                 Dictionary<string, string> properties = new Dictionary<string, string>();
-                CollectCommonProperties(properties, oldFocus);
+                CollectCommonProperties(properties, oldFocus, oldFocus);
                 LogFocus(properties, false);
             }
             if(e.NewValue is FrameworkElement newFocus) {
                 Dictionary<string, string> properties = new Dictionary<string, string>();
-                CollectCommonProperties(properties, newFocus);
+                CollectCommonProperties(properties, newFocus, newFocus);
                 LogFocus(properties, true);
             }
         }
@@ -83,54 +83,56 @@ namespace DevExpress.Logify.WPF {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
             Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source);
+            CollectCommonProperties(properties, source, e.OriginalSource);
             LogKeyboard(properties, e, false);
         }
         void KeyUp(object sender, KeyEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
             Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source);
+            CollectCommonProperties(properties, source, e.OriginalSource);
             LogKeyboard(properties, e, true);
         }
         void MouseDown(object sender, MouseButtonEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
             Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source);
+            CollectCommonProperties(properties, source, e.OriginalSource);
             LogMouse(properties, e, false, false);
         }
         void MouseUp(object sender, MouseButtonEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
             Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source);
+            CollectCommonProperties(properties, source, e.OriginalSource);
             LogMouse(properties, e, true, false);
         }
         void MouseDoubleClick(object sender, MouseButtonEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
             Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source);
+            CollectCommonProperties(properties, source, e.OriginalSource);
             LogMouse(properties, e, false, true);
         }
         void MouseWheel(object sender, MouseWheelEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
             Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source);
+            CollectCommonProperties(properties, source, e.OriginalSource);
             LogMouseWheel(properties, e);
         }
         void TextInput(object sender, TextCompositionEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
             Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source);
+            CollectCommonProperties(properties, source, e.OriginalSource);
             LogTextInput(properties, e);
         }
-        void CollectCommonProperties(Dictionary<string, string> properties, FrameworkElement source) {
+        void CollectCommonProperties(Dictionary<string, string> properties, FrameworkElement source, object originalSource) {
             properties["Name"] = source.Name;
             properties["ClassName"] = source.GetType().ToString();
+            if(!Object.Equals(source, originalSource))
+                properties["#h"] = "y";
 
             var automation = UIElementAutomationPeer.CreatePeerForElement(source);
             if(automation == null)
