@@ -93,20 +93,21 @@ namespace DevExpress.Logify.Core.Internal {
         int CalculateApproxItemSize() {
             int result = 0;
             try {
-                result += CalculateTextSize(item.DateTime.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture));
-                result += CalculateTextSize(item.Level.ToString());
-                result += CalculateTextSize(item.Event.ToString());
-                result += CalculateTextSize(item.Category);
-                result += CalculateTextSize(item.Message);
-                result += CalculateTextSize(item.ClassName);
-                result += CalculateTextSize(item.MethodName);
-                result += CalculateTextSize(item.Line.ToString());
-                result += CalculateTextSize(item.ThreadId);
+                result += CalculateTextSize("dateTime", item.DateTime.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture));
+                result += CalculateTextSize("level", item.Level.ToString());
+                result += CalculateTextSize("event", item.Event.ToString());
+                result += CalculateTextSize("category", item.Category);
+                result += CalculateTextSize("message", item.Message);
+                result += CalculateTextSize("className", item.ClassName);
+                result += CalculateTextSize("methodName", item.MethodName);
+                result += CalculateTextSize("line", item.Line.ToString());
+                result += CalculateTextSize("threadId", item.ThreadId);
+                if (item.IsAuto)
+                    result += CalculateTextSize("a", item.IsAuto.ToString());
 
                 if (item.CustomData != null && item.CustomData.Count > 0) {
                     foreach (string key in item.CustomData.Keys) {
-                        result += CalculateTextSize(key);
-                        result += CalculateTextSize(item.CustomData[key]);
+                        result += CalculateTextSize(key, item.CustomData[key]);
                     }
                 }
             }
@@ -114,10 +115,10 @@ namespace DevExpress.Logify.Core.Internal {
             }
             return result;
         }
-        int CalculateTextSize(string text) {
+        int CalculateTextSize(string name, string text) {
             if (String.IsNullOrEmpty(text))
                 return 0;
-            return text.Length;
+            return name.Length + text.Length;
         }
         public int PerformProcess(Exception ex, ILogger logger) {
             int writtenContentSize = 0;
@@ -148,6 +149,8 @@ namespace DevExpress.Logify.Core.Internal {
                         logger.WriteValue("line", item.Line);
                     if (!String.IsNullOrEmpty(item.ThreadId))
                         logger.WriteValue("threadId", item.ThreadId);
+                    if (item.IsAuto)
+                        logger.WriteValue("a", "1");
 
                     CustomDataCollector customDataCollector = new CustomDataCollector(item.CustomData, null);
                     customDataCollector.Process(ex, logger);

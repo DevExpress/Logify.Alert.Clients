@@ -195,6 +195,7 @@ namespace DevExpress.Logify.Core {
         public int Line { get; set; }
         public string ThreadId { get; set; }
         public IDictionary<string, string> CustomData { get; set; }
+        internal bool IsAuto { get; set; }
     }
 }
 

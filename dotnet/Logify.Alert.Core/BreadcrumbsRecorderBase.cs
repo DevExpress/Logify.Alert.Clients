@@ -18,6 +18,7 @@ namespace DevExpress.Logify.Core {
             item.Level = BreadcrumbLevel.Info;
             item.ThreadId = GetThreadId();
             item.Category = "input";
+            item.IsAuto = true;
         }
         protected abstract string GetThreadId();
     }
