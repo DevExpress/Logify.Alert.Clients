@@ -27,6 +27,7 @@ export default class breadcrumbsListeners {
         this.addListener(new windowEventsListener());
         this.addListener(new dragDropEventsListener());
         this.addListener(new ajaxEventsListener());
+        this.addListener(new consoleEventListeners());
 
         for (let i = 0; i < this._eventListeners.length; i++) {
             this._eventListeners[i].startListening(this.win, this.eventCallback.bind(this));
@@ -39,13 +40,13 @@ export default class breadcrumbsListeners {
         }
 
         this.owner.addBreadcrumbs(breadcrumb);
-        //console.log(this.owner._breadcrumbs);
     }
 }
 
 class eventsListenerBase {
     constructor() {
         this._events = [];
+        this.category = "";
     }
     startListening(win, eventCallback) {
         for (let i = 0; i < this._events.length; i++) {
@@ -59,7 +60,7 @@ class eventsListenerBase {
         }
     }
     collectBreadcrumb(event, eventCallback) {
-        let breadcrumbsModel = new breadcrumb(new Date(), "", this.getEventName(event.type));
+        let breadcrumbsModel = new breadcrumb("", this.getEventName(event.type));
         breadcrumbsModel.level = "Info";
         breadcrumbsModel.customData = {};
         breadcrumbsModel.customData["timeStamp"] = event.timeStamp;
@@ -71,6 +72,7 @@ class eventsListenerBase {
     }
     parseEventData(event, breadcrumb) {
         let element = event.target;
+        this.setCategory(breadcrumb);
         const elementData = this.parseElementInfo(element);
         Object.assign(breadcrumb.customData, breadcrumb.customData, elementData);
     }
@@ -95,7 +97,11 @@ class eventsListenerBase {
             data.checked = element.checked;
         return data;
     }
-
+    setCategory(breadcrumb) {
+        if (this.category){
+            breadcrumb.category = this.category;
+        }
+    }
 }
 class mouseEventsListener extends eventsListenerBase {
     constructor() {
@@ -106,6 +112,8 @@ class mouseEventsListener extends eventsListenerBase {
             "auxclick": "mouseClick",
             "dblclick": "mouseDoubleClick"
         }
+
+        this.category = "mouse";
 
         this._events = Object.keys(this._eventNames);
     }
@@ -128,6 +136,7 @@ class mouseEventsListener extends eventsListenerBase {
         breadcrumb.customData["x"] = event.x;
         breadcrumb.customData["y"] = event.y;
     }
+    
     getEventName(eventType) {
         return this._eventNames.hasOwnProperty(eventType) ? this._eventNames[eventType] : eventType;
     }
@@ -139,6 +148,7 @@ class formEventsListener extends eventsListenerBase {
             "submit",
             "reset"
         ];
+        this.category = "form";
     }
 }
 
@@ -180,8 +190,10 @@ class keyboardEventsListener extends eventsListenerBase {
             "keypress": "keyPress",
             "keyup": "keyUp"
         }
-
+        
         this._events = Object.keys(this._eventNames);
+
+        this.category = "keyboard";
     }
     parseEventData(event, breadcrumb) {
         super.parseEventData(event, breadcrumb);
@@ -202,6 +214,7 @@ class inputEventsListener extends eventsListenerBase {
         this._events = [
             "change"
         ];
+        this.category = "input";
     }
 }
 
@@ -211,6 +224,7 @@ class selectEventsListener extends eventsListenerBase {
         this._events = [
             "select"
         ];
+        this.category = "selectText";
     }
 }
 class historyEventsListener extends eventsListenerBase {
@@ -219,6 +233,7 @@ class historyEventsListener extends eventsListenerBase {
         this._events = [
             "popstate",
         ];
+        this.category = "history";
     }
 }
 class printEventsListener extends eventsListenerBase {
@@ -228,6 +243,7 @@ class printEventsListener extends eventsListenerBase {
             "beforeprint",
             "afterprint"
         ];
+        this.category = "print";
     }
 }
 
@@ -237,6 +253,7 @@ class windowEventsListener extends eventsListenerBase {
         this._events = [
             "resize"
         ];
+        this.category = "window";
     }
     parseEventData(event, breadcrumb) {
         breadcrumb.customData["newWidth"] = event.target.innerWidth;
@@ -251,6 +268,7 @@ class dragDropEventsListener extends eventsListenerBase {
             "drag",
             "drop"
         ];
+        this.category = "dragDrop";
     }
     parseEventData(event, breadcrumb) {
         super.parseEventData(event, breadcrumb);
@@ -261,8 +279,9 @@ class dragDropEventsListener extends eventsListenerBase {
 
 class ajaxEventsListener {
     constructor() {
-        this._event = "request";
-     }
+        this._event = "xhr";
+        this.category = "request";
+    }
     startListening(win, eventCallback) {
         this.addXMLRequestListenerCallback(
             function (request) {
@@ -285,29 +304,70 @@ class ajaxEventsListener {
         }
     }
     onStateChangeCallback(request, eventCallback) {
-        if ( !request.onreadystatechange ) {
-            request.onreadystatechange = function(stateChangedEvent) {
+        if (!request.onreadystatechange) {
+            request.onreadystatechange = function (stateChangedEvent) {
                 this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback).bind(this);
             }.bind(this);
         } else {
-            const oldEvent =  request.onreadystatechange;
+            const oldEvent = request.onreadystatechange;
             var callbackStateChanged = this.collectBreadcrumb;
             let instance = this;
-            request.onreadystatechange = function(stateChangedEvent) {
+            request.onreadystatechange = function (stateChangedEvent) {
                 this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback);
                 oldEvent.apply(this, arguments);
-            }.bind(this)
+            }.bind(this);
         }
     }
     collectBreadcrumb(request, eventCallback) {
-        let breadcrumbsModel = new breadcrumb(new Date(), "", this._event);
+        let breadcrumbsModel = new breadcrumb("", this._event);
+        breadcrumbsModel.category = this.category;
+
         breadcrumbsModel.customData = {}
-        
         breadcrumbsModel.customData["readyState"] = request.readyState;
         breadcrumbsModel.customData["status"] = request.status;
         breadcrumbsModel.customData["statusText"] = request.statusText;
         breadcrumbsModel.customData["responseURL"] = request.responseURL;
 
         eventCallback(breadcrumbsModel);
+    }
+}
+
+class consoleEventListeners {
+    constructor() {
+        this._events = [
+            "log",
+            "error",
+            "warn"
+        ];
+        this.category = "console";
+    }
+    startListening(win, eventCallback) {
+        if (win.console != undefined) {
+            for (let i = 0; i < this._events.length; i++) {
+                this.wrapObject(console, this._events[i], eventCallback);
+            }
+        }
+    }
+    wrapObject(object, property, callback) {
+        let oldFunction = object[property];
+        let wrapperClass = this;
+        object[property] = function () {
+            let args = Array.prototype.slice.call(arguments, 0);
+            wrapperClass.createBreadcrumb(args, property, callback);
+            if (typeof oldFunction === "function") {
+                Function.prototype.apply.call(oldFunction, console, args);
+            }
+        };
+    }
+    createBreadcrumb(values, property, callback) {
+        let breadcrumbModel = new breadcrumb("", property);
+        breadcrumbModel.category = "console";
+        breadcrumbModel.level = "Info";
+        if (values != undefined && values.length > 0) {
+            breadcrumbModel.customData = {};
+            breadcrumbModel.customData["values"] = values;
+        }
+
+        callback(breadcrumbModel);
     }
 }
