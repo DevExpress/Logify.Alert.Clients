@@ -316,24 +316,21 @@ namespace DevExpress.Logify.Core.Internal {
             return UnsafeNativeMethods.CallNextHookEx(hhk, nCode, wParam, lParam);
         }
         public static int GetCurrentThreadId() { return UnsafeNativeMethods.GetCurrentThreadIdSafe(); }
-        public static string GetAccessibleName(IntPtr hWnd) {
+        public static IAccessible GetAccessibleObject(IntPtr hWnd) {
             try {
                 Guid guid = new Guid("618736e0-3c3d-11cf-810c-00aa00389b71");
                 Object instance = null;
                 const int OBJID_WINDOW = 0x0;
                 int hResult = UnsafeNativeMethods.AccessibleObjectFromWindow(hWnd, OBJID_WINDOW, ref guid, ref instance);
                 if (hResult != 0 || instance == null)
-                    return String.Empty;
-                IAccessible accObj = instance as IAccessible;
-                if (accObj == null)
-                    return String.Empty;
-                return accObj.accName;
+                    return null;
+                return instance as IAccessible;
             }
             catch {
-                return String.Empty;
+                return null;
             }
         }
-        public static string GetAccessibleName(IntPtr hWnd, Point point) {
+        public static IAccessible GetAccessibleObject(IntPtr hWnd, Point point) {
             try {
                 IAccessible accObj;
                 object obj = new object();
@@ -342,13 +339,13 @@ namespace DevExpress.Logify.Core.Internal {
                 pt.Y = point.Y;
                 UnsafeNativeMethods.ClientToScreen(hWnd, ref pt);
                 if (UnsafeNativeMethods.AccessibleObjectFromPoint(pt, out accObj, out obj) != IntPtr.Zero)
-                    return String.Empty;
+                    return null;
                 if (accObj == null)
-                    return String.Empty;
-                return accObj.accName;
+                    return null;
+                return accObj;
             }
             catch {
-                return String.Empty;
+                return null;
             }
         }
 
@@ -407,7 +404,13 @@ namespace DevExpress.Logify.Core.Internal {
         public static int SendMessage(IntPtr hWnd, Win32.WindowsMessages Msg, IntPtr wParam, IntPtr lParam) {
             return UnsafeNativeMethods.SendMessage(hWnd, (int)Msg, wParam, lParam);
         }
-
+        public static Point ClientToScreen(IntPtr hwnd, Point point) {
+            POINT pt = new POINT();
+            pt.X = point.X;
+            pt.Y = point.Y;
+            UnsafeNativeMethods.ClientToScreen(hwnd, ref pt);
+            return new Point(pt.X, pt.Y);
+        }
 
         #region UnsafeNativeMethods
         static class UnsafeNativeMethods {

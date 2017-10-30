@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Accessibility;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -61,14 +62,11 @@ namespace DevExpress.Logify.Core.Internal {
 
         
         bool ProcessMouseMessage(ref Message m, MouseButtons button, bool isUp) {
-            string windowText = GetWindowTextOrAccessibleName(m.HWnd, Win32.PointFromLParam(m.LParam));
-
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["mouseButton"] = button.ToString();
             data["action"] = isUp ? "up" : "down";
-            data["windowCaption"] = windowText;
-            data["x"] = GetMouseX(m.LParam).ToString();
-            data["y"] = GetMouseY(m.LParam).ToString();
+            AppendMouseCoords(ref m, data);
+            AppendTargetInfo(m.HWnd, Win32.PointFromLParam(m.LParam), data);
 
             Breadcrumb item = new Breadcrumb();
             item.Event = isUp ? BreadcrumbEvent.MouseUp : BreadcrumbEvent.MouseDown;
@@ -79,14 +77,11 @@ namespace DevExpress.Logify.Core.Internal {
             return false;
         }
         bool ProcessDblClickMessage(ref Message m, MouseButtons button) {
-            string windowText = GetWindowTextOrAccessibleName(m.HWnd, Win32.PointFromLParam(m.LParam));
-
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["mouseButton"] = button.ToString();
             data["action"] = "doubleClick";
-            data["windowCaption"] = windowText;
-            data["x"] = GetMouseX(m.LParam).ToString();
-            data["y"] = GetMouseY(m.LParam).ToString();
+            AppendMouseCoords(ref m, data);
+            AppendTargetInfo(m.HWnd, Win32.PointFromLParam(m.LParam), data);
 
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.MouseDoubleClick;
@@ -147,6 +142,11 @@ namespace DevExpress.Logify.Core.Internal {
             AddBreadcrumb(item);
             return false;
         }
+        Point GetScreenMousePosition(IntPtr hWnd, IntPtr param) {
+            int x = GetMouseX(param);
+            int y = GetMouseY(param);
+            return Win32.ClientToScreen(hWnd, new Point(x, y));
+        }
         int GetMouseX(IntPtr param) {
             int value = param.ToInt32();
             return value & 0xFFFF;
@@ -165,10 +165,8 @@ namespace DevExpress.Logify.Core.Internal {
             return Win32.IsPasswordBox(m.HWnd);
         }
         bool ProcessActivateMessage(IntPtr wParam, IntPtr lParam) {
-            string windowText = GetWindowText(wParam);
-
             Dictionary<string, string> data = new Dictionary<string, string>();
-            data["windowCaption"] = windowText;
+            AppendTargetInfo(wParam, data);
 
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.WindowActivate;
@@ -179,10 +177,8 @@ namespace DevExpress.Logify.Core.Internal {
             return false;
         }
         bool ProcessSetFocusMessage(IntPtr wParam, IntPtr lParam) {
-            string windowText = GetWindowText(wParam);
-
             Dictionary<string, string> data = new Dictionary<string, string>();
-            data["windowCaption"] = windowText;
+            AppendTargetInfo(wParam, data);
 
             Breadcrumb item = new Breadcrumb();
             item.Event = BreadcrumbEvent.FocusChange;
@@ -192,17 +188,78 @@ namespace DevExpress.Logify.Core.Internal {
             AddBreadcrumb(item);
             return false;
         }
-        string GetWindowText(IntPtr hWnd) {
-            string windowText = Win32.GetWindowText(hWnd);
-            if (String.IsNullOrEmpty(windowText))
-                windowText = Win32.GetAccessibleName(hWnd);
-            return windowText;
+        void AppendMouseCoords(ref Message m, Dictionary<string, string> data) {
+            data["x"] = GetMouseX(m.LParam).ToString();
+            data["y"] = GetMouseY(m.LParam).ToString();
+            Point screenPos = GetScreenMousePosition(m.HWnd, m.LParam);
+            data["sx"] = screenPos.X.ToString();
+            data["sy"] = screenPos.Y.ToString();
         }
-        string GetWindowTextOrAccessibleName(IntPtr hWnd, Point point) {
-            string windowText = Win32.GetWindowText(hWnd);
-            if (String.IsNullOrEmpty(windowText))
-                windowText = Win32.GetAccessibleName(hWnd, point);
-            return windowText;
+        void AppendTargetInfo(IntPtr hWnd, IDictionary<string, string> data) {
+            IAccessible accessible = Win32.GetAccessibleObject(hWnd);
+            AppendTargetInfoFromAccessible(accessible, data);
+            string windowCaption = TrimStringValue(Win32.GetWindowText(hWnd));
+            if (!String.IsNullOrEmpty(windowCaption))
+                data["windowCaption"] = windowCaption;
+        }
+        void AppendTargetInfo(IntPtr hWnd, Point point, IDictionary<string, string> data) {
+            IAccessible accessible = Win32.GetAccessibleObject(hWnd, point);
+            AppendTargetInfoFromAccessible(accessible, data);
+            string windowCaption = TrimStringValue(Win32.GetWindowText(hWnd));
+            if (!String.IsNullOrEmpty(windowCaption))
+                data["windowCaption"] = windowCaption;
+        }
+        string TrimStringValue(string value) {
+            const int maxLength = 64;
+            if (String.IsNullOrEmpty(value))
+                return value;
+            if (value.Length <= maxLength)
+                return value;
+            else
+                return value.Substring(0, maxLength);
+        }
+
+        bool AppendTargetInfoFromAccessible(IAccessible accessible, IDictionary<string, string> data) {
+            if (accessible == null)
+                return false;
+
+            data["accRole"] = accessible.accRole.ToString();
+            bool result = false;
+            string accName = accessible.accName;
+            if (!String.IsNullOrEmpty(accName)) {
+                data["accName"] = TrimStringValue(accName);
+                result = true;
+            }
+            
+
+            if (IsGridRole(accessible)) {
+                return result;
+            }
+
+            IAccessible parent = accessible.accParent as IAccessible;
+            if (parent == null) {
+                return result;
+            }
+
+            if (IsGridRole(parent)) {
+                data["parentAccRole"] = parent.accRole.ToString();
+                string parentAccName = TrimStringValue(parent.accName.ToString());
+                if (!String.IsNullOrEmpty(parentAccName))
+                    data["parentAccName"] = parentAccName;
+                return result;
+            }
+            else
+                return result;
+        }
+
+        bool IsGridRole(IAccessible instance) {
+            try {
+                AccessibleRole role = (AccessibleRole)instance.accRole;
+                return role == AccessibleRole.Cell || role == AccessibleRole.Row || role == AccessibleRole.RowHeader || role == AccessibleRole.Column || role == AccessibleRole.ColumnHeader;
+            }
+            catch {
+                return false;
+            }
         }
         protected override string GetThreadId() {
             return Win32.GetCurrentThreadId().ToString();
