@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace DevExpress.Logify.Core.Internal {
     [SecuritySafeCritical]
-    public class WinFormsBreadcrumsRecorder : IMessageFilterEx {
+    public class WinFormsBreadcrumsRecorder : BreadcrumbsRecorderBase, IMessageFilterEx {
         public bool VerboseKeyboardEvents { get; set; }
         public bool IncludePasswords { get; set; }
         public bool PreFilterMessage(ref Message m) {
@@ -59,12 +59,7 @@ namespace DevExpress.Logify.Core.Internal {
             return false;
         }
 
-        void PopulateCommonBreadcrumbInfo(Breadcrumb item) {
-            item.DateTime = DateTime.Now;
-            item.Level = BreadcrumbLevel.Info;
-            item.ThreadId = Win32.GetCurrentThreadId().ToString();
-            item.Category = "input";
-        }
+        
         bool ProcessMouseMessage(ref Message m, MouseButtons button, bool isUp) {
             string windowText = GetWindowTextOrAccessibleName(m.HWnd, Win32.PointFromLParam(m.LParam));
 
@@ -197,13 +192,6 @@ namespace DevExpress.Logify.Core.Internal {
             AddBreadcrumb(item);
             return false;
         }
-        void AddBreadcrumb(Breadcrumb item) {
-            if (LogifyClientBase.Instance != null) {
-                PopulateCommonBreadcrumbInfo(item);
-                LogifyClientBase.Instance.Breadcrumbs.AddSimple(item);
-            }
-        }
-
         string GetWindowText(IntPtr hWnd) {
             string windowText = Win32.GetWindowText(hWnd);
             if (String.IsNullOrEmpty(windowText))
@@ -215,6 +203,9 @@ namespace DevExpress.Logify.Core.Internal {
             if (String.IsNullOrEmpty(windowText))
                 windowText = Win32.GetAccessibleName(hWnd, point);
             return windowText;
+        }
+        protected override string GetThreadId() {
+            return Win32.GetCurrentThreadId().ToString();
         }
         /*
         void TryOptimizeLastKeyboardBreadcrumbs() {

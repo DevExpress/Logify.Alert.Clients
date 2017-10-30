@@ -143,6 +143,12 @@ namespace DevExpress.Logify.Core {
         static readonly BreadcrumbEvent focusChange = new BreadcrumbEvent("focusChange");
         public static BreadcrumbEvent FocusChange { get { return focusChange; } }
 
+        static readonly BreadcrumbEvent gotFocus = new BreadcrumbEvent("gotFocus");
+        public static BreadcrumbEvent GotFocus { get { return gotFocus; } }
+
+        static readonly BreadcrumbEvent lostFocus = new BreadcrumbEvent("lostFocus");
+        public static BreadcrumbEvent LostFocus { get { return lostFocus; } }
+
         readonly string id;
 
         public BreadcrumbEvent(string id) {

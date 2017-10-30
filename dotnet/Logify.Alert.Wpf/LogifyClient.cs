@@ -31,8 +31,8 @@ namespace DevExpress.Logify.WPF {
         }
 
         public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
-        internal bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
-        internal int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
+        public bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
+        public int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
@@ -52,7 +52,12 @@ namespace DevExpress.Logify.WPF {
                 LogifyClientBase.Instance = instance;
             }
         }
-
+        protected override void BeginCollectBreadcrumbsCore() {
+            WPFBreadcrumbsRecorder.Instance.BeginCollect();
+        }
+        protected override void EndCollectBreadcrumbsCore() {
+            WPFBreadcrumbsRecorder.Instance.EndCollect();
+        }
         protected override IInfoCollectorFactory CreateCollectorFactory() {
             return new WPFExceptionCollectorFactory();
         }

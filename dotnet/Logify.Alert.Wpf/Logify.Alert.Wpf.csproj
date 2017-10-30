@@ -50,6 +50,7 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -176,6 +177,7 @@
     <Compile Include="..\Logify.Alert.Core\TraceListenerBase.cs">
       <Link>TraceListenerBase.cs</Link>
     </Compile>
+    <Compile Include="BreadcrumbsRecorder.cs" />
     <Compile Include="Collectors\AppDispatcherCollector.cs" />
     <Compile Include="Collectors\WpfApplicationCollector.cs" />
     <Compile Include="Collectors\DispatcherCollector.cs" />
