@@ -69,74 +69,69 @@ namespace DevExpress.Logify.WPF {
         }
         void FocusObserverOnFocusChanged(object sender, ValueChangedEventArgs<IInputElement> e) {
             if(e.OldValue is FrameworkElement oldFocus) {
-                Dictionary<string, string> properties = new Dictionary<string, string>();
-                CollectCommonProperties(properties, oldFocus, oldFocus);
+                Dictionary<string, string> properties = CollectCommonProperties(oldFocus, oldFocus);
                 LogFocus(properties, false);
             }
             if(e.NewValue is FrameworkElement newFocus) {
-                Dictionary<string, string> properties = new Dictionary<string, string>();
-                CollectCommonProperties(properties, newFocus, newFocus);
+                Dictionary<string, string> properties = CollectCommonProperties(newFocus, newFocus);
                 LogFocus(properties, true);
             }
         }
         void KeyDown(object sender, KeyEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source, e.OriginalSource);
-            LogKeyboard(properties, e, false);
+
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
+            LogKeyboard(properties, e, false, CheckPasswordElement(e.OriginalSource as UIElement));
         }
         void KeyUp(object sender, KeyEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source, e.OriginalSource);
-            LogKeyboard(properties, e, true);
+
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
+            LogKeyboard(properties, e, true, CheckPasswordElement(e.OriginalSource as UIElement));
         }
         void MouseDown(object sender, MouseButtonEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source, e.OriginalSource);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
             LogMouse(properties, e, false, false);
         }
         void MouseUp(object sender, MouseButtonEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source, e.OriginalSource);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
             LogMouse(properties, e, true, false);
         }
         void MouseDoubleClick(object sender, MouseButtonEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source, e.OriginalSource);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
             LogMouse(properties, e, false, true);
         }
         void MouseWheel(object sender, MouseWheelEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source, e.OriginalSource);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
             LogMouseWheel(properties, e);
         }
         void TextInput(object sender, TextCompositionEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = new Dictionary<string, string>();
-            CollectCommonProperties(properties, source, e.OriginalSource);
-            LogTextInput(properties, e);
+
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
+            LogTextInput(properties, e, CheckPasswordElement(e.OriginalSource as UIElement));
         }
-        void CollectCommonProperties(Dictionary<string, string> properties, FrameworkElement source, object originalSource) {
+        Dictionary<string, string> CollectCommonProperties(FrameworkElement source, object originalSource) {
+            Dictionary<string, string> properties = new Dictionary<string, string>();
             properties["Name"] = source.Name;
             properties["ClassName"] = source.GetType().ToString();
             if(!Object.Equals(source, originalSource))
                 properties["#h"] = "y";
 
-            var automation = UIElementAutomationPeer.CreatePeerForElement(source);
+            AutomationPeer automation = GetAutomationPeer(source);
             if(automation == null)
-                return;
+                return properties;
 
             properties["Name"] = string.IsNullOrEmpty(source.Name) ? automation.GetName() : source.Name;
 
@@ -152,9 +147,15 @@ namespace DevExpress.Logify.WPF {
             properties["windowCaption"] = properties["Name"];
 
             CollectValue(properties, automation);
+            return properties;
+        }
+        AutomationPeer GetAutomationPeer(UIElement source) {
+            return UIElementAutomationPeer.CreatePeerForElement(source);
         }
         void CollectValue(Dictionary<string, string> properties, AutomationPeer automation) {
-            if(automation.GetPattern(PatternInterface.Value) is IValueProvider valueProvider) {
+            if(automation.IsPassword()) {
+                properties["Value"] = "*";
+            } else if(automation.GetPattern(PatternInterface.Value) is IValueProvider valueProvider) {
                 properties["Value"] = valueProvider.Value;
             }
         }
@@ -189,11 +190,10 @@ namespace DevExpress.Logify.WPF {
 
             AddBreadcrumb(item);
         }
-        void LogTextInput(IDictionary<string, string> properties, TextCompositionEventArgs e) {
-            properties["Text"] = e.Text;
-            properties["char"] = e.Text;
-            properties["SystemText"] = e.SystemText;
-            properties["Text"] = e.Text;
+        void LogTextInput(IDictionary<string, string> properties, TextCompositionEventArgs e, bool isPassword) {
+            properties["Text"] = isPassword ? "*" : e.Text;
+            properties["char"] = isPassword ? "*" : e.Text;
+            properties["SystemText"] = isPassword ? "*" : e.SystemText;
             properties["action"] = "press";
 
             Breadcrumb item = new Breadcrumb();
@@ -209,20 +209,27 @@ namespace DevExpress.Logify.WPF {
 
             AddBreadcrumb(item);
         }
-        void LogKeyboard(IDictionary<string, string> properties, KeyEventArgs e, bool isUp) {
-            properties["key"] = e.Key.ToString();
-            properties["SystemKey"] = e.SystemKey.ToString();
+        void LogKeyboard(IDictionary<string, string> properties, KeyEventArgs e, bool isUp, bool isPassword) {
+            properties["key"] = isPassword ? Key.Multiply.ToString() : e.Key.ToString();
+            properties["SystemKey"] = isPassword ? Key.Multiply.ToString() : e.SystemKey.ToString();
             properties["IsToggled"] = e.IsToggled.ToString();
             properties["IsRepeat"] = e.IsRepeat.ToString();
             properties["KeyStates"] = e.KeyStates.ToString();
             properties["action"] = isUp ? "up" : "down";
-            properties["scanCode"] = KeyInterop.VirtualKeyFromKey(e.Key).ToString();
+            properties["scanCode"] = KeyInterop.VirtualKeyFromKey(isPassword ? Key.Multiply : e.Key).ToString();
 
             Breadcrumb item = new Breadcrumb();
             item.Event = isUp ? BreadcrumbEvent.KeyUp : BreadcrumbEvent.KeyDown;
             item.CustomData = properties;
 
             AddBreadcrumb(item);
+        }
+        bool CheckPasswordElement(UIElement targetElement) {
+            if(targetElement != null) {
+                AutomationPeer automationPeer = GetAutomationPeer(targetElement);
+                return (automationPeer != null) ? automationPeer.IsPassword() : false;
+            }
+            return false;
         }
     }
     static class LinqExtensions {
