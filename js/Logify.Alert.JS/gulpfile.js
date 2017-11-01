@@ -15,7 +15,8 @@ gulp.task('prepare-scripts', ['clean'], function () {
     return gulp.src('./src/**/*.js')
         .pipe(sourcemaps.init())
         .pipe(gulpBabel({
-            presets: ['es2015']
+            presets: ['es2015'],
+            plugins: ["transform-object-assign"]
         }))
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest('./lib/src'));
