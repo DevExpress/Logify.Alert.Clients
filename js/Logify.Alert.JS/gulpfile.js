@@ -34,6 +34,11 @@ gulp.task('minify-scripts', ['browserify-scripts'], function() {
         }))
         .pipe(gulp.dest('./lib'));
 });
+
+gulp.task('watch', function () {
+   gulp.watch('./src/**/*.js', ['browserify-scripts']);
+});
+
 gulp.task('prepare-tests', ['clean'], function () {
     return gulp.src('./test/**/*.js')
         .pipe(sourcemaps.init())

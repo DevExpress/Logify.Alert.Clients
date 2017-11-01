@@ -1,6 +1,6 @@
 'use strict';
 
-import breadcrumb from "./breadcrumb.js";
+import { breadcrumb, autoRecorderBreadcrumb } from "./breadcrumb.js";
 
 export default class breadcrumbsListeners {
     constructor(win, owner) {
@@ -30,7 +30,7 @@ export default class breadcrumbsListeners {
         this.addListener(new consoleEventListeners());
 
         for (let i = 0; i < this._eventListeners.length; i++) {
-            this._eventListeners[i].startListening(this.win, this.eventCallback.bind(this));
+            this._eventListeners[i].startListening(this.win, this.owner, this.eventCallback.bind(this));
         }
     }
 
@@ -45,27 +45,47 @@ export default class breadcrumbsListeners {
 
 class eventsListenerBase {
     constructor() {
+        this.delayListening = false;
+        this._timeOut = 300;
+        this._timeOutId;
         this._events = [];
         this.category = "";
     }
-    startListening(win, eventCallback) {
+    startListening(win, owner, eventCallback) {
+        this._owner = owner;
         for (let i = 0; i < this._events.length; i++) {
             win.addEventListener(
                 this._events[i],
                 function (event) {
-                    this.collectBreadcrumb(event, eventCallback)
+                    if (this.delayListening) {
+                        this.delayedListener(event, eventCallback);
+                    } else {
+                        this.collectBreadcrumb(event, eventCallback)
+                    }
                 }.bind(this),
                 false
             );
         }
     }
+    delayedListener(event, eventCallback) {
+        if (this._owner.collectBreadcrumbs) {
+            if (this._timeOutId != undefined) {
+                clearTimeout(this._timeOutId);
+            }
+            this._timeOutId = setTimeout(function () {
+                this.collectBreadcrumb(event, eventCallback);
+            }.bind(this), this._timeOut);
+        }
+    }
     collectBreadcrumb(event, eventCallback) {
-        let breadcrumbsModel = new breadcrumb("", this.getEventName(event.type));
-        breadcrumbsModel.level = "Info";
-        breadcrumbsModel.customData = {};
-        breadcrumbsModel.customData["timeStamp"] = event.timeStamp;
-        this.parseEventData(event, breadcrumbsModel);
-        eventCallback(breadcrumbsModel);
+        if (this._owner.collectBreadcrumbs) {
+            let breadcrumbsModel = new autoRecorderBreadcrumb("", this.getEventName(event.type));
+            breadcrumbsModel.level = "Info";
+            breadcrumbsModel.customData = {};
+            breadcrumbsModel.customData["timeStamp"] = event.timeStamp;
+            this.parseEventData(event, breadcrumbsModel);
+            eventCallback(breadcrumbsModel);
+        }
     }
     getEventName(eventType) {
         return eventType;
@@ -83,8 +103,8 @@ class eventsListenerBase {
         let data = {};
         data.targetId = element.id;
         data.tag = element.tagName;
-        if (data.tag === "BODY")
-            return;
+        // if (data.tag === "BODY")
+        //     return;
         if (element.name)
             data.name = element.name;
         if (element.href)
@@ -98,9 +118,19 @@ class eventsListenerBase {
         return data;
     }
     setCategory(breadcrumb) {
-        if (this.category){
+        if (this.category) {
             breadcrumb.category = this.category;
         }
+    }
+    setPropertyPrefixes(object, prefix) {
+        if (!object)
+            return {};
+        const props = Object.keys(object);
+        for (let i = 0; i < props.length; i++) {
+            object[prefix + "_" + props[i]] = object[props[i]];
+            delete object[props[i]];
+        }
+        return object;
     }
 }
 class mouseEventsListener extends eventsListenerBase {
@@ -136,7 +166,7 @@ class mouseEventsListener extends eventsListenerBase {
         breadcrumb.customData["x"] = event.x;
         breadcrumb.customData["y"] = event.y;
     }
-    
+
     getEventName(eventType) {
         return this._eventNames.hasOwnProperty(eventType) ? this._eventNames[eventType] : eventType;
     }
@@ -190,7 +220,7 @@ class keyboardEventsListener extends eventsListenerBase {
             "keypress": "keyPress",
             "keyup": "keyUp"
         }
-        
+
         this._events = Object.keys(this._eventNames);
 
         this.category = "keyboard";
@@ -269,9 +299,15 @@ class dragDropEventsListener extends eventsListenerBase {
             "drop"
         ];
         this.category = "dragDrop";
+        this.delayListening = true;
     }
     parseEventData(event, breadcrumb) {
         super.parseEventData(event, breadcrumb);
+        if (event.toElement) {
+            let toElement = super.parseElementInfo(event.toElement);
+            Object.assign(breadcrumb.customData, super.setPropertyPrefixes(toElement, "to"));
+
+        }
         breadcrumb.customData["offsetX"] = event.offsetX;
         breadcrumb.customData["offsetY"] = event.offsetY;
     }
@@ -282,7 +318,8 @@ class ajaxEventsListener {
         this._event = "xhr";
         this.category = "request";
     }
-    startListening(win, eventCallback) {
+    startListening(win, owner, eventCallback) {
+        this._owner = owner;
         this.addXMLRequestListenerCallback(
             function (request) {
                 this.onStateChangeCallback(request, eventCallback);
@@ -304,26 +341,30 @@ class ajaxEventsListener {
         }
     }
     onStateChangeCallback(request, eventCallback) {
-        if (!request.onreadystatechange) {
-            request.onreadystatechange = function (stateChangedEvent) {
-                this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback);
-            }.bind(this);
-        } else {
-            const oldEvent = request.onreadystatechange;
-            var callbackStateChanged = this.collectBreadcrumb;
-            let instance = this;
-            request.onreadystatechange = function (stateChangedEvent) {
-                this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback);
-                oldEvent.apply(this, arguments);
-            }.bind(this);
+        if (this._owner.collectBreadcrumbs) {
+            if (!request.onreadystatechange) {
+                request.onreadystatechange = function (stateChangedEvent) {
+                    this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback);
+                }.bind(this);
+            } else {
+                const oldEvent = request.onreadystatechange;
+                var callbackStateChanged = this.collectBreadcrumb;
+                let instance = this;
+                request.onreadystatechange = function (stateChangedEvent) {
+                    if (stateChangedEvent.currentTarget.readyState === 4) {
+                        this.collectBreadcrumb(stateChangedEvent.currentTarget, eventCallback);
+                    }
+                    oldEvent.apply(this, arguments);
+                }.bind(this);
+            }
         }
     }
     collectBreadcrumb(request, eventCallback) {
-        let breadcrumbsModel = new breadcrumb("", this._event);
+        let breadcrumbsModel = new autoRecorderBreadcrumb("", this._event);
+        breadcrumbsModel.level = "Info";
         breadcrumbsModel.category = this.category;
 
-        breadcrumbsModel.customData = {}
-        breadcrumbsModel.customData["readyState"] = request.readyState;
+        breadcrumbsModel.customData = {};
         breadcrumbsModel.customData["status"] = request.status;
         breadcrumbsModel.customData["statusText"] = request.statusText;
         breadcrumbsModel.customData["responseURL"] = request.responseURL;
@@ -341,7 +382,8 @@ class consoleEventListeners {
         ];
         this.category = "console";
     }
-    startListening(win, eventCallback) {
+    startListening(win, owner, eventCallback) {
+        this._owner = owner;
         if (win.console != undefined) {
             for (let i = 0; i < this._events.length; i++) {
                 this.wrapObject(console, this._events[i], eventCallback);
@@ -353,21 +395,25 @@ class consoleEventListeners {
         let wrapperClass = this;
         object[property] = function () {
             let args = Array.prototype.slice.call(arguments, 0);
+
             wrapperClass.createBreadcrumb(args, property, callback);
+
             if (typeof oldFunction === "function") {
                 Function.prototype.apply.call(oldFunction, console, args);
             }
         };
     }
     createBreadcrumb(values, property, callback) {
-        let breadcrumbModel = new breadcrumb("", property);
-        breadcrumbModel.category = "console";
-        breadcrumbModel.level = "Info";
-        if (values != undefined && values.length > 0) {
-            breadcrumbModel.customData = {};
-            breadcrumbModel.customData["value"] = values.join(", ");
-        }
+        if (this._owner.collectBreadcrumbs) {
+            let breadcrumbModel = new autoRecorderBreadcrumb("", "console." + property);
+            breadcrumbModel.category = "console";
+            breadcrumbModel.level = property == "warn" ? "Warning" : property == "error" ? "Error" : "Info";
+            if (values != undefined && values.length > 0) {
+                breadcrumbModel.customData = {};
+                breadcrumbModel.customData["value"] = values.join(", ");
+            }
 
-        callback(breadcrumbModel);
+            callback(breadcrumbModel);
+        }
     }
 }
