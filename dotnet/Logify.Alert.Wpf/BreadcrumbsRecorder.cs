@@ -56,12 +56,11 @@ namespace DevExpress.Logify.WPF {
             return Thread.CurrentThread.ManagedThreadId.ToString();
         }
         void SubscribeToControl() {
-            Subscribe(typeof(Control));
+            Subscribe(typeof(FrameworkElement));
         }
         void Subscribe(Type type) {
             EventManager.RegisterClassHandler(type, UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(MouseDown), true);
             EventManager.RegisterClassHandler(type, UIElement.PreviewMouseUpEvent, new MouseButtonEventHandler(MouseUp), true);
-            EventManager.RegisterClassHandler(type, Control.PreviewMouseDoubleClickEvent, new MouseButtonEventHandler(MouseDoubleClick), true);
             EventManager.RegisterClassHandler(type, UIElement.PreviewKeyDownEvent, new KeyEventHandler(KeyDown), true);
             EventManager.RegisterClassHandler(type, UIElement.PreviewKeyUpEvent, new KeyEventHandler(KeyUp), true);
             EventManager.RegisterClassHandler(type, UIElement.PreviewTextInputEvent, new TextCompositionEventHandler(TextInput), true);
@@ -81,54 +80,49 @@ namespace DevExpress.Logify.WPF {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
             LogKeyboard(properties, e, false, CheckPasswordElement(e.OriginalSource as UIElement));
         }
         void KeyUp(object sender, KeyEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
             LogKeyboard(properties, e, true, CheckPasswordElement(e.OriginalSource as UIElement));
         }
         void MouseDown(object sender, MouseButtonEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
-            LogMouse(properties, e, false, false);
+
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
+            LogMouse(properties, e, false);
         }
         void MouseUp(object sender, MouseButtonEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
-            LogMouse(properties, e, true, false);
-        }
-        void MouseDoubleClick(object sender, MouseButtonEventArgs e) {
-            if(!IsActive || !(sender is FrameworkElement source))
-                return;
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
-            LogMouse(properties, e, false, true);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
+            LogMouse(properties, e, true);
         }
         void MouseWheel(object sender, MouseWheelEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
             LogMouseWheel(properties, e);
         }
         void TextInput(object sender, TextCompositionEventArgs e) {
             if(!IsActive || !(sender is FrameworkElement source))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
             LogTextInput(properties, e, CheckPasswordElement(e.OriginalSource as UIElement));
         }
-        Dictionary<string, string> CollectCommonProperties(FrameworkElement source, object originalSource) {
+        Dictionary<string, string> CollectCommonProperties(FrameworkElement source, FrameworkElement originalSource) {
             Dictionary<string, string> properties = new Dictionary<string, string>();
             properties["Name"] = source.Name;
             properties["ClassName"] = source.GetType().ToString();
-            if(!Object.Equals(source, originalSource))
+            if(IsHiddenItem(source, originalSource))
                 properties["#h"] = "y";
-
+            
             AutomationPeer automation = GetAutomationPeer(source);
             if(automation == null)
                 return properties;
@@ -149,6 +143,19 @@ namespace DevExpress.Logify.WPF {
             CollectValue(properties, automation);
             return properties;
         }
+        FrameworkElement GetRootTemplateElement(FrameworkElement element) {
+            if(element == null)
+                return null;
+
+            if(element.TemplatedParent is FrameworkElement) {
+                return GetRootTemplateElement(element.TemplatedParent as FrameworkElement);
+            }
+            return element;
+        }
+        bool IsHiddenItem(FrameworkElement source, FrameworkElement originalSource) {
+            FrameworkElement targetElement = GetRootTemplateElement(originalSource);
+            return !Object.Equals(source, targetElement);
+        }
         AutomationPeer GetAutomationPeer(UIElement source) {
             return UIElementAutomationPeer.CreatePeerForElement(source);
         }
@@ -159,12 +166,12 @@ namespace DevExpress.Logify.WPF {
                 properties["Value"] = valueProvider.Value;
             }
         }
-        void LogMouse(IDictionary<string, string> properties, MouseButtonEventArgs e, bool isUp, bool isDoubleClick) {
+        void LogMouse(IDictionary<string, string> properties, MouseButtonEventArgs e, bool isUp) {
             properties["ButtonState"] = e.ButtonState.ToString();
-            properties["ChangedButton"] = e.ChangedButton.ToString();
+            properties["mouseButton"] = e.ChangedButton.ToString();
             properties["ClickCount"] = e.ClickCount.ToString();
             Breadcrumb item = new Breadcrumb();
-            if(isDoubleClick) {
+            if(e.ClickCount == 2) {
                 properties["action"] = "doubleClick";
                 item.Event = BreadcrumbEvent.MouseDoubleClick;
             } else if(isUp) {
