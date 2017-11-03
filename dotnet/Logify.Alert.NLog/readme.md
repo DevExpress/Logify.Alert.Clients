@@ -67,4 +67,8 @@ using DevExpress.Logify.Win;
 LogifyAlert client = LogifyAlert.Instance;
 ```
 
-Now, each time your application sends an [Error](https://github.com/NLog/NLog/wiki/Tutorial#writing-log-messages) message with non-empty *LogEvent.Exception* parameter to the NLog system, a new report is generated and sent to Logify Alert.
+Now, each time your application sends an [Error](https://github.com/NLog/NLog/wiki/Tutorial#writing-log-messages) message with non-empty *LogEvent.Exception* parameter to the NLog system, a new report is generated and sent to Logify Alert. For example:
+
+```cs
+logger.Error(new Exception("Test Logify exception"), "Test message");
+```
