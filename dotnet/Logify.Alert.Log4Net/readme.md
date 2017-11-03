@@ -63,4 +63,8 @@ using DevExpress.Logify.Win;
 LogifyAlert client = LogifyAlert.Instance;
 ```
 
-Now,  each time your application calls the [ILog.Error](http://logging.apache.org/log4net/release/sdk/html/M_log4net_ILog_Error.htm)  log4Net method with non-empty *LoggingEvent.ExceptionObject* parameter, a new report is generated and sent to Logify Alert.
+Now,  each time your application calls the [ILog.Error](http://logging.apache.org/log4net/release/sdk/html/M_log4net_ILog_Error.htm)  log4Net method with non-empty *LoggingEvent.ExceptionObject* parameter, a new report is generated and sent to Logify Alert. For example:
+
+```cs
+log.Error("Test message", new Exception("Test Logify exception"));
+```
