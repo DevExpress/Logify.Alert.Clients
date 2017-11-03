@@ -74,4 +74,9 @@ LogifyAlert client = LogifyAlert.Instance;
 Log.Logger = new LoggerConfiguration().ReadFrom.AppSettings().CreateLogger();
 ```
 
-Now, each time your application sends an [Error or a Fatal](https://github.com/serilog/serilog/wiki/Writing-Log-Events) message with non-empty *LogEvent.Exception* parameter to the Serilog system, a new report is generated and sent to Logify Alert.
+Now, each time your application sends an [Error or a Fatal](https://github.com/serilog/serilog/wiki/Writing-Log-Events) message with non-empty *LogEvent.Exception* parameter to the Serilog system, a new report is generated and sent to Logify Alert. For example:
+
+``` csarp
+Log.Logger.Error(new Exception("Test Logify exception"), "Test message");
+```
+
