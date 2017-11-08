@@ -8,7 +8,7 @@ export default class breadcrumb {
     }
 }
 
-export class autoRecorderBreadcrumb extends breadcrumb {
+export class autoRecordedBreadcrumb extends breadcrumb {
     constructor(message, eventType) {
         super(message, eventType);
         this.a = "1";

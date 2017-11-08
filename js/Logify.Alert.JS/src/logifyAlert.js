@@ -1,6 +1,6 @@
 'use strict';
 import jsCollector from "./collectors/jsCollector.js";
-import breadcrumbsListeners from "./breadcrumbs/breadcrumbsListeners.js";
+import breadcrumbsAutoRecorders from "./breadcrumbs/breadcrumbsAutoRecorders.js";
 import jsReportSender from "./reportSender/jsReportSender.js";
 
 class logifyAlert {
@@ -18,13 +18,34 @@ class logifyAlert {
         this.collectSessionStorage = true;
         this.collectCookies = true;
         this.collectInputs = false;
-        
-        this.collectBreadcrumbs = false;
+
+        this._collectBreadcrumbs = false;
 
         this.beforeReportException = undefined;
         this.afterReportException = undefined;
+    }
 
-        this.initBreadcrumbs();
+    get collectBreadcrumbs() {
+        return this._collectBreadcrumbs;
+    }
+
+    set collectBreadcrumbs(value) {
+        if (!this._collectBreadcrumbs && value) {
+            this.startBreadcrumbsAutoRecorders();
+        } else {
+            this.stopBreadcrumbsAutoRecorders();
+        }
+        this._collectBreadcrumbs = value;
+    }
+
+    startBreadcrumbsAutoRecorders() {
+        this._breadcrumbsListener = new breadcrumbsAutoRecorders(window, this);
+        this._breadcrumbsListener.startListening();
+    }
+
+    stopBreadcrumbsAutoRecorders() {
+        if (this._breadcrumbsListener)
+            this._breadcrumbsListener.stopListening();
     }
 
     stopHandling() {
@@ -32,13 +53,13 @@ class logifyAlert {
     }
 
     startHandling() {
-        if(this._handleReports)
+        if (this._handleReports)
             return;
 
         this._handleReports = true;
-        
+
         window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
-            if(this._handleReports) {
+            if (this._handleReports) {
                 this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, this);
             }
 
@@ -46,7 +67,7 @@ class logifyAlert {
         };
 
         window.addEventListener('unhandledrejection', event => {
-            if(this._handleReports) {
+            if (this._handleReports) {
                 this.sendRejection(event.reason, event.promise);
             }
         });
@@ -84,18 +105,13 @@ class logifyAlert {
     }
 
     callBeforeReportExceptionCallback() {
-        if(this.beforeReportException != undefined) {
+        if (this.beforeReportException != undefined) {
             this.customData = this.beforeReportException(this.customData);
         }
     }
 
-    initBreadcrumbs() {
-        const breadcrumbsListener = new breadcrumbsListeners(window, this);
-        breadcrumbsListener.startListening();
-    }
-
     addBreadcrumbs(breadcrumb) {
-        if(this._breadcrumbs === undefined) {
+        if (this._breadcrumbs === undefined) {
             this._breadcrumbs = [];
         }
         this._breadcrumbs.push(breadcrumb);
