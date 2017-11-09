@@ -134,42 +134,55 @@ namespace DevExpress.Logify {
 
 namespace DevExpress.Logify.Core.Internal {
     public static class ClientConfigurationLoader {
+        public static void ConfigureClientFromFile(LogifyClientBase client, string configFileName) {
+            ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+            map.ExeConfigFilename = configFileName;
+            Configuration config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+            LogifyConfigSection section = config.GetSection("logifyAlert") as LogifyConfigSection;
+
+            ApplyClientConfiguration(client, section);
+            LogifyClientAccessor.AfterConfigure(client);
+        }
         public static void ApplyClientConfiguration(LogifyClientBase client) {
             LogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as LogifyConfigSection;
-            if (section != null) {
-                if (section.ServiceUrl != null && !String.IsNullOrEmpty(section.ServiceUrl.Value))
-                    client.ServiceUrl = section.ServiceUrl.Value;
-                //if (section.LogId != null)
-                //    reportSender.LogId = section.LogId.Value;
-                if (section.ApiKey != null)
-                    client.ApiKey = section.ApiKey.Value;
-                if (section.ConfirmSend != null)
-                    client.ConfirmSendReport = section.ConfirmSend.ValueAsBool;
+            ApplyClientConfiguration(client, section);
+        }
+        public static void ApplyClientConfiguration(LogifyClientBase client, LogifyConfigSection section) {
+            if (section == null)
+                return;
 
-                //if (section.MiniDumpServiceUrl != null)
-                //    client.MiniDumpServiceUrl = section.MiniDumpServiceUrl.Value;
+            if (section.ServiceUrl != null && !String.IsNullOrEmpty(section.ServiceUrl.Value))
+                client.ServiceUrl = section.ServiceUrl.Value;
+            //if (section.LogId != null)
+            //    reportSender.LogId = section.LogId.Value;
+            if (section.ApiKey != null)
+                client.ApiKey = section.ApiKey.Value;
+            if (section.ConfirmSend != null)
+                client.ConfirmSendReport = section.ConfirmSend.ValueAsBool;
 
-                if (section.OfflineReportsEnabled != null)
-                    client.OfflineReportsEnabled = section.OfflineReportsEnabled.ValueAsBool;
-                if (section.OfflineReportsDirectory != null)
-                    client.OfflineReportsDirectory = section.OfflineReportsDirectory.Value;
-                if (section.OfflineReportsCount != null)
-                    client.OfflineReportsCount = section.OfflineReportsCount.ValueAsInt;
+            //if (section.MiniDumpServiceUrl != null)
+            //    client.MiniDumpServiceUrl = section.MiniDumpServiceUrl.Value;
 
-                if (section.CollectMiniDump != null)
-                    ClientConfigHelper.GetConfig(client).CollectMiniDump = section.CollectMiniDump.ValueAsBool;
-                if (section.CollectBreadcrumbs != null)
-                    ClientConfigHelper.GetConfig(client).CollectBreadcrumbs = section.CollectBreadcrumbs.ValueAsBool;
-                if (section.BreadcrumbsMaxCount != null) {
-                    int value = section.BreadcrumbsMaxCount.ValueAsInt;
-                    if (value > 1)
-                        ClientConfigHelper.GetConfig(client).BreadcrumbsMaxCount = value;
-                }
+            if (section.OfflineReportsEnabled != null)
+                client.OfflineReportsEnabled = section.OfflineReportsEnabled.ValueAsBool;
+            if (section.OfflineReportsDirectory != null)
+                client.OfflineReportsDirectory = section.OfflineReportsDirectory.Value;
+            if (section.OfflineReportsCount != null)
+                client.OfflineReportsCount = section.OfflineReportsCount.ValueAsInt;
 
-                if (section.CustomData != null && section.CustomData.Count > 0) {
-                    foreach (KeyValueConfigurationElement element in section.CustomData)
-                        client.CustomData[element.Key] = element.Value;
-                }
+            if (section.CollectMiniDump != null)
+                ClientConfigHelper.GetConfig(client).CollectMiniDump = section.CollectMiniDump.ValueAsBool;
+            if (section.CollectBreadcrumbs != null)
+                ClientConfigHelper.GetConfig(client).CollectBreadcrumbs = section.CollectBreadcrumbs.ValueAsBool;
+            if (section.BreadcrumbsMaxCount != null) {
+                int value = section.BreadcrumbsMaxCount.ValueAsInt;
+                if (value > 1)
+                    ClientConfigHelper.GetConfig(client).BreadcrumbsMaxCount = value;
+            }
+
+            if (section.CustomData != null && section.CustomData.Count > 0) {
+                foreach (KeyValueConfigurationElement element in section.CustomData)
+                    client.CustomData[element.Key] = element.Value;
             }
         }
     }

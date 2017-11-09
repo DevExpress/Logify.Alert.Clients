@@ -153,7 +153,7 @@ namespace DevExpress.Logify.Core {
                 ForceUpdateBreadcrumbsMaxCount();
             }
         }
-        protected void ForceUpdateBreadcrumbsMaxCount() {
+        protected internal void ForceUpdateBreadcrumbsMaxCount() {
             this.breadcrumbs = BreadcrumbCollection.ChangeSize(this.breadcrumbs, Config.BreadcrumbsMaxCount);
             
         }
@@ -224,7 +224,12 @@ namespace DevExpress.Logify.Core {
 
             IExceptionReportSender reportSender = CreateExceptionReportSender();
             Configure();
-
+            InitAfterConfigure(reportSender);
+        }
+        protected internal void InitAfterConfigure() {
+            InitAfterConfigure(CreateExceptionReportSender());
+        }
+        protected void InitAfterConfigure(IExceptionReportSender reportSender) {
             reportSender.ServiceUrl = this.ServiceUrl;
             reportSender.ApiKey = this.ApiKey;
             reportSender.ConfirmSendReport = this.ConfirmSendReport;
@@ -607,6 +612,11 @@ namespace DevExpress.Logify.Core.Internal {
                 return LogifyClientBase.Instance.RaiseConfirmationDialogShowing(model);
             else
                 return false;
+        }
+
+        public static void AfterConfigure(LogifyClientBase client) {
+            client.ForceUpdateBreadcrumbsMaxCount();
+            client.InitAfterConfigure();
         }
     }
 
