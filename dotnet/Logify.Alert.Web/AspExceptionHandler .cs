@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Web;
-using System.Web.Configuration;
 
 namespace DevExpress.Logify.Web {
     public class AspExceptionHandler : HttpModuleBase {
         public override void OnInit(HttpApplication context) {
-            // Force init LogifyAlient client
             try {
-                LogifyAlert client = LogifyAlert.Instance;
-                client = null;
-            }
-            catch {
-            }
-
-            try {
+                if(LogifyAlert.Instance.CollectBreadcrumbs)
+                    context.AcquireRequestState += this.OnAcquireRequestState;
                 context.Error += this.OnError;
             }
-            catch {
-            }
+            catch { }
+        }
+
+        protected virtual void OnAcquireRequestState(object sender, EventArgs e) {
+            AspBreadcrumbsRecorder.Instance.AddBreadcrumb(sender as HttpApplication);
         }
 
         protected virtual void OnError(object sender, EventArgs args) {
@@ -30,10 +26,13 @@ namespace DevExpress.Logify.Web {
                 if (server == null)
                     return;
 
-                LogifyAlert.Instance.Send(server.GetLastError());
+                Exception lastError = server.GetLastError();
+                if(LogifyAlert.Instance.CollectBreadcrumbs)
+                    AspBreadcrumbsRecorder.Instance.UpdateBreadcrumb(sender as HttpApplication, lastError);
+
+                LogifyAlert.Instance.Send(lastError);
             }
-            catch {
-            }
+            catch { }
         }
     }
 }

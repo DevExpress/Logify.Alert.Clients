@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Runtime.ExceptionServices;
-using System.Security;
-using System.Threading;
-using DevExpress.Logify.Core;
-using System.Diagnostics;
-using System.Reflection;
-using System.Security.AccessControl;
-using DevExpress.Logify.Web;
 using System.ComponentModel;
+using System.Reflection;
+using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Web {
@@ -23,6 +16,13 @@ namespace DevExpress.Logify.Web {
         internal LogifyAlert(bool b) {
         }
         protected LogifyAlert(string apiKey) : base(apiKey) {
+        }
+
+        public bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
+        public new BreadcrumbCollection Breadcrumbs {
+            get {
+                return AspBreadcrumbsRecorder.Instance.Breadcrumbs;
+            }
         }
 
         public static new LogifyAlert Instance {
@@ -87,7 +87,6 @@ namespace DevExpress.Logify.Web {
         protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
             return new EmptyBackgroundExceptionReportSender(reportSender);
         }
-
         protected override string GetAssemblyVersionString(Assembly asm) {
             return asm.GetName().Version.ToString();
         }
@@ -98,7 +97,6 @@ namespace DevExpress.Logify.Web {
             ClientConfigurationLoader.ApplyClientConfiguration(this);
             ForceUpdateBreadcrumbsMaxCount();
         }
-
         public override void Run() {
             //do nothing
             //SendOfflineReports();
@@ -109,12 +107,14 @@ namespace DevExpress.Logify.Web {
         protected override IStackTraceHelper CreateStackTraceHelper() {
             return new StackTraceHelper();
         }
-
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
             return null;
         }
         protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
             return false;
+        }
+        public void SetBreadcrumbsStorage(IBreadcrumbsStorage storage) {
+            AspBreadcrumbsRecorder.Instance.SetBreadcrumbsStorage(storage);
         }
     }
 }

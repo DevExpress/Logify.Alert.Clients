@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Core {
@@ -13,7 +9,7 @@ namespace DevExpress.Logify.Core {
                 LogifyClientBase.Instance.Breadcrumbs.AddSimple(item);
             }
         }
-        void PopulateCommonBreadcrumbInfo(Breadcrumb item) {
+        protected void PopulateCommonBreadcrumbInfo(Breadcrumb item) {
             item.DateTime = DateTime.Now;
             item.Level = BreadcrumbLevel.Info;
             item.ThreadId = GetThreadId();
