@@ -68,55 +68,61 @@ namespace DevExpress.Logify.WPF {
         }
         void FocusObserverOnFocusChanged(object sender, ValueChangedEventArgs<IInputElement> e) {
             if(e.OldValue is FrameworkElement oldFocus) {
-                Dictionary<string, string> properties = CollectCommonProperties(oldFocus, oldFocus);
+                Dictionary<string, string> properties = CollectCommonProperties(oldFocus);
                 LogFocus(properties, false);
             }
             if(e.NewValue is FrameworkElement newFocus) {
-                Dictionary<string, string> properties = CollectCommonProperties(newFocus, newFocus);
+                Dictionary<string, string> properties = CollectCommonProperties(newFocus);
                 LogFocus(properties, true);
             }
         }
         void KeyDown(object sender, KeyEventArgs e) {
-            if(!IsActive || !(sender is FrameworkElement source))
+            FrameworkElement source = sender as FrameworkElement;
+            if(!IsActive || (sender == null))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
+            Dictionary<string, string> properties = CollectCommonProperties(source);
             LogKeyboard(properties, e, false, CheckPasswordElement(e.OriginalSource as UIElement));
         }
         void KeyUp(object sender, KeyEventArgs e) {
-            if(!IsActive || !(sender is FrameworkElement source))
+            FrameworkElement source = sender as FrameworkElement;
+            if(!IsActive || (sender == null))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
+            Dictionary<string, string> properties = CollectCommonProperties(source);
             LogKeyboard(properties, e, true, CheckPasswordElement(e.OriginalSource as UIElement));
         }
         void MouseDown(object sender, MouseButtonEventArgs e) {
-            if(!IsActive || !(sender is FrameworkElement source))
+            FrameworkElement source = sender as FrameworkElement;
+            if(!IsActive || (sender == null))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
+            Dictionary<string, string> properties = CollectCommonProperties(source);
             LogMouse(properties, e, false);
         }
         void MouseUp(object sender, MouseButtonEventArgs e) {
-            if(!IsActive || !(sender is FrameworkElement source))
+            FrameworkElement source = sender as FrameworkElement;
+            if(!IsActive || (sender == null))
                 return;
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
+            Dictionary<string, string> properties = CollectCommonProperties(source);
             LogMouse(properties, e, true);
         }
         void MouseWheel(object sender, MouseWheelEventArgs e) {
-            if(!IsActive || !(sender is FrameworkElement source))
+            FrameworkElement source = sender as FrameworkElement;
+            if(!IsActive || (sender == null))
                 return;
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
+            Dictionary<string, string> properties = CollectCommonProperties(source);
             LogMouseWheel(properties, e);
         }
         void TextInput(object sender, TextCompositionEventArgs e) {
-            if(!IsActive || !(sender is FrameworkElement source))
+            FrameworkElement source = sender as FrameworkElement;
+            if(!IsActive || (sender == null))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source, e.OriginalSource as FrameworkElement);
+            Dictionary<string, string> properties = CollectCommonProperties(source);
             LogTextInput(properties, e, CheckPasswordElement(e.OriginalSource as UIElement));
         }
-        Dictionary<string, string> CollectCommonProperties(FrameworkElement source, FrameworkElement originalSource) {
+        Dictionary<string, string> CollectCommonProperties(FrameworkElement source) {
             Dictionary<string, string> properties = new Dictionary<string, string>();
             properties["Name"] = source.Name;
             properties["ClassName"] = source.GetType().ToString();
