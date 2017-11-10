@@ -56,7 +56,7 @@ namespace DevExpress.Logify.WPF {
             return Thread.CurrentThread.ManagedThreadId.ToString();
         }
         void SubscribeToControl() {
-            Subscribe(typeof(FrameworkElement));
+            Subscribe(typeof(Control));
         }
         void Subscribe(Type type) {
             EventManager.RegisterClassHandler(type, UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(MouseDown), true);
@@ -120,8 +120,8 @@ namespace DevExpress.Logify.WPF {
             Dictionary<string, string> properties = new Dictionary<string, string>();
             properties["Name"] = source.Name;
             properties["ClassName"] = source.GetType().ToString();
-            if(IsHiddenItem(source, originalSource))
-                properties["#h"] = "y";
+            //if(IsHiddenItem(source, originalSource))
+            //    properties["#h"] = "y";
             
             AutomationPeer automation = GetAutomationPeer(source);
             if(automation == null)
