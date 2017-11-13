@@ -26,6 +26,7 @@ namespace DevExpress.Logify.WPF {
         static volatile bool initialized;
         static readonly object Locker = new object();
         bool IsActive = false;
+        PreviousArgs previousArgs = null;
 
         private WPFBreadcrumbsRecorder() { }
 
@@ -68,11 +69,11 @@ namespace DevExpress.Logify.WPF {
         }
         void FocusObserverOnFocusChanged(object sender, ValueChangedEventArgs<IInputElement> e) {
             if(e.OldValue is FrameworkElement oldFocus) {
-                Dictionary<string, string> properties = CollectCommonProperties(oldFocus);
+                Dictionary<string, string> properties = CollectCommonProperties(oldFocus, null);
                 LogFocus(properties, false);
             }
             if(e.NewValue is FrameworkElement newFocus) {
-                Dictionary<string, string> properties = CollectCommonProperties(newFocus);
+                Dictionary<string, string> properties = CollectCommonProperties(newFocus, null);
                 LogFocus(properties, true);
             }
         }
@@ -81,7 +82,7 @@ namespace DevExpress.Logify.WPF {
             if(!IsActive || (sender == null))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e);
             LogKeyboard(properties, e, false, CheckPasswordElement(e.OriginalSource as UIElement));
         }
         void KeyUp(object sender, KeyEventArgs e) {
@@ -89,7 +90,7 @@ namespace DevExpress.Logify.WPF {
             if(!IsActive || (sender == null))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e);
             LogKeyboard(properties, e, true, CheckPasswordElement(e.OriginalSource as UIElement));
         }
         void MouseDown(object sender, MouseButtonEventArgs e) {
@@ -97,21 +98,23 @@ namespace DevExpress.Logify.WPF {
             if(!IsActive || (sender == null))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e);
             LogMouse(properties, e, false);
         }
         void MouseUp(object sender, MouseButtonEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
             if(!IsActive || (sender == null))
                 return;
-            Dictionary<string, string> properties = CollectCommonProperties(source);
+
+            Dictionary<string, string> properties = CollectCommonProperties(source, e);
             LogMouse(properties, e, true);
         }
         void MouseWheel(object sender, MouseWheelEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
             if(!IsActive || (sender == null))
                 return;
-            Dictionary<string, string> properties = CollectCommonProperties(source);
+
+            Dictionary<string, string> properties = CollectCommonProperties(source, e);
             LogMouseWheel(properties, e);
         }
         void TextInput(object sender, TextCompositionEventArgs e) {
@@ -119,16 +122,23 @@ namespace DevExpress.Logify.WPF {
             if(!IsActive || (sender == null))
                 return;
 
-            Dictionary<string, string> properties = CollectCommonProperties(source);
+            Dictionary<string, string> properties = CollectCommonProperties(source, e);
             LogTextInput(properties, e, CheckPasswordElement(e.OriginalSource as UIElement));
         }
-        Dictionary<string, string> CollectCommonProperties(FrameworkElement source) {
+        Dictionary<string, string> CollectCommonProperties(FrameworkElement source, EventArgs e) {
             Dictionary<string, string> properties = new Dictionary<string, string>();
             properties["Name"] = source.Name;
             properties["ClassName"] = source.GetType().ToString();
-            //if(IsHiddenItem(source, originalSource))
-            //    properties["#h"] = "y";
-            
+
+            if(previousArgs == null) {
+                previousArgs = new PreviousArgs() { EventArgs = e, Guid = Guid.NewGuid().ToString() };
+            } else {
+                if(e == null || !Object.Equals(previousArgs.EventArgs, e)) {
+                    previousArgs = new PreviousArgs() { EventArgs = e, Guid = Guid.NewGuid().ToString() };
+                }
+            }
+            properties["#e"] = previousArgs.Guid;
+
             AutomationPeer automation = GetAutomationPeer(source);
             if(automation == null)
                 return properties;
@@ -148,19 +158,6 @@ namespace DevExpress.Logify.WPF {
 
             CollectValue(properties, automation);
             return properties;
-        }
-        FrameworkElement GetRootTemplateElement(FrameworkElement element) {
-            if(element == null)
-                return null;
-
-            if(element.TemplatedParent is FrameworkElement) {
-                return GetRootTemplateElement(element.TemplatedParent as FrameworkElement);
-            }
-            return element;
-        }
-        bool IsHiddenItem(FrameworkElement source, FrameworkElement originalSource) {
-            FrameworkElement targetElement = GetRootTemplateElement(originalSource);
-            return !Object.Equals(source, targetElement);
         }
         AutomationPeer GetAutomationPeer(UIElement source) {
             return UIElementAutomationPeer.CreatePeerForElement(source);
@@ -328,5 +325,9 @@ namespace DevExpress.Logify.WPF {
             if(PreviousFocus != CurrentFocus)
                 RaiseFocusChanged(PreviousFocus, CurrentFocus);
         }
+    }
+    class PreviousArgs {
+        public EventArgs EventArgs { get; set; }
+        public string Guid { get; set; }
     }
 }
