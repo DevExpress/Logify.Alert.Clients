@@ -252,19 +252,38 @@ namespace DevExpress.Logify.WPF {
             AddBreadcrumb(item);
         }
         void LogKeyboard(IDictionary<string, string> properties, KeyEventArgs e, bool isUp, bool isPassword) {
-            properties["key"] = isPassword ? Key.Multiply.ToString() : e.Key.ToString();
-            properties["SystemKey"] = isPassword ? Key.Multiply.ToString() : e.SystemKey.ToString();
+            properties["key"] = GetKeyValue(e.Key, isPassword).ToString();
+            properties["SystemKey"] = GetKeyValue(e.SystemKey, isPassword).ToString();
             properties["IsToggled"] = e.IsToggled.ToString();
             properties["IsRepeat"] = e.IsRepeat.ToString();
             properties["KeyStates"] = e.KeyStates.ToString();
             properties["action"] = isUp ? "up" : "down";
-            properties["scanCode"] = KeyInterop.VirtualKeyFromKey(isPassword ? Key.Multiply : e.Key).ToString();
+            properties["scanCode"] = KeyInterop.VirtualKeyFromKey(GetKeyValue(e.Key, isPassword)).ToString();
 
             Breadcrumb item = new Breadcrumb();
             item.Event = isUp ? BreadcrumbEvent.KeyUp : BreadcrumbEvent.KeyDown;
             item.CustomData = properties;
 
             AddBreadcrumb(item);
+        }
+        Key GetKeyValue(Key key, bool isPassword) {
+            if(!isPassword)
+                return key;
+
+            switch(key) {
+                case Key.Tab:
+                case Key.Left:
+                case Key.Right:
+                case Key.Up:
+                case Key.Down:
+                case Key.Enter:
+                case Key.Home:
+                case Key.End:
+                    return key;
+
+                default:
+                    return Key.Multiply;
+            }
         }
         bool CheckPasswordElement(UIElement targetElement) {
             if(targetElement != null) {
