@@ -10,6 +10,7 @@ using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DevExpress.Logify.WPF {
     public class WPFBreadcrumbsRecorder: BreadcrumbsRecorderBase {
@@ -68,11 +69,13 @@ namespace DevExpress.Logify.WPF {
             //EventManager.RegisterClassHandler(type, UIElement.PreviewMouseWheelEvent, new MouseWheelEventHandler(MouseWheel), true);
         }
         void FocusObserverOnFocusChanged(object sender, ValueChangedEventArgs<IInputElement> e) {
-            if(e.OldValue is FrameworkElement oldFocus) {
+            FrameworkElement oldFocus = e.OldValue as FrameworkElement;
+            if(oldFocus != null) {
                 Dictionary<string, string> properties = CollectCommonProperties(oldFocus, null);
                 LogFocus(properties, false);
             }
-            if(e.NewValue is FrameworkElement newFocus) {
+            FrameworkElement newFocus = e.NewValue as FrameworkElement;
+            if(newFocus != null) {
                 Dictionary<string, string> properties = CollectCommonProperties(newFocus, null);
                 LogFocus(properties, true);
             }
@@ -99,7 +102,7 @@ namespace DevExpress.Logify.WPF {
                 return;
 
             Dictionary<string, string> properties = CollectCommonProperties(source, e);
-            LogMouse(properties, e, false);
+            LogMouse(properties, source, e, false);
         }
         void MouseUp(object sender, MouseButtonEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
@@ -107,7 +110,7 @@ namespace DevExpress.Logify.WPF {
                 return;
 
             Dictionary<string, string> properties = CollectCommonProperties(source, e);
-            LogMouse(properties, e, true);
+            LogMouse(properties, source, e, true);
         }
         void MouseWheel(object sender, MouseWheelEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
@@ -169,7 +172,7 @@ namespace DevExpress.Logify.WPF {
                 properties["Value"] = valueProvider.Value;
             }
         }
-        void LogMouse(IDictionary<string, string> properties, MouseButtonEventArgs e, bool isUp) {
+        void LogMouse(IDictionary<string, string> properties, FrameworkElement source, MouseButtonEventArgs e, bool isUp) {
             properties["ButtonState"] = e.ButtonState.ToString();
             properties["mouseButton"] = e.ChangedButton.ToString();
             properties["ClickCount"] = e.ClickCount.ToString();
@@ -184,9 +187,30 @@ namespace DevExpress.Logify.WPF {
                 properties["action"] = "down";
                 item.Event = BreadcrumbEvent.MouseDown;
             }
+            IInputElement inputElement = GetRootInputElement(source);
+            Point relativePosition = e.GetPosition(inputElement);
+            properties["x"] = relativePosition.X.ToString();
+            properties["y"] = relativePosition.Y.ToString();
+            if(inputElement is Visual) {
+                Point screenPosition = (inputElement as Visual).PointToScreen(relativePosition);
+                properties["sx"] = screenPosition.X.ToString();
+                properties["sy"] = screenPosition.Y.ToString();
+            }
             item.CustomData = properties;
 
             AddBreadcrumb(item);
+        }
+        IInputElement GetRootInputElement(FrameworkElement source) {
+            return GetRootInputElementCore(source, null);
+        }
+        IInputElement GetRootInputElementCore(FrameworkElement source, IInputElement lastInputElement) {
+            if(source is IInputElement)
+                lastInputElement = source as IInputElement;
+
+            if(source != null) {
+                return GetRootInputElementCore(source.Parent as FrameworkElement, lastInputElement);
+            }
+            return lastInputElement;
         }
         void LogMouseWheel(IDictionary<string, string> properties, MouseWheelEventArgs e) {
             properties["Delta"] = e.Delta.ToString();
@@ -274,11 +298,11 @@ namespace DevExpress.Logify.WPF {
 
         public static IInputElement CurrentFocus {
             get { return (IInputElement)currentWR.With(x => x.Target); }
-            private set => currentWR = new WeakReference(value);
+            private set { currentWR = new WeakReference(value); }
         }
         public static IInputElement PreviousFocus {
             get { return (IInputElement)oldWR.With(x => x.Target); }
-            private set => oldWR = new WeakReference(value);
+            private set { oldWR = new WeakReference(value); }
         }
         public static TR With<TI, TR>(this TI input, Func<TI, TR> evaluator)
             where TI : class
