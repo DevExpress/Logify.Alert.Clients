@@ -168,8 +168,11 @@ namespace DevExpress.Logify.WPF {
         void CollectValue(Dictionary<string, string> properties, AutomationPeer automation) {
             if(automation.IsPassword()) {
                 properties["Value"] = "*";
-            } else if(automation.GetPattern(PatternInterface.Value) is IValueProvider valueProvider) {
-                properties["Value"] = valueProvider.Value;
+            } else {
+                IValueProvider valueProvider = automation.GetPattern(PatternInterface.Value) as IValueProvider;
+                if(valueProvider != null) {
+                    properties["Value"] = valueProvider.Value;
+                }
             }
         }
         void LogMouse(IDictionary<string, string> properties, FrameworkElement source, MouseButtonEventArgs e, bool isUp) {
