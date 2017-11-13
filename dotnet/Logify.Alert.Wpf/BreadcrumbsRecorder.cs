@@ -190,18 +190,23 @@ namespace DevExpress.Logify.WPF {
                 properties["action"] = "down";
                 item.Event = BreadcrumbEvent.MouseDown;
             }
-            IInputElement inputElement = GetRootInputElement(source);
-            Point relativePosition = e.GetPosition(inputElement);
-            properties["x"] = relativePosition.X.ToString();
-            properties["y"] = relativePosition.Y.ToString();
-            if(inputElement is Visual) {
-                Point screenPosition = (inputElement as Visual).PointToScreen(relativePosition);
-                properties["sx"] = screenPosition.X.ToString();
-                properties["sy"] = screenPosition.Y.ToString();
-            }
+            CollectMousePosition(properties, source, e);
             item.CustomData = properties;
 
             AddBreadcrumb(item);
+        }
+        void CollectMousePosition(IDictionary<string, string> properties, FrameworkElement source, MouseButtonEventArgs e) {
+            IInputElement inputElement = GetRootInputElement(source);
+            if(inputElement != null) {
+                Point relativePosition = e.GetPosition(inputElement);
+                properties["x"] = relativePosition.X.ToString();
+                properties["y"] = relativePosition.Y.ToString();
+                if(inputElement is Visual) {
+                    Point screenPosition = (inputElement as Visual).PointToScreen(relativePosition);
+                    properties["sx"] = screenPosition.X.ToString();
+                    properties["sy"] = screenPosition.Y.ToString();
+                }
+            }
         }
         IInputElement GetRootInputElement(FrameworkElement source) {
             return GetRootInputElementCore(source, null);
