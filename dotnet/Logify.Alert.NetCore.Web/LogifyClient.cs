@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
-using System.Security;
-using System.Threading;
-using DevExpress.Logify.Core;
-using System.Diagnostics;
 using System.Reflection;
-using DevExpress.Logify.Web;
-using System.ComponentModel;
-using Microsoft.Extensions.Configuration;
+using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
+using Microsoft.Extensions.Configuration;
 
 namespace DevExpress.Logify.Web {
     public class LogifyAlert : LogifyClientBase {
@@ -18,6 +12,13 @@ namespace DevExpress.Logify.Web {
         internal LogifyAlert(bool b) {
         }
         protected LogifyAlert(string apiKey) : base(apiKey) {
+        }
+
+        public bool CollectBreadcrumbs { get { return base.CollectBreadcrumbsCore; } set { base.CollectBreadcrumbsCore = value; } }
+        public new BreadcrumbCollection Breadcrumbs {
+            get {
+                return NetCoreWebBreadcrumbsRecorder.Instance.Breadcrumbs;
+            }
         }
 
         public static new LogifyAlert Instance {

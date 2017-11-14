@@ -13,11 +13,8 @@ namespace DevExpress.Logify.Web {
             get {
                 if(instance != null)
                     return instance;
-                lock(typeof(AspBreadcrumbsRecorder)) {
-                    if(instance != null)
-                        return instance;
-                    InitializeInstance(null);
-                }
+
+                InitializeInstance(null);
                 return instance;
             }
         }
@@ -34,12 +31,16 @@ namespace DevExpress.Logify.Web {
         }
 
         internal static void InitializeInstance(IBreadcrumbsStorage storage) {
-            if(storage != null)
-                instance = new AspBreadcrumbsRecorder(storage);
-            else if(HttpContext.Current != null && HttpContext.Current.Session != null)
-                instance = new AspBreadcrumbsRecorder(new HttpBreadcrumbsStorage());
-            else
-                instance = new AspBreadcrumbsRecorder(new InMemoryBreadcrumbsStorage());
+            lock(typeof(AspBreadcrumbsRecorder)) {
+                if(storage != null)
+                    instance = new AspBreadcrumbsRecorder(storage);
+                if(instance != null)
+                    return;
+                else if(HttpContext.Current != null && HttpContext.Current.Session != null)
+                    instance = new AspBreadcrumbsRecorder(new HttpBreadcrumbsStorage());
+                else
+                    instance = new AspBreadcrumbsRecorder(new InMemoryBreadcrumbsStorage());
+            }
         }
         internal void SetBreadcrumbsStorage(IBreadcrumbsStorage storage) {
             InitializeInstance(storage);
@@ -61,10 +62,11 @@ namespace DevExpress.Logify.Web {
             if(response == null)
                 return;
 
+            HttpCookie cookie = request.Cookies["ASP.NET_SessionId"];
+
             HttpSessionState session = httpApplication.Context.Session;
             //if(session == null)
             //    return;
-            HttpCookie cookie = request.Cookies["ASP.NET_SessionId"];
 
             Breadcrumb breadcrumb = new Breadcrumb();
             base.PopulateCommonBreadcrumbInfo(breadcrumb);
@@ -74,13 +76,13 @@ namespace DevExpress.Logify.Web {
             breadcrumb.CustomData = new Dictionary<string, string>() {
                 { "url", request.Url.ToString() },
                 { "status", response.StatusDescription },
-                { "session", TryGetSessionId(session, cookie) }
+                { "session", TryGetSessionId(cookie, session) }
             };
 
             this.AddBreadcrumb(breadcrumb);
         }
         internal void UpdateBreadcrumb(HttpApplication httpApplication, Exception ex) {
-            Breadcrumb breadcrumb = Breadcrumbs.First();
+            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.Event == BreadcrumbEvent.None).First();
             if(breadcrumb != null) {
                 HttpResponse response = httpApplication.Context.Response;
                 if(response != null)
@@ -90,12 +92,12 @@ namespace DevExpress.Logify.Web {
         protected override string GetThreadId() {
             return Thread.CurrentThread.ManagedThreadId.ToString();
         }
-        string TryGetSessionId(HttpSessionState session, HttpCookie cookie) {
+        string TryGetSessionId(HttpCookie cookie, HttpSessionState session) {
             string result = null;
-            if(session != null)
-                result = session.SessionID;
-            if(string.IsNullOrEmpty(result) && cookie != null)
+            if(cookie != null)
                 result = cookie.Value;
+            if(string.IsNullOrEmpty(result) && session != null)
+                result = session.SessionID;
             return result;
         }
     }

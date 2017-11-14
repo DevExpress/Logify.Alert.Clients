@@ -13,7 +13,7 @@ namespace DevExpress.Logify.Web {
             }
         }
         public InMemoryBreadcrumbsStorage() {
-            this._breadcrumbs = new BreadcrumbCollection();
+            this._breadcrumbs = new BreadcrumbCollection(50);
         }
     }
     public class HttpBreadcrumbsStorage : IBreadcrumbsStorage {
@@ -21,7 +21,7 @@ namespace DevExpress.Logify.Web {
         public BreadcrumbCollection Breadcrumbs {
             get {
                 if(HttpContext.Current.Session[SessionKey] == null)
-                    HttpContext.Current.Session[SessionKey] = new BreadcrumbCollection();
+                    HttpContext.Current.Session[SessionKey] = new BreadcrumbCollection(50);
                 return (BreadcrumbCollection)HttpContext.Current.Session[SessionKey];
             }
         }

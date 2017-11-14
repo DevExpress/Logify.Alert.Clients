@@ -18,7 +18,7 @@ namespace DevExpress.Logify.Web {
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
 
-        public bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
+        public bool CollectBreadcrumbs { get { return base.CollectBreadcrumbsCore; } set { base.CollectBreadcrumbsCore = value; } }
         public new BreadcrumbCollection Breadcrumbs {
             get {
                 return AspBreadcrumbsRecorder.Instance.Breadcrumbs;

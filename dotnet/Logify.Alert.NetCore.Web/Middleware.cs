@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevExpress.Logify.Core;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Builder;
 using DevExpress.Logify.Core.Internal;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
 namespace DevExpress.Logify.Web {
     internal class LogifyAlertMiddleware {
@@ -18,6 +19,8 @@ namespace DevExpress.Logify.Web {
         public async Task Invoke(HttpContext context) {
             //context.Response.StatusCode
             try {
+                if(LogifyAlert.Instance.CollectBreadcrumbs)
+                    NetCoreWebBreadcrumbsRecorder.Instance.AddBreadcrumb(context);
                 await next(context);
             }
             catch (Exception e) {
