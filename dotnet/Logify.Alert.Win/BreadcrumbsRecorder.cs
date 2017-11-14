@@ -106,12 +106,13 @@ namespace DevExpress.Logify.Core.Internal {
         }
         bool ProcessKeyMessage(ref Message m, bool isUp) {
             string key = ((Keys)m.WParam).ToString();
-            if (ShouldMaskMessage(ref m))
+            bool maskKey = ShouldMaskMessage(ref m) && !IsNonSymbolKey((Keys)m.WParam);
+            if (maskKey)
                 key = Keys.Multiply.ToString();
 
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["key"] = key;
-            data["scanCode"] = GetScanCode(m.LParam).ToString();
+            data["scanCode"] = maskKey ? "0" : GetScanCode(m.LParam).ToString();
             data["action"] = isUp ? "up" : "down";
 
             Breadcrumb item = new Breadcrumb();
@@ -124,14 +125,38 @@ namespace DevExpress.Logify.Core.Internal {
             //    TryOptimizeLastKeyboardBreadcrumbs();
             return false;
         }
+
+        bool IsNonSymbolKey(Keys key) {
+            return key == Keys.Tab ||
+                key == Keys.Left ||
+                key == Keys.Right ||
+                key == Keys.Up ||
+                key == Keys.Down ||
+                key == Keys.PageUp ||
+                key == Keys.PageDown ||
+                key == Keys.Home ||
+                key == Keys.End ||
+                key == Keys.Enter ||
+                key == Keys.Return ||
+                key == Keys.Control ||
+                key == Keys.ControlKey ||
+                key == Keys.LControlKey ||
+                key == Keys.RControlKey ||
+                key == Keys.Shift ||
+                key == Keys.ShiftKey ||
+                key == Keys.LShiftKey ||
+                key == Keys.RShiftKey;
+        }
+
         bool ProcessKeyCharMessage(ref Message m) {
             char @char = (char)m.WParam;
-            if (ShouldMaskMessage(ref m))
+            bool maskKey = ShouldMaskMessage(ref m);
+            if (maskKey)
                 @char = '*';
 
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["char"] = new string(@char, 1);
-            data["scanCode"] = GetScanCode(m.LParam).ToString();
+            data["scanCode"] = maskKey ? "0" : GetScanCode(m.LParam).ToString();
             data["action"] = "press";
 
             Breadcrumb item = new Breadcrumb();

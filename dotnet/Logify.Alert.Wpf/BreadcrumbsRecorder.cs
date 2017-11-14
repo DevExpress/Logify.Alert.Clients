@@ -276,6 +276,12 @@ namespace DevExpress.Logify.WPF {
                 case Key.Right:
                 case Key.Up:
                 case Key.Down:
+                case Key.PageUp:
+                case Key.PageDown:
+                case Key.LeftCtrl:
+                case Key.RightCtrl:
+                case Key.LeftShift:
+                case Key.RightShift:
                 case Key.Enter:
                 case Key.Home:
                 case Key.End:
