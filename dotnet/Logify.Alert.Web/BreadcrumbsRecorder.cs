@@ -98,15 +98,15 @@ namespace DevExpress.Logify.Web {
             //HttpCookie standardCookie = request.Cookies["ASP.NET_SessionId"];
             //if(standardCookie != null)
             //    cookieValue = standardCookie.Value;
-            if(string.IsNullOrEmpty(cookieValue)) {
-                HttpCookie logifyCookie = request.Cookies[CookieName];
-                if(logifyCookie != null) {
-                    cookieValue = logifyCookie.Value;
-                } else {
-                    cookieValue = Guid.NewGuid().ToString();
-                    response.Cookies.Add(new HttpCookie(CookieName, cookieValue));
-                }
+            //if(string.IsNullOrEmpty(cookieValue)) {
+            HttpCookie logifyCookie = request.Cookies[CookieName];
+            if(logifyCookie != null) {
+                cookieValue = logifyCookie.Value;
+            } else {
+                cookieValue = Guid.NewGuid().ToString();
+                response.Cookies.Add(new HttpCookie(CookieName, cookieValue));
             }
+            //}
             return cookieValue;
         }
     }
