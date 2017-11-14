@@ -62,11 +62,7 @@ namespace DevExpress.Logify.Web {
             if(response == null)
                 return;
 
-            HttpCookie cookie = request.Cookies["ASP.NET_SessionId"];
-
             HttpSessionState session = httpApplication.Context.Session;
-            //if(session == null)
-            //    return;
 
             Breadcrumb breadcrumb = new Breadcrumb();
             base.PopulateCommonBreadcrumbInfo(breadcrumb);
@@ -76,29 +72,42 @@ namespace DevExpress.Logify.Web {
             breadcrumb.CustomData = new Dictionary<string, string>() {
                 { "url", request.Url.ToString() },
                 { "status", response.StatusDescription },
-                { "session", TryGetSessionId(cookie, session) }
+                { "session", TryGetSessionId(request, response, session) },
+                { "a", "1" }
             };
 
             this.AddBreadcrumb(breadcrumb);
         }
-        internal void UpdateBreadcrumb(HttpApplication httpApplication, Exception ex) {
-            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.Event == BreadcrumbEvent.None).First();
-            if(breadcrumb != null) {
-                HttpResponse response = httpApplication.Context.Response;
-                if(response != null)
-                    breadcrumb.CustomData["status"] = "Failed";
-            }
+        internal void UpdateBreadcrumb() {
+            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.CustomData != null && b.CustomData["a"] == "1").First();
+            if(breadcrumb != null)
+                breadcrumb.CustomData["status"] = "Failed";
         }
         protected override string GetThreadId() {
             return Thread.CurrentThread.ManagedThreadId.ToString();
         }
-        string TryGetSessionId(HttpCookie cookie, HttpSessionState session) {
-            string result = null;
-            if(cookie != null)
-                result = cookie.Value;
+        string TryGetSessionId(HttpRequest request, HttpResponse response, HttpSessionState session) {
+            string result = TryGetCookie(request, response);
             if(string.IsNullOrEmpty(result) && session != null)
                 result = session.SessionID;
             return result;
+        }
+        const string CookieName = "Logify.Web.Cookie";
+        string TryGetCookie(HttpRequest request, HttpResponse response) {
+            string cookieValue = null;
+            //HttpCookie standardCookie = request.Cookies["ASP.NET_SessionId"];
+            //if(standardCookie != null)
+            //    cookieValue = standardCookie.Value;
+            if(string.IsNullOrEmpty(cookieValue)) {
+                HttpCookie logifyCookie = request.Cookies[CookieName];
+                if(logifyCookie != null) {
+                    cookieValue = logifyCookie.Value;
+                } else {
+                    cookieValue = Guid.NewGuid().ToString();
+                    response.Cookies.Add(new HttpCookie(CookieName, cookieValue));
+                }
+            }
+            return cookieValue;
         }
     }
 }

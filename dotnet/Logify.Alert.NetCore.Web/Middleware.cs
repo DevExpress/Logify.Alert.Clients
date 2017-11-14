@@ -50,6 +50,8 @@ namespace DevExpress.Logify.Web {
         void ReportException(Exception ex, HttpContext context) {
             LogifyHttpContext.Current = context;
             try {
+                if(LogifyAlert.Instance.CollectBreadcrumbs)
+                    NetCoreWebBreadcrumbsRecorder.Instance.UpdateBreadcrumb();
                 LogifyAlert.Instance.Send(ex);
             }
             catch {

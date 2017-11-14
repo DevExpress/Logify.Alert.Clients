@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using DevExpress.Logify.Core;
 using Microsoft.AspNetCore.Http;
@@ -42,7 +44,7 @@ namespace DevExpress.Logify.Web {
             this._storage.Breadcrumbs.Add(item);
         }
         internal void AddBreadcrumb(HttpContext context) {
-            if(context.Request != null && context.Request.Path != null) {
+            if(context.Request != null && context.Request.Path != null && context.Response != null) {
                 Breadcrumb breadcrumb = new Breadcrumb();
                 base.PopulateCommonBreadcrumbInfo(breadcrumb);
                 breadcrumb.Category = "request";
@@ -51,22 +53,37 @@ namespace DevExpress.Logify.Web {
                 breadcrumb.CustomData = new Dictionary<string, string>() {
                     { "url", context.Request.Path.ToString() },
                     { "status", context.Response.StatusCode.ToString() },
-                    { "session", TryGetSessionId(context) }
+                    { "session", TryGetSessionId(context) },
+                    { "a", "1" }
                 };
 
                 this.AddBreadcrumb(breadcrumb);
             }
         }
+        internal void UpdateBreadcrumb() {
+            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.CustomData != null && b.CustomData["a"] == "1").First();
+            if(breadcrumb != null) 
+                breadcrumb.CustomData["status"] = "Failed";
+        }
         protected override string GetThreadId() {
             return Thread.CurrentThread.ManagedThreadId.ToString();
         }
         string TryGetSessionId(HttpContext context) {
-            string result = null;
+            string result = TryGetCookie(context);
             try {
-                if(context.Session != null)
+                if(string.IsNullOrEmpty(result) && context.Session != null)
                     result = context.Session.Id;
             } catch { }
             return result;
+        }
+        const string CookieName = "Logify.Web.Cookie";
+        string TryGetCookie(HttpContext context) {
+            string cookieValue = context.Request.Cookies[CookieName];
+            if(string.IsNullOrEmpty(cookieValue)) {
+                cookieValue = Guid.NewGuid().ToString();
+                context.Response.Cookies.Append(CookieName, cookieValue);
+            }
+            return cookieValue;
         }
     }
 }

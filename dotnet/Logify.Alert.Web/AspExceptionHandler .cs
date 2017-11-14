@@ -26,10 +26,10 @@ namespace DevExpress.Logify.Web {
                 if (server == null)
                     return;
 
-                Exception lastError = server.GetLastError();
                 if(LogifyAlert.Instance.CollectBreadcrumbs)
-                    AspBreadcrumbsRecorder.Instance.UpdateBreadcrumb(sender as HttpApplication, lastError);
+                    AspBreadcrumbsRecorder.Instance.UpdateBreadcrumb();
 
+                Exception lastError = server.GetLastError();
                 LogifyAlert.Instance.Send(lastError);
             }
             catch { }
