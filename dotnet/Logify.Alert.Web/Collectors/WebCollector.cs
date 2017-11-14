@@ -67,6 +67,7 @@ namespace DevExpress.Logify.Core.Internal {
             Collectors.Add(new DebuggerCollector());
             Collectors.Add(new MemoryCollector(config));
             Collectors.Add(new FrameworkVersionsCollector());
+            Collectors.Add(new EnvironmentCollector());
         }
     }
 }

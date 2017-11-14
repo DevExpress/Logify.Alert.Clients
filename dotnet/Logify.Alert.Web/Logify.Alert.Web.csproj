@@ -105,6 +105,9 @@
     <Compile Include="..\Logify.Alert.Core\Collectors\CompositeInfoCollector.cs">
       <Link>Collectors\CompositeInfoCollector.cs</Link>
     </Compile>
+    <Compile Include="..\Logify.Alert.Core\Collectors\EnvironmentCollector.cs">
+      <Link>Collectors\EnvironmentCollector.cs</Link>
+    </Compile>
     <Compile Include="..\Logify.Alert.Core\Collectors\ExceptionObjectCollector.cs">
       <Link>Collectors\ExceptionObjectCollector.cs</Link>
     </Compile>

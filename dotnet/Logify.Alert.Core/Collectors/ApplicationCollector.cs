@@ -20,6 +20,7 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.WriteValue("architecture", RuntimeInformation.ProcessArchitecture.ToString());
                 logger.WriteValue("is64bit", RuntimeInformation.ProcessArchitecture == Architecture.X64 || RuntimeInformation.ProcessArchitecture == Architecture.Arm64);
 #endif
+                logger.WriteValue("commandLine", Environment.CommandLine);
                 SerializeCurrentDomainInfo(ex, logger, "currentDomain");
             }
             finally {

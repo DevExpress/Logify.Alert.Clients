@@ -14,6 +14,7 @@
             Collectors.Add(new CurrentCultureCollector());
             Collectors.Add(new CurrentUICultureCollector());
             Collectors.Add(new FrameworkVersionsCollector());
+            Collectors.Add(new EnvironmentCollector());
             if (config.CollectScreenshot)
                 Collectors.Add(new ScreenshotCollector());
             //etc
