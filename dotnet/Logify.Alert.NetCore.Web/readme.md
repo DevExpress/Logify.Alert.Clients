@@ -34,6 +34,8 @@ WebHost.CreateDefaultBuilder(args)
 
 Add the following code to the **Configure()** method declared in the application's **Startup.cs** file.
 ```csharp
+using DevExpress.Logify.Web;
+...
 public static void Register(HttpConfiguration config) {
     //...
     if (env.IsDevelopment())
@@ -55,6 +57,7 @@ That's it. Now, your application will report unhandled exceptions to the Logify 
 ### Manual error reporting
 ```csharp
 using DevExpress.Logify.Web;
+...
 try {
     LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
     RunYourCode();
@@ -91,6 +94,9 @@ client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
 #### XML configuration file:
+
+_Requires the Microsoft.Extensions.Configuration.Xml package_
+
 ```xml
 <configuration>
   <LogifyAlert>
@@ -115,6 +121,9 @@ client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
 #### INI configuration file:
+
+_Requires the Microsoft.Extensions.Configuration.Ini package_
+
 ```ini
 [LogifyAlert]
 ApiKey = SPECIFY_YOUR_API_KEY_HERE
@@ -196,21 +205,6 @@ client.ProxyCredentials = new NetworkCredential("MyProxyUserName", "MyProxyPassw
 String. Specifies a unique user identifier that corresponds to the sent report.
 ```csharp
 client.UserId = "user@myapp.com";
-```
-
-### Methods for automatic reporting
-Logify Alert allows you to automatically listen to uncaught exceptions and deliver crash reports. For this purpose, use the methods below.
-
-#### StartExceptionsHandling()
-Commands Logify Alert to start listening to uncaught exceptions and sends reports for all processed exceptions.
-```csharp
-client.StartExceptionsHandling();
-```
-
-#### StopExceptionsHandling()
-Commands Logify Alert to stop listening to uncaught exceptions.
-```csharp
-client.StopExceptionsHandling();
 ```
 
 ### Methods for manual reporting

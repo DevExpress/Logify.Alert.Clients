@@ -11,6 +11,7 @@ $ Install-Package Logify.Alert.Console
 ### Manual error reporting
 ```csharp
 using DevExpress.Logify.Console;
+...
 try {
     LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
     RunYourCode();
@@ -46,6 +47,9 @@ client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
 #### XML configuration file:
+
+_Requires the Microsoft.Extensions.Configuration.Xml package_
+
 ```xml
 <configuration>
   <LogifyAlert>
@@ -70,6 +74,9 @@ client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
 #### INI configuration file:
+
+_Requires the Microsoft.Extensions.Configuration.Ini package_
+
 ```ini
 [LogifyAlert]
 ApiKey = SPECIFY_YOUR_API_KEY_HERE
@@ -154,20 +161,6 @@ String. Specifies a unique user identifier that corresponds to the sent report.
 client.UserId = "user@myapp.com";
 ```
 
-### Methods for automatic reporting
-Logify Alert allows you to automatically listen to uncaught exceptions and deliver crash reports. For this purpose, use the methods below.
-
-#### StartExceptionsHandling()
-Commands Logify Alert to start listening to uncaught exceptions and sends reports for all processed exceptions.
-```csharp
-client.StartExceptionsHandling();
-```
-
-#### StopExceptionsHandling()
-Commands Logify Alert to stop listening to uncaught exceptions.
-```csharp
-client.StopExceptionsHandling();
-```
 
 ### Methods for manual reporting
 Alternatively, Logify Alert allows you to catch required exceptions manually, generate reports based on caught exceptions and send these reports only. For this purpose, use the methods below.
