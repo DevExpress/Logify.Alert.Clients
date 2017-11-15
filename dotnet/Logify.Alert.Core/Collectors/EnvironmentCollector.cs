@@ -3,7 +3,10 @@ using System;
 namespace DevExpress.Logify.Core.Internal {
     public class EnvironmentCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
-            logger.BeginWriteObject("environment");
+            /*
+            // AM: Due legal reasons need explicit user action to send security-critial data.
+            //     Users should use custom data instead.
+            logger.BeginWriteObje ct("environment");
             try {
                 logger.WriteValue("machineName", Environment.MachineName);
                 logger.WriteValue("userDomainName", Environment.UserDomainName);
@@ -12,6 +15,7 @@ namespace DevExpress.Logify.Core.Internal {
             finally {
                 logger.EndWriteObject("environment");
             }
+            */
         }
     }
 }
