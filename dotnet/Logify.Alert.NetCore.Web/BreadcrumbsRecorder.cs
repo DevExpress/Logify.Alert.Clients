@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using DevExpress.Logify.Core;
+using DevExpress.Logify.Core.Internal;
 using Microsoft.AspNetCore.Http;
 
 namespace DevExpress.Logify.Web {
@@ -48,20 +49,19 @@ namespace DevExpress.Logify.Web {
                 Breadcrumb breadcrumb = new Breadcrumb();
                 base.PopulateCommonBreadcrumbInfo(breadcrumb);
                 breadcrumb.Category = "request";
-                breadcrumb.Event = BreadcrumbEvent.None;
+                breadcrumb.Event = BreadcrumbEvent.Request;
                 breadcrumb.MethodName = context.Request.Method;
                 breadcrumb.CustomData = new Dictionary<string, string>() {
                     { "url", context.Request.Path.ToString() },
                     { "status", context.Response.StatusCode.ToString() },
-                    { "session", TryGetSessionId(context) },
-                    { "a", "1" }
+                    { "session", TryGetSessionId(context) }
                 };
 
                 this.AddBreadcrumb(breadcrumb);
             }
         }
         internal void UpdateBreadcrumb() {
-            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.CustomData != null && b.CustomData["a"] == "1").First();
+            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.GetIsAuto() && b.Event == BreadcrumbEvent.Request).First();
             if(breadcrumb != null) 
                 breadcrumb.CustomData["status"] = "Failed";
         }

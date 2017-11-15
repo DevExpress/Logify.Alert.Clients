@@ -68,7 +68,7 @@ namespace DevExpress.Logify.Web {
             Breadcrumb breadcrumb = new Breadcrumb();
             base.PopulateCommonBreadcrumbInfo(breadcrumb);
             breadcrumb.Category = "request";
-            breadcrumb.Event = BreadcrumbEvent.None;
+            breadcrumb.Event = BreadcrumbEvent.Request;
             breadcrumb.MethodName = request.HttpMethod;
             breadcrumb.CustomData = new Dictionary<string, string>() {
                 { "url", request.Url.ToString() },
@@ -79,7 +79,7 @@ namespace DevExpress.Logify.Web {
             this.AddBreadcrumb(breadcrumb);
         }
         internal void UpdateBreadcrumb() {
-            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.CustomData != null && b.GetIsAuto()).First();
+            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.GetIsAuto() && b.Event == BreadcrumbEvent.Request).First();
             if(breadcrumb != null)
                 breadcrumb.CustomData["status"] = "Failed";
         }

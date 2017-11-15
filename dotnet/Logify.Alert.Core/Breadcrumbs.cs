@@ -149,6 +149,9 @@ namespace DevExpress.Logify.Core {
         static readonly BreadcrumbEvent lostFocus = new BreadcrumbEvent("lostFocus");
         public static BreadcrumbEvent LostFocus { get { return lostFocus; } }
 
+        static readonly BreadcrumbEvent request = new BreadcrumbEvent("request");
+        public static BreadcrumbEvent Request { get { return request; } }
+
         readonly string id;
 
         public BreadcrumbEvent(string id) {
