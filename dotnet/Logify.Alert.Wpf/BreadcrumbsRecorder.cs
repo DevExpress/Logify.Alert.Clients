@@ -375,7 +375,8 @@ namespace DevExpress.Logify.WPF {
 
         public static event ValueChangedEventHandler<IInputElement> FocusChanged;
         static void RaiseFocusChanged(IInputElement oldElement, IInputElement newElement) {
-            FocusChanged?.Invoke(null, new ValueChangedEventArgs<IInputElement>(oldElement, newElement));
+            if(FocusChanged != null)
+                FocusChanged.Invoke(null, new ValueChangedEventArgs<IInputElement>(oldElement, newElement));
         }
         static void AddRecord(IInputElement focusedElement) {
             PreviousFocus = CurrentFocus;
