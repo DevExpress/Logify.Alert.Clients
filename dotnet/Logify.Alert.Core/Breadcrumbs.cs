@@ -200,6 +200,11 @@ namespace DevExpress.Logify.Core {
 }
 
 namespace DevExpress.Logify.Core.Internal {
+    public static class BreadcrumbExtensions {
+        public static bool GetIsAuto(this Breadcrumb instance) {
+            return instance.IsAuto;
+        }
+    }
     //public void Add(Breadcrumb item, [CallerMember])
     public static class BreadcrumbCollectionExtensions {
         public static void AddSimple(this BreadcrumbCollection items, Breadcrumb item) {

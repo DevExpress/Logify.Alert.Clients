@@ -5,6 +5,7 @@ using System.Threading;
 using System.Web;
 using System.Web.SessionState;
 using DevExpress.Logify.Core;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Web {
     public class AspBreadcrumbsRecorder : BreadcrumbsRecorderBase {
@@ -72,14 +73,13 @@ namespace DevExpress.Logify.Web {
             breadcrumb.CustomData = new Dictionary<string, string>() {
                 { "url", request.Url.ToString() },
                 { "status", response.StatusDescription },
-                { "session", TryGetSessionId(request, response, session) },
-                { "a", "1" }
+                { "session", TryGetSessionId(request, response, session) }
             };
 
             this.AddBreadcrumb(breadcrumb);
         }
         internal void UpdateBreadcrumb() {
-            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.CustomData != null && b.CustomData["a"] == "1").First();
+            Breadcrumb breadcrumb = Breadcrumbs.Where(b => b.CustomData != null && b.GetIsAuto()).First();
             if(breadcrumb != null)
                 breadcrumb.CustomData["status"] = "Failed";
         }
