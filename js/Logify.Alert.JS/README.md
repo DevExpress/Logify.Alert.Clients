@@ -48,6 +48,25 @@ Specifies the application version. This version is shown in generated reports.
 client.applicationVersion = '1.0.1';
 ```
 
+#### breadcrumbsMaxCount
+
+Integer. Specifies the maximum allowed number of breadcrumbs attached to one crash report. The default value is 1000 instances (or 3 MB).
+
+```javascript
+logify.breadcrumbMaxCount = 2000;
+```
+
+#### collectBreadcrumbs
+
+Boolean. Specifies whether automatic breadcrumbs collecting is enabled. The default value is **false**.
+The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by defaul. To change the maximum allowed size of attached breadcrumbs, use the *breadcrumbsMaxCount* property. 
+
+```javascript
+var logify = new logifyAlert("YOUR_APIKEY_HERE");
+logify.collectBreadcrumbs = true;
+logify.startHandling();
+```
+
 #### collectCookies
 
 Specifies whether or not the Logify Alert client will collect cookies. The default value is **true**.
@@ -134,6 +153,16 @@ Sends information about the caught rejection to the Logify Alert server.
 
 ```javascript
 client.sendRejection(reason, promise);
+```
+
+### Methods
+
+#### addBreadcrumbs(breadcrumb)
+
+Adds a new instance to a collection of manual breadcrumbs attached to a report. The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by defaul. To change the maximum allowed size of attached breadcrumbs, use the *breadcrumbsMaxCount* property.
+
+```javascript
+client.addBreadcrumbs({ "dateTime": new Date().toUTCString(), "event": "manual", "message": "A manually added breadcrumb" });
 ```
 
 ### Callbacks
