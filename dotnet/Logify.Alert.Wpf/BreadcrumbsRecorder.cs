@@ -28,6 +28,7 @@ namespace DevExpress.Logify.WPF {
         static readonly object Locker = new object();
         bool IsActive = false;
         PreviousArgs previousArgs = null;
+        short currentId = 0;
 
         private WPFBreadcrumbsRecorder() { }
 
@@ -134,13 +135,13 @@ namespace DevExpress.Logify.WPF {
             properties["ClassName"] = source.GetType().ToString();
 
             if(previousArgs == null) {
-                previousArgs = new PreviousArgs() { EventArgs = e, Guid = Guid.NewGuid().ToString() };
+                previousArgs = new PreviousArgs() { EventArgs = e, Id = (currentId++).ToString("X") };
             } else {
                 if(e == null || !Object.Equals(previousArgs.EventArgs, e)) {
-                    previousArgs = new PreviousArgs() { EventArgs = e, Guid = Guid.NewGuid().ToString() };
+                    previousArgs = new PreviousArgs() { EventArgs = e, Id = (currentId++).ToString("X") };
                 }
             }
-            properties["#e"] = previousArgs.Guid;
+            properties["#e"] = previousArgs.Id;
 
             AutomationPeer automation = GetAutomationPeer(source);
             if(automation == null)
@@ -385,6 +386,6 @@ namespace DevExpress.Logify.WPF {
     }
     class PreviousArgs {
         public EventArgs EventArgs { get; set; }
-        public string Guid { get; set; }
+        public string Id { get; set; }
     }
 }
