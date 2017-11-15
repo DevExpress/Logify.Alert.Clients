@@ -159,7 +159,7 @@ client.sendRejection(reason, promise);
 
 #### addBreadcrumbs(breadcrumb)
 
-Adds a new instance to a collection of manual breadcrumbs attached to a report. The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by defaul. To change the maximum allowed size of attached breadcrumbs, use the *breadcrumbsMaxCount* property.
+Adds a new instance to a collection of manual breadcrumbs attached to a report. The total breadcrumbs size is limited by 100 instances (or **3 Mb**) per one crash report by default. To change the maximum allowed size of attached breadcrumbs, use the *breadcrumbsMaxCount* property.
 
 ```javascript
 client.addBreadcrumbs({ "dateTime": new Date().toUTCString(), "event": "manual", "message": "A manually added breadcrumb" });
