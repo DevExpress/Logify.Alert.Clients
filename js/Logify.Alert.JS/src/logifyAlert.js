@@ -8,7 +8,7 @@ class logifyAlert {
         this._apiKey = apiKey;
         this._handleReports = false;
         this._breadcrumbs = undefined;
-        this._maxBreadcrumbsCount = 1000;
+        this._maxBreadcrumbsCount = 100;
 
         this.applicationName = undefined;
         this.applicationVersion = undefined;
@@ -44,8 +44,10 @@ class logifyAlert {
     }
 
     stopBreadcrumbsAutoRecorders() {
-        if (this._breadcrumbsListener)
+        if (this._breadcrumbsListener) {
             this._breadcrumbsListener.stopListening();
+            this._breadcrumbsListener = undefined;
+        }
     }
 
     stopHandling() {

@@ -154,7 +154,7 @@ describe('jsCollector tests', function() {
     }
     
     function checkData(collector, hasStack) {
-        assert.equal(9, collector.collectors.length);
+        assert.equal(10, collector.collectors.length);
 
         assert.equal("mocErrorMsg", collector.reportData.error.message);
         assert.equal("mocUrl", collector.reportData.error.url);
