@@ -25,7 +25,7 @@ namespace DevExpress.Logify.Web {
             }
             catch (Exception e) {
                 ReportException(e, context);
-                throw e;
+                throw;
             }
             if (context.Response != null && context.Response.StatusCode == 404) {
                 try {
