@@ -16,7 +16,7 @@ namespace DevExpress.Logify.Win {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
 
-        IMessageFilterEx breadcrumbsRecorder = new WinFormsBreadcrumsRecorder();
+        IMessageFilterEx breadcrumbsRecorder = new WinFormsBreadcrumbsRecorder();
 
         [Obsolete("Please use the LogifyAlert.Instance property instead.", true)]
         [EditorBrowsable(EditorBrowsableState.Never)]

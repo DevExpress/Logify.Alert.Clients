@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace DevExpress.Logify.Core.Internal {
     [SecuritySafeCritical]
-    public class WinFormsBreadcrumsRecorder : BreadcrumbsRecorderBase, IMessageFilterEx {
+    public class WinFormsBreadcrumbsRecorder : BreadcrumbsRecorderBase, IMessageFilterEx {
         public bool VerboseKeyboardEvents { get; set; }
         public bool IncludePasswords { get; set; }
         public bool PreFilterMessage(ref Message m) {
