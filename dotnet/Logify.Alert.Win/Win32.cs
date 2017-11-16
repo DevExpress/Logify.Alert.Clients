@@ -382,17 +382,7 @@ namespace DevExpress.Logify.Core.Internal {
             short y = unchecked((short)(((value & 0xFFFF0000) >> 16)));
             return new Point(x, y);
         }
-        [ThreadStatic]
-        static StringBuilder className;
         public static bool IsPasswordBox(IntPtr hWnd) {
-            if (className == null)
-                className = new StringBuilder(1024);
-
-            if (UnsafeNativeMethods.GetClassName(hWnd, className, 1024) <= 0)
-                return false;
-            //if (String.Compare(className.ToString(), "EDIT", StringComparison.InvariantCultureIgnoreCase) != 0)
-            //    return false;
-
             const int ES_PASSWORD = 32;
             int style = GetWindowLong(hWnd, Win32.WindowLongParam.GWL_STYLE);
             if ((style & ES_PASSWORD) == 0)
