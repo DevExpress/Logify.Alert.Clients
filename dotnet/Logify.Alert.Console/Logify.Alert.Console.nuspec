@@ -23,9 +23,8 @@
     <file src="..\..\bin\net45\Logify.Alert.Console.dll" target="lib\net45\Logify.Alert.Console.dll" />
     <file src="app.config.install.xdt" target="content\net40\app.config.install.xdt" />
     <file src="app.config.uninstall.xdt" target="content\net40\app.config.uninstall.xdt" />
-    <!--<file src="InitLogifyAlert.cs.pp" target="content\net40\InitLogifyAlert.cs.pp" />-->
     <file src="app.config.install.xdt" target="content\net45\app.config.install.xdt" />
     <file src="app.config.uninstall.xdt" target="content\net45\app.config.uninstall.xdt" />
-    <file src="InitLogifyAlert.cs.pp" target="content\net45\InitLogifyAlert.cs.pp" />
+    <!--<file src="InitLogifyAlert.cs.pp" target="content\InitLogifyAlert.cs.pp" />-->
   </files>
 </package>
