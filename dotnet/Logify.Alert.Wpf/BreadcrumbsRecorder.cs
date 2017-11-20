@@ -83,7 +83,7 @@ namespace DevExpress.Logify.WPF {
         }
         void KeyDown(object sender, KeyEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
-            if(!IsActive || (sender == null))
+            if(!IsActive || (source == null))
                 return;
 
             Dictionary<string, string> properties = CollectCommonProperties(source, e);
@@ -91,7 +91,7 @@ namespace DevExpress.Logify.WPF {
         }
         void KeyUp(object sender, KeyEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
-            if(!IsActive || (sender == null))
+            if(!IsActive || (source == null))
                 return;
 
             Dictionary<string, string> properties = CollectCommonProperties(source, e);
@@ -99,7 +99,7 @@ namespace DevExpress.Logify.WPF {
         }
         void MouseDown(object sender, MouseButtonEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
-            if(!IsActive || (sender == null))
+            if(!IsActive || (source == null))
                 return;
 
             Dictionary<string, string> properties = CollectCommonProperties(source, e);
@@ -107,7 +107,7 @@ namespace DevExpress.Logify.WPF {
         }
         void MouseUp(object sender, MouseButtonEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
-            if(!IsActive || (sender == null))
+            if(!IsActive || (source == null))
                 return;
 
             Dictionary<string, string> properties = CollectCommonProperties(source, e);
@@ -115,7 +115,7 @@ namespace DevExpress.Logify.WPF {
         }
         void MouseWheel(object sender, MouseWheelEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
-            if(!IsActive || (sender == null))
+            if(!IsActive || (source == null))
                 return;
 
             Dictionary<string, string> properties = CollectCommonProperties(source, e);
@@ -123,7 +123,7 @@ namespace DevExpress.Logify.WPF {
         }
         void TextInput(object sender, TextCompositionEventArgs e) {
             FrameworkElement source = sender as FrameworkElement;
-            if(!IsActive || (sender == null))
+            if(!IsActive || (source == null))
                 return;
 
             Dictionary<string, string> properties = CollectCommonProperties(source, e);
