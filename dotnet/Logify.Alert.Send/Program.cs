@@ -160,7 +160,7 @@ namespace DevExpress.Logify.Send {
                 Console.WriteLine("ERROR: ApiKey not specified");
                 return false;
             }
-            if (String.IsNullOrEmpty(config.ApiKey)) {
+            if (String.IsNullOrEmpty(config.ReportFileName)) {
                 Console.WriteLine("ERROR: ReportFileName not specified");
                 return false;
             }
