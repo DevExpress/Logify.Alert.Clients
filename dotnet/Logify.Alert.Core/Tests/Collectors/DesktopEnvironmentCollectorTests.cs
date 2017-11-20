@@ -10,6 +10,8 @@ namespace DevExpress.Logify.Core.Internal.Tests {
         public bool CollectMiniDump { get; set; }
         public bool CollectBreadcrumbs { get; set; }
         public int BreadcrumbsMaxCount { get; set; }
+
+        public IgnorePropertiesInfoConfig IgnoreConfig { get; set; }
     }
     [TestFixture]
     public class DesktopEnvironmentCollectorTests : CollectorTestsBase {
@@ -24,7 +26,7 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US", false);
             this.collector = new DesktopEnvironmentCollector(new DefaultTestClientConfiguration());
-            Assert.AreEqual(9, this.collector.Collectors.Count);
+            Assert.AreEqual(10, this.collector.Collectors.Count);
             Assert.AreEqual(typeof(FrameworkVersionsCollector), this.collector.Collectors[8].GetType());
             this.collector.Collectors.RemoveAt(8);
             Assert.AreEqual(typeof(Win32GuiResourcesCollector), this.collector.Collectors[5].GetType());

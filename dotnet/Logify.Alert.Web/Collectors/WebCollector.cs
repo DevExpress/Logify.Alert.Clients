@@ -30,6 +30,10 @@ namespace DevExpress.Logify.Core.Internal {
         }
 
         protected override void RegisterCollectors(ILogifyClientConfiguration config) {
+            IgnorePropertiesInfoConfig ignoreConfig = config.IgnoreConfig;
+            if (ignoreConfig == null)
+                ignoreConfig = new IgnorePropertiesInfoConfig();
+
             Collectors.Add(new LogifyProtocolVersionCollector());
             Collectors.Add(new LogifyReportGenerationDateTimeCollector());
             Collectors.Add(LogifyAppInfoCollector);
@@ -42,13 +46,13 @@ namespace DevExpress.Logify.Core.Internal {
                 if (context != null) {
                     try {
                         if (context.Request != null)
-                            Collectors.Add(new RequestCollector(context.Request));
+                            Collectors.Add(new RequestCollector(context.Request, ignoreConfig));
                     }
                     catch {
                     }
                     try {
                         if (context.Response != null)
-                            Collectors.Add(new ResponseCollector(context.Response));
+                            Collectors.Add(new ResponseCollector(context.Response, ignoreConfig));
                     }
                     catch {
                     }

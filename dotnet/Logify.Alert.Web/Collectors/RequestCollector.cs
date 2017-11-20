@@ -5,19 +5,27 @@ using System.Text;
 using System.Web;
 
 using DevExpress.Logify.Core;
+using System.Collections.Generic;
 
 namespace DevExpress.Logify.Core.Internal {
     class RequestCollector : IInfoCollector {
-
         readonly HttpRequest request;
         readonly string name;
+        readonly IgnorePropertiesInfo ignoreFormNames;
+        readonly IgnorePropertiesInfo ignoreHeaders;
+        readonly IgnorePropertiesInfo ignoreCookies;
+        readonly IgnorePropertiesInfo ignoreServerVariables;
         private ILogger logger;
 
-        public RequestCollector(HttpRequest request) : this(request, "request") { }
+        public RequestCollector(HttpRequest request, IgnorePropertiesInfoConfig ignoreConfig) : this(request, "request", ignoreConfig) { }
 
-        public RequestCollector(HttpRequest request, string name) {
+        public RequestCollector(HttpRequest request, string name, IgnorePropertiesInfoConfig ignoreConfig) {
             this.request = request;
             this.name = name;
+            this.ignoreFormNames = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreFormNames);
+            this.ignoreHeaders = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreHeaders);
+            this.ignoreCookies = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreCookies);
+            this.ignoreServerVariables = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreServerVariables);
         }
 
         public virtual void Process(Exception e, ILogger logger) {
@@ -28,11 +36,11 @@ namespace DevExpress.Logify.Core.Internal {
                 this.SerializeBrowserInfo();
                 this.SerializeContentInfo();
                 this.SerializeFileInfo();
-                Utils.SerializeCookieInfo(request.Cookies, logger);
-                Utils.SerializeInfo(request.Form, "form", logger);
-                Utils.SerializeInfo(request.Headers, "headers", logger);
-                Utils.SerializeInfo(request.ServerVariables, "serverVariables", logger);
-                Utils.SerializeInfo(request.QueryString, "queryString", logger);
+                Utils.SerializeCookieInfo(request.Cookies, this.ignoreCookies, logger);
+                Utils.SerializeInfo(request.Form, "form", this.ignoreFormNames, logger);
+                Utils.SerializeInfo(request.Headers, "headers", this.ignoreHeaders, logger);
+                Utils.SerializeInfo(request.ServerVariables, "serverVariables", this.ignoreServerVariables, logger);
+                Utils.SerializeInfo(request.QueryString, "queryString", null, logger);
                 logger.WriteValue("applicationPath", request.ApplicationPath);
                 logger.WriteValue("httpMethod", request.HttpMethod);
                 try { logger.WriteValue("httpRequestBody", (new System.IO.StreamReader(request.InputStream)).ReadToEnd()); } catch { }
@@ -118,6 +126,47 @@ namespace DevExpress.Logify.Core.Internal {
                 finally {
                     logger.EndWriteObject("files");
                 }
+            }
+        }
+    }
+    public class IgnorePropertiesInfo {
+        public bool IgnoreAll { get; set; }
+        public HashSet<string> IgnoreNames { get; set; }
+
+        public bool ShouldIgnore(string name) {
+            if (IgnoreAll)
+                return true;
+            return IgnoreNames != null && IgnoreNames.Contains(name);
+        }
+
+        public static IgnorePropertiesInfo FromString(string value) {
+            IgnorePropertiesInfo result = new IgnorePropertiesInfo();
+            result.IgnoreNames = new HashSet<string>();
+            try {
+                if (String.IsNullOrEmpty(value))
+                    return result;
+
+                string[] names = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (names == null || names.Length <= 0)
+                    return result;
+
+                int count = names.Length;
+                for (int i = 0; i < count; i++) {
+                    string item = names[i].Trim();
+                    if (!String.IsNullOrEmpty(item)) {
+                        if (item == "*") {
+                            result.IgnoreAll = true;
+                            break;
+                        }
+                        if (!result.IgnoreNames.Contains(item))
+                            result.IgnoreNames.Add(item);
+                    }
+                }
+
+                return result;
+            }
+            catch {
+                return result;
             }
         }
     }

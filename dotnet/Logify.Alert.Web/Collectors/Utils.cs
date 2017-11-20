@@ -7,13 +7,15 @@ using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Core.Internal {
     static class Utils {
-        public static void SerializeCookieInfo(HttpCookieCollection cookies, ILogger logger) {
+        public static void SerializeCookieInfo(HttpCookieCollection cookies, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
             if (cookies != null && cookies.Count != 0) {
                 try {
                     logger.BeginWriteObject("cookie");
                     foreach (string key in cookies.AllKeys) {
                         HttpCookie cookie = cookies.Get(key);
                         if (String.IsNullOrEmpty(key)) 
+                            continue;
+                        if (ignoreInfo != null && ignoreInfo.ShouldIgnore(key))
                             continue;
                         
                         logger.BeginWriteObject(key);
@@ -31,12 +33,13 @@ namespace DevExpress.Logify.Core.Internal {
             }
         }
 
-        public static void SerializeInfo(NameValueCollection info, string name, ILogger logger) {
+        public static void SerializeInfo(NameValueCollection info, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
             if (info != null && info.Count != 0) {
                 try {
                     logger.BeginWriteObject(name);
                     foreach (string key in info.AllKeys) {
-                        logger.WriteValue(key, info.Get(key));
+                        if (ignoreInfo == null || !ignoreInfo.ShouldIgnore(key))
+                            logger.WriteValue(key, info.Get(key));
                     }
                 }
                 finally {

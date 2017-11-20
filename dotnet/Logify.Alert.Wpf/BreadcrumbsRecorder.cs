@@ -34,7 +34,11 @@ namespace DevExpress.Logify.WPF {
 
         public void BeginCollect() {
             IsActive = true;
-            FocusObserver.IsActive = true;
+            try {
+                FocusObserver.IsActive = true;
+            }
+            catch {
+            }
             Initialize();
         }
         void Initialize() {
@@ -44,7 +48,11 @@ namespace DevExpress.Logify.WPF {
                 if(initialized)
                     return;
                 try {
-                    FocusObserver.FocusChanged += FocusObserverOnFocusChanged;
+                    try {
+                        FocusObserver.FocusChanged += FocusObserverOnFocusChanged;
+                    }
+                    catch {
+                    }
                     SubscribeToControl();
                 } finally {
                     initialized = true;
@@ -53,7 +61,11 @@ namespace DevExpress.Logify.WPF {
         }
         public void EndCollect() {
             IsActive = false;
-            FocusObserver.IsActive = false;
+            try {
+                FocusObserver.IsActive = false;
+            }
+            catch {
+            }
         }
         protected override string GetThreadId() {
             return Thread.CurrentThread.ManagedThreadId.ToString();
