@@ -35,6 +35,14 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual("offline_reports", client.OfflineReportsDirectory);
             Assert.AreEqual(100, client.OfflineReportsCount);
             Assert.AreEqual(false, client.OfflineReportsEnabled);
+            Assert.AreEqual(false, client.CollectBreadcrumbs);
+            Assert.AreEqual(true, client.Breadcrumbs != null);
+            Assert.AreEqual(0, client.Breadcrumbs.Count);
+            //Assert.AreEqual(1000, client.BreadcrumbsMaxCount);
+            Assert.AreEqual(null, client.IgnoreFormNames);
+            Assert.AreEqual(null, client.IgnoreHeaders);
+            Assert.AreEqual(null, client.IgnoreCookies);
+            Assert.AreEqual(null, client.IgnoreServerVariables);
 
             Predicate<IExceptionReportSender> predicate = (s) => {
                 OfflineDirectoryExceptionReportSender sender = s as OfflineDirectoryExceptionReportSender;
@@ -176,6 +184,68 @@ namespace DevExpress.Logify.Core.Tests {
                 return true;
             };
             CheckDefaultStructureAndPredicate(client, predicate);
+        }
+        [Test]
+        public void CollectBreadcrumbs() {
+            Assert.AreEqual(false, client.CollectBreadcrumbs);
+
+            client.CollectBreadcrumbs = true;
+            Assert.AreEqual(true, client.CollectBreadcrumbs);
+
+            client.CollectBreadcrumbs = false;
+            Assert.AreEqual(false, client.CollectBreadcrumbs);
+        }
+        /*
+        [Test]
+        public void BreadcrumbsMaxCount() {
+            Assert.AreEqual(1000, client.BreadcrumbsMaxCount);
+
+            client.BreadcrumbsMaxCount = 100;
+            Assert.AreEqual(100, client.BreadcrumbsMaxCount);
+
+            client.BreadcrumbsMaxCount = 200;
+            Assert.AreEqual(200, client.BreadcrumbsMaxCount);
+        }
+        */
+        [Test]
+        public void IgnoreHeaders() {
+            Assert.AreEqual(null, client.IgnoreHeaders);
+
+            client.IgnoreHeaders = "*";
+            Assert.AreEqual("*", client.IgnoreHeaders);
+
+            client.IgnoreHeaders = "name,name1, name2";
+            Assert.AreEqual("name,name1, name2", client.IgnoreHeaders);
+        }
+        [Test]
+        public void IgnoreCookies() {
+            Assert.AreEqual(null, client.IgnoreCookies);
+
+            client.IgnoreCookies = "*";
+            Assert.AreEqual("*", client.IgnoreCookies);
+
+            client.IgnoreCookies = "name,name1, name2";
+            Assert.AreEqual("name,name1, name2", client.IgnoreCookies);
+        }
+        [Test]
+        public void IgnoreServerVariables() {
+            Assert.AreEqual(null, client.IgnoreServerVariables);
+
+            client.IgnoreServerVariables = "*";
+            Assert.AreEqual("*", client.IgnoreServerVariables);
+
+            client.IgnoreServerVariables = "name,name1, name2";
+            Assert.AreEqual("name,name1, name2", client.IgnoreServerVariables);
+        }
+        [Test]
+        public void IgnoreFormNames() {
+            Assert.AreEqual(null, client.IgnoreFormNames);
+
+            client.IgnoreFormNames = "*";
+            Assert.AreEqual("*", client.IgnoreFormNames);
+
+            client.IgnoreFormNames = "name,name1, name2";
+            Assert.AreEqual("name,name1, name2", client.IgnoreFormNames);
         }
 
         static void CheckDefaultStructureAndPredicate(LogifyAlert client, Predicate<IExceptionReportSender> predicate) {

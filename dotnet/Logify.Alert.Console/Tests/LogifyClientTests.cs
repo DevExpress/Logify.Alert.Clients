@@ -36,6 +36,10 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual("offline_reports", client.OfflineReportsDirectory);
             Assert.AreEqual(100, client.OfflineReportsCount);
             Assert.AreEqual(false, client.OfflineReportsEnabled);
+            Assert.AreEqual(false, client.CollectBreadcrumbs);
+            Assert.AreEqual(true, client.Breadcrumbs != null);
+            Assert.AreEqual(0, client.Breadcrumbs.Count);
+            Assert.AreEqual(1000, client.BreadcrumbsMaxCount);
 
             Predicate<IExceptionReportSender> predicate = (s) => {
                 OfflineDirectoryExceptionReportSender sender = s as OfflineDirectoryExceptionReportSender;
@@ -171,6 +175,16 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(true, client.CollectBreadcrumbs);
             client.CollectBreadcrumbs = false;
             Assert.AreEqual(false, client.CollectBreadcrumbs);
+        }
+        [Test]
+        public void BreadcrumbsMaxCount() {
+            Assert.AreEqual(1000, client.BreadcrumbsMaxCount);
+
+            client.BreadcrumbsMaxCount = 100;
+            Assert.AreEqual(100, client.BreadcrumbsMaxCount);
+
+            client.BreadcrumbsMaxCount = 200;
+            Assert.AreEqual(200, client.BreadcrumbsMaxCount);
         }
 
         static void CheckDefaultStructureAndPredicate(LogifyAlert client, Predicate<IExceptionReportSender> predicate) {

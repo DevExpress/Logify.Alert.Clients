@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Reflection;
 using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
+using System.Configuration;
 
 namespace DevExpress.Logify.Web {
     public class LogifyAlert : LogifyClientBase {
@@ -19,10 +20,22 @@ namespace DevExpress.Logify.Web {
         }
 
         public bool CollectBreadcrumbs { get { return base.CollectBreadcrumbsCore; } set { base.CollectBreadcrumbsCore = value; } }
-        public new BreadcrumbCollection Breadcrumbs {
-            get {
-                return AspBreadcrumbsRecorder.Instance.Breadcrumbs;
-            }
+        public override BreadcrumbCollection Breadcrumbs { get { return AspBreadcrumbsRecorder.Instance.Breadcrumbs; } }
+        public string IgnoreFormNames {
+            get { return Config.IgnoreConfig.IgnoreFormNames; }
+            set { Config.IgnoreConfig.IgnoreFormNames = value; }
+        }
+        public string IgnoreHeaders {
+            get { return Config.IgnoreConfig.IgnoreHeaders; }
+            set { Config.IgnoreConfig.IgnoreHeaders = value; }
+        }
+        public string IgnoreCookies {
+            get { return Config.IgnoreConfig.IgnoreCookies; }
+            set { Config.IgnoreConfig.IgnoreCookies = value; }
+        }
+        public string IgnoreServerVariables {
+            get { return Config.IgnoreConfig.IgnoreServerVariables; }
+            set { Config.IgnoreConfig.IgnoreServerVariables = value; }
         }
 
         public static new LogifyAlert Instance {
@@ -95,7 +108,22 @@ namespace DevExpress.Logify.Web {
         }
         protected override void Configure() {
             ClientConfigurationLoader.ApplyClientConfiguration(this);
+            ConfigureWeb();
             ForceUpdateBreadcrumbsMaxCount();
+        }
+        void ConfigureWeb() {
+            WebLogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as WebLogifyConfigSection;
+            if (section == null)
+                return;
+
+            if (section.IgnoreFormNames != null)
+                this.IgnoreFormNames = section.IgnoreFormNames.Value;
+            if (section.IgnoreHeaders != null)
+                this.IgnoreHeaders = section.IgnoreHeaders.Value;
+            if (section.IgnoreCookies != null)
+                this.IgnoreCookies = section.IgnoreCookies.Value;
+            if (section.IgnoreServerVariables != null)
+                this.IgnoreServerVariables = section.IgnoreServerVariables.Value;
         }
         public override void Run() {
             //do nothing

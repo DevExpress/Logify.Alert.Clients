@@ -131,7 +131,7 @@ namespace DevExpress.Logify.Core {
         public string UserId { get; set; }
         public IDictionary<string, string> CustomData { get { return customData; } }
         public AttachmentCollection Attachments { get { return attachments; } }
-        public BreadcrumbCollection Breadcrumbs { get { return breadcrumbs; } }
+        public virtual BreadcrumbCollection Breadcrumbs { get { return breadcrumbs; } }
         protected internal bool CollectBreadcrumbsCore {
             get { return Config.CollectBreadcrumbs; }
             set {
@@ -154,8 +154,7 @@ namespace DevExpress.Logify.Core {
             }
         }
         protected internal void ForceUpdateBreadcrumbsMaxCount() {
-            this.breadcrumbs = BreadcrumbCollection.ChangeSize(this.breadcrumbs, Config.BreadcrumbsMaxCount);
-            
+            this.breadcrumbs = BreadcrumbCollection.ChangeSize(this.Breadcrumbs, Config.BreadcrumbsMaxCount);
         }
         protected bool IsSecondaryInstance { get; set; }
 
