@@ -161,7 +161,7 @@ client.AppVersion = "1.0.2";
 ```
 
 #### Breadcrumbs
-BreadcrumbCollection. Specifies a collection of manual breadcrumbs attached to a report. The total breadcrumbs size is limited by 50 instances (or **3 Mb**) per one crash report by default.
+BreadcrumbCollection. Specifies a collection of manual breadcrumbs attached to a report. The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by default. To change the maximum allowed size of attached breadcrumbs, use the *BreadcrumbsMaxCount* property.
 ```csharp
 using DevExpress.Logify.Core;
 using DevExpress.Logify.Web;
@@ -173,10 +173,15 @@ LogifyAlert.Instance.Breadcrumbs.Add(new Breadcrumb() {
 });
 ```
 
+#### BreadcrumbsMaxCount
+Integer. Specifies the maximum allowed number of breadcrumbs attached to one crash report. The default value is 1000 instances (or 3 MB).
+```csharp
+LogifyAlert.Instance.BreadcrumbMaxCount = 2000;
+```
 
 #### CollectBreadcrumbs
 Boolean. Specifies whether automatic breadcrumbs collecting is enabled. The default value is **false**.
-The total breadcrumbs size is limited by 50 instances (or **3 Mb**) per one crash report.
+The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by default. To change the maximum allowed size of attached breadcrumbs, use the *BreadcrumbsMaxCount* property.
 ```csharp
 LogifyAlert.Instance.CollectBreadcrumbs = true;  
 ```
