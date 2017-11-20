@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Reflection;
 using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
-using System.Configuration;
 
 namespace DevExpress.Logify.Web {
     public class LogifyAlert : LogifyClientBase {
@@ -20,7 +20,6 @@ namespace DevExpress.Logify.Web {
         }
 
         public bool CollectBreadcrumbs { get { return base.CollectBreadcrumbsCore; } set { base.CollectBreadcrumbsCore = value; } }
-        public override BreadcrumbCollection Breadcrumbs { get { return AspBreadcrumbsRecorder.Instance.Breadcrumbs; } }
         public string IgnoreFormNames {
             get { return Config.IgnoreConfig.IgnoreFormNames; }
             set { Config.IgnoreConfig.IgnoreFormNames = value; }
@@ -140,9 +139,6 @@ namespace DevExpress.Logify.Web {
         }
         protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
             return false;
-        }
-        public void SetBreadcrumbsStorage(IBreadcrumbsStorage storage) {
-            AspBreadcrumbsRecorder.Instance.SetBreadcrumbsStorage(storage);
         }
     }
 }

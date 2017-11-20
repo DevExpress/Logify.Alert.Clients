@@ -15,11 +15,6 @@ namespace DevExpress.Logify.Web {
         }
 
         public bool CollectBreadcrumbs { get { return base.CollectBreadcrumbsCore; } set { base.CollectBreadcrumbsCore = value; } }
-        public new BreadcrumbCollection Breadcrumbs {
-            get {
-                return NetCoreWebBreadcrumbsRecorder.Instance.Breadcrumbs;
-            }
-        }
 
         public static new LogifyAlert Instance {
             get {

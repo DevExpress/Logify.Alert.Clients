@@ -9,7 +9,7 @@ namespace DevExpress.Logify.Core {
                 LogifyClientBase.Instance.Breadcrumbs.AddSimple(item);
             }
         }
-        protected void PopulateCommonBreadcrumbInfo(Breadcrumb item) {
+        void PopulateCommonBreadcrumbInfo(Breadcrumb item) {
             item.DateTime = DateTime.Now;
             item.Level = BreadcrumbLevel.Info;
             item.ThreadId = GetThreadId();

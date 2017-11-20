@@ -6,13 +6,13 @@ namespace DevExpress.Logify.Web {
         public override void OnInit(HttpApplication context) {
             try {
                 if(LogifyAlert.Instance.CollectBreadcrumbs)
-                    context.AcquireRequestState += this.OnAcquireRequestState;
+                    context.BeginRequest += this.OnBeginRequest;
                 context.Error += this.OnError;
             }
             catch { }
         }
 
-        protected virtual void OnAcquireRequestState(object sender, EventArgs e) {
+        protected virtual void OnBeginRequest(object sender, EventArgs e) {
             AspBreadcrumbsRecorder.Instance.AddBreadcrumb(sender as HttpApplication);
         }
 
@@ -27,7 +27,7 @@ namespace DevExpress.Logify.Web {
                     return;
 
                 if(LogifyAlert.Instance.CollectBreadcrumbs)
-                    AspBreadcrumbsRecorder.Instance.UpdateBreadcrumb();
+                    AspBreadcrumbsRecorder.Instance.UpdateBreadcrumb(sender as HttpApplication);
 
                 Exception lastError = server.GetLastError();
                 LogifyAlert.Instance.Send(lastError);

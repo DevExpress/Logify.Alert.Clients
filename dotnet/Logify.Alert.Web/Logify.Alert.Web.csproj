@@ -150,7 +150,6 @@
     <Compile Include="..\Logify.Alert.Core\TraceListenerBase.cs">
       <Link>TraceListenerBase.cs</Link>
     </Compile>
-    <Compile Include="BreadcrumbsStorage.cs" />
     <Compile Include="BreadcrumbsRecorder.cs" />
     <Compile Include="Collectors\ModulesCollector.cs" />
     <Compile Include="Collectors\RequestCollector.cs" />

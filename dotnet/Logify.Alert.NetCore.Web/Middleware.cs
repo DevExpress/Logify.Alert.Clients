@@ -51,7 +51,7 @@ namespace DevExpress.Logify.Web {
             LogifyHttpContext.Current = context;
             try {
                 if(LogifyAlert.Instance.CollectBreadcrumbs)
-                    NetCoreWebBreadcrumbsRecorder.Instance.UpdateBreadcrumb();
+                    NetCoreWebBreadcrumbsRecorder.Instance.UpdateBreadcrumb(context);
                 LogifyAlert.Instance.Send(ex);
             }
             catch {

@@ -131,7 +131,7 @@ namespace DevExpress.Logify.Core {
         public string UserId { get; set; }
         public IDictionary<string, string> CustomData { get { return customData; } }
         public AttachmentCollection Attachments { get { return attachments; } }
-        public virtual BreadcrumbCollection Breadcrumbs { get { return breadcrumbs; } }
+        public BreadcrumbCollection Breadcrumbs { get { return breadcrumbs; } }
         protected internal bool CollectBreadcrumbsCore {
             get { return Config.CollectBreadcrumbs; }
             set {
