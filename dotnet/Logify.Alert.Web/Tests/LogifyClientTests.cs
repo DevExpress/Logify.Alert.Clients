@@ -39,7 +39,7 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(true, client.Breadcrumbs != null);
             Assert.AreEqual(0, client.Breadcrumbs.Count);
             //Assert.AreEqual(1000, client.BreadcrumbsMaxCount);
-            Assert.AreEqual(null, client.IgnoreFormNames);
+            Assert.AreEqual(null, client.IgnoreFormFields);
             Assert.AreEqual(null, client.IgnoreHeaders);
             Assert.AreEqual(null, client.IgnoreCookies);
             Assert.AreEqual(null, client.IgnoreServerVariables);
@@ -238,14 +238,14 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual("name,name1, name2", client.IgnoreServerVariables);
         }
         [Test]
-        public void IgnoreFormNames() {
-            Assert.AreEqual(null, client.IgnoreFormNames);
+        public void IgnoreFormFields() {
+            Assert.AreEqual(null, client.IgnoreFormFields);
 
-            client.IgnoreFormNames = "*";
-            Assert.AreEqual("*", client.IgnoreFormNames);
+            client.IgnoreFormFields = "*";
+            Assert.AreEqual("*", client.IgnoreFormFields);
 
-            client.IgnoreFormNames = "name,name1, name2";
-            Assert.AreEqual("name,name1, name2", client.IgnoreFormNames);
+            client.IgnoreFormFields = "name,name1, name2";
+            Assert.AreEqual("name,name1, name2", client.IgnoreFormFields);
         }
 
         static void CheckDefaultStructureAndPredicate(LogifyAlert client, Predicate<IExceptionReportSender> predicate) {

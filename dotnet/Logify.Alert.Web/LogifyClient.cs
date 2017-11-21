@@ -20,9 +20,9 @@ namespace DevExpress.Logify.Web {
         }
 
         public bool CollectBreadcrumbs { get { return base.CollectBreadcrumbsCore; } set { base.CollectBreadcrumbsCore = value; } }
-        public string IgnoreFormNames {
-            get { return Config.IgnoreConfig.IgnoreFormNames; }
-            set { Config.IgnoreConfig.IgnoreFormNames = value; }
+        public string IgnoreFormFields {
+            get { return Config.IgnoreConfig.IgnoreFormFields; }
+            set { Config.IgnoreConfig.IgnoreFormFields = value; }
         }
         public string IgnoreHeaders {
             get { return Config.IgnoreConfig.IgnoreHeaders; }
@@ -115,8 +115,8 @@ namespace DevExpress.Logify.Web {
             if (section == null)
                 return;
 
-            if (section.IgnoreFormNames != null)
-                this.IgnoreFormNames = section.IgnoreFormNames.Value;
+            if (section.IgnoreFormFields != null)
+                this.IgnoreFormFields = section.IgnoreFormFields.Value;
             if (section.IgnoreHeaders != null)
                 this.IgnoreHeaders = section.IgnoreHeaders.Value;
             if (section.IgnoreCookies != null)

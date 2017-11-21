@@ -26,7 +26,7 @@
     }
 
     public class IgnorePropertiesInfoConfig {
-        public string IgnoreFormNames { get; set; }
+        public string IgnoreFormFields { get; set; }
         public string IgnoreHeaders { get; set; }
         public string IgnoreCookies { get; set; }
         public string IgnoreServerVariables { get; set; }

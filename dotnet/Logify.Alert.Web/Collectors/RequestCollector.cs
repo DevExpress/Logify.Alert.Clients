@@ -11,7 +11,7 @@ namespace DevExpress.Logify.Core.Internal {
     class RequestCollector : IInfoCollector {
         readonly HttpRequest request;
         readonly string name;
-        readonly IgnorePropertiesInfo ignoreFormNames;
+        readonly IgnorePropertiesInfo ignoreFormFields;
         readonly IgnorePropertiesInfo ignoreHeaders;
         readonly IgnorePropertiesInfo ignoreCookies;
         readonly IgnorePropertiesInfo ignoreServerVariables;
@@ -22,7 +22,7 @@ namespace DevExpress.Logify.Core.Internal {
         public RequestCollector(HttpRequest request, string name, IgnorePropertiesInfoConfig ignoreConfig) {
             this.request = request;
             this.name = name;
-            this.ignoreFormNames = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreFormNames);
+            this.ignoreFormFields = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreFormFields);
             this.ignoreHeaders = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreHeaders);
             this.ignoreCookies = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreCookies);
             this.ignoreServerVariables = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreServerVariables);
@@ -37,7 +37,7 @@ namespace DevExpress.Logify.Core.Internal {
                 this.SerializeContentInfo();
                 this.SerializeFileInfo();
                 Utils.SerializeCookieInfo(request.Cookies, this.ignoreCookies, logger);
-                Utils.SerializeInfo(request.Form, "form", this.ignoreFormNames, logger);
+                Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
                 Utils.SerializeInfo(request.Headers, "headers", this.ignoreHeaders, logger);
                 Utils.SerializeInfo(request.ServerVariables, "serverVariables", this.ignoreServerVariables, logger);
                 Utils.SerializeInfo(request.QueryString, "queryString", null, logger);
@@ -131,17 +131,68 @@ namespace DevExpress.Logify.Core.Internal {
     }
     public class IgnorePropertiesInfo {
         public bool IgnoreAll { get; set; }
-        public HashSet<string> IgnoreNames { get; set; }
+        public HashSet<string> IgnoreNamesExact { get; set; }
+        public List<string> IgnoreNamesStartsWith { get; set; }
+        public List<string> IgnoreNamesEndsWith { get; set; }
+        public List<string> IgnoreNamesContains { get; set; }
 
         public bool ShouldIgnore(string name) {
             if (IgnoreAll)
                 return true;
-            return IgnoreNames != null && IgnoreNames.Contains(name);
-        }
 
+            if (String.IsNullOrEmpty(name))
+                return false;
+
+            return ShouldIgnoreExact(name) ||
+                ShouldIgnoreStartsWith(name) ||
+                ShouldIgnoreEndsWith(name) ||
+                ShouldIgnoreContains(name);
+        }
+        bool ShouldIgnoreExact(string name) {
+            return IgnoreNamesExact != null && IgnoreNamesExact.Contains(name);
+        }
+        bool ShouldIgnoreStartsWith(string name) {
+            if (IgnoreNamesStartsWith == null)
+                return false;
+
+            int count = IgnoreNamesStartsWith.Count;
+            for (int i = 0; i < count; i++) {
+                if (name.StartsWith(IgnoreNamesStartsWith[i], StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+        bool ShouldIgnoreEndsWith(string name) {
+            if (IgnoreNamesEndsWith == null)
+                return false;
+
+            int count = IgnoreNamesEndsWith.Count;
+            for (int i = 0; i < count; i++) {
+                if (name.EndsWith(IgnoreNamesEndsWith[i], StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+        bool ShouldIgnoreContains(string name) {
+            if (IgnoreNamesContains == null)
+                return false;
+
+            int count = IgnoreNamesContains.Count;
+            for (int i = 0; i < count; i++) {
+                if (name.IndexOf(IgnoreNamesContains[i], StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    return true;
+            }
+
+            return false;
+        }
         public static IgnorePropertiesInfo FromString(string value) {
             IgnorePropertiesInfo result = new IgnorePropertiesInfo();
-            result.IgnoreNames = new HashSet<string>();
+            result.IgnoreNamesExact = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+            result.IgnoreNamesStartsWith = new List<string>();
+            result.IgnoreNamesEndsWith = new List<string>();
+            result.IgnoreNamesContains = new List<string>();
             try {
                 if (String.IsNullOrEmpty(value))
                     return result;
@@ -158,8 +209,21 @@ namespace DevExpress.Logify.Core.Internal {
                             result.IgnoreAll = true;
                             break;
                         }
-                        if (!result.IgnoreNames.Contains(item))
-                            result.IgnoreNames.Add(item);
+                        bool endsWith = item.StartsWith("*");
+                        bool startsWith = item.EndsWith("*");
+                        if (startsWith && endsWith) {
+                            result.IgnoreNamesContains.Add(item.Trim('*'));
+                        }
+                        else if (startsWith && !endsWith) {
+                            result.IgnoreNamesStartsWith.Add(item.Trim('*'));
+                        }
+                        else if (!startsWith && endsWith) {
+                            result.IgnoreNamesEndsWith.Add(item.Trim('*'));
+                        }
+                        else {
+                            if (!result.IgnoreNamesExact.Contains(item))
+                                result.IgnoreNamesExact.Add(item);
+                        }
                     }
                 }
 

@@ -9,8 +9,8 @@ namespace DevExpress.Logify {
         [ConfigurationProperty("appName")]
         public ClientValueElement AppName { get { return (ClientValueElement)base["appName"]; } }
 
-        [ConfigurationProperty("ignoreFormNames")]
-        public ClientValueElement IgnoreFormNames { get { return (ClientValueElement)base["ignoreFormNames"]; } }
+        [ConfigurationProperty("ignoreFormFields")]
+        public ClientValueElement IgnoreFormFields { get { return (ClientValueElement)base["ignoreFormFields"]; } }
         [ConfigurationProperty("ignoreHeaders")]
         public ClientValueElement IgnoreHeaders { get { return (ClientValueElement)base["ignoreHeaders"]; } }
         [ConfigurationProperty("ignoreCookies")]

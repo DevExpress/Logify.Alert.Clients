@@ -35,7 +35,8 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.WriteValue("expiresAbsolute", response.ExpiresAbsolute.ToString());
                 logger.WriteValue("headerEncoding", response.HeaderEncoding.EncodingName);
                 try {
-                    logger.WriteValue("httpResponseBody", (new System.IO.StreamReader(response.OutputStream)).ReadToEnd());
+                    if (response.OutputStream != null && response.OutputStream.CanRead)
+                        logger.WriteValue("httpResponseBody", (new System.IO.StreamReader(response.OutputStream)).ReadToEnd());
                 } catch { }
 #if NET_4_5_2
                             logger.WriteValue("isHeadersWritten", response.HeadersWritten);
