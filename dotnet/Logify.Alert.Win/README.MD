@@ -77,7 +77,7 @@ You can set up the Logify Alert client using the **App.config** file as follows.
 ## API
 ### Properties
 #### ApiKey
-String. Specifies an [API Key](https://logify.devexpress.com/Documentation/CreateApp) used to register the applications within the Logify service.
+String. Specifies an [API Key](https://logify.devexpress.com/Alert/Documentation/CreateApp) used to register the applications within the Logify service.
 ```csharp
 client.ApiKey = "My Api Key";
 ```
