@@ -30,6 +30,10 @@ namespace DevExpress.Logify.Core.Internal {
         }
 
         protected override void RegisterCollectors(ILogifyClientConfiguration config) {
+            IgnorePropertiesInfoConfig ignoreConfig = config.IgnoreConfig;
+            if (ignoreConfig == null)
+                ignoreConfig = new IgnorePropertiesInfoConfig();
+
             Collectors.Add(new LogifyProtocolVersionCollector());
             Collectors.Add(LogifyAppInfoCollector);
             //Collectors.Add(new DevelopementPlatformCollector(Platform.ASP)); // added in constuctor
@@ -39,9 +43,9 @@ namespace DevExpress.Logify.Core.Internal {
             HttpContext context = LogifyHttpContext.Current;
             if (context != null) {
                 if (context.Request != null)
-                    Collectors.Add(new RequestCollector(context.Request));
+                    Collectors.Add(new RequestCollector(context.Request, ignoreConfig));
                 if (context.Response != null)
-                    Collectors.Add(new ResponseCollector(context.Response));
+                    Collectors.Add(new ResponseCollector(context.Response, ignoreConfig));
                 //if (context.ApplicationInstance != null && context.ApplicationInstance.Modules != null)
                 //    Collectors.Add(new ModulesCollector(context.ApplicationInstance.Modules));
             }

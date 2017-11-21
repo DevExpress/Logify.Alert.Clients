@@ -15,6 +15,22 @@ namespace DevExpress.Logify.Web {
         }
 
         public bool CollectBreadcrumbs { get { return base.CollectBreadcrumbsCore; } set { base.CollectBreadcrumbsCore = value; } }
+        public string IgnoreFormFields {
+            get { return Config.IgnoreConfig.IgnoreFormFields; }
+            set { Config.IgnoreConfig.IgnoreFormFields = value; }
+        }
+        public string IgnoreHeaders {
+            get { return Config.IgnoreConfig.IgnoreHeaders; }
+            set { Config.IgnoreConfig.IgnoreHeaders = value; }
+        }
+        public string IgnoreCookies {
+            get { return Config.IgnoreConfig.IgnoreCookies; }
+            set { Config.IgnoreConfig.IgnoreCookies = value; }
+        }
+        //public string IgnoreServerVariables {
+        //    get { return Config.IgnoreConfig.IgnoreServerVariables; }
+        //    set { Config.IgnoreConfig.IgnoreServerVariables = value; }
+        //}
 
         public static new LogifyAlert Instance {
             get {

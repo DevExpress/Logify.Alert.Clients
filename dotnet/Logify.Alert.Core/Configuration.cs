@@ -20,6 +20,10 @@ namespace DevExpress.Logify.Core.Internal {
         public Dictionary<string, string> CustomData { get; set; }
         public bool CollectBreadcrumbs { get; set; }
         public int BreadcrumbsMaxCount { get; set; }
+        public string IgnoreFormFields { get; set; }
+        public string IgnoreHeaders { get; set; }
+        public string IgnoreCookies { get; set; }
+        //public string IgnoreServerVariables { get; set; }
     }
 
     public static class ClientConfigurationLoader {
@@ -48,9 +52,21 @@ namespace DevExpress.Logify.Core.Internal {
             if (!String.IsNullOrEmpty(config.OfflineReportsDirectory))
                 client.OfflineReportsDirectory = config.OfflineReportsDirectory;
             client.OfflineReportsCount = config.OfflineReportsCount;
-            ClientConfigHelper.GetConfig(client).CollectBreadcrumbs = config.CollectBreadcrumbs;
+
+            ILogifyClientConfiguration clientConfig = ClientConfigHelper.GetConfig(client);
+            clientConfig.CollectBreadcrumbs = config.CollectBreadcrumbs;
             if (config.BreadcrumbsMaxCount > 1)
-                ClientConfigHelper.GetConfig(client).BreadcrumbsMaxCount = config.BreadcrumbsMaxCount;
+                clientConfig.BreadcrumbsMaxCount = config.BreadcrumbsMaxCount;
+            if (clientConfig.IgnoreConfig != null) {
+                if (!String.IsNullOrEmpty(config.IgnoreFormFields))
+                    clientConfig.IgnoreConfig.IgnoreFormFields = config.IgnoreFormFields;
+                if (!String.IsNullOrEmpty(config.IgnoreHeaders))
+                    clientConfig.IgnoreConfig.IgnoreHeaders = config.IgnoreHeaders;
+                if (!String.IsNullOrEmpty(config.IgnoreCookies))
+                    clientConfig.IgnoreConfig.IgnoreCookies = config.IgnoreCookies;
+                //if (!String.IsNullOrEmpty(config.IgnoreServerVariables))
+                //    clientConfig.IgnoreConfig.IgnoreServerVariables = config.IgnoreServerVariables;
+            }
 
             if (config.CustomData != null && config.CustomData.Count > 0) {
                 foreach (string key in config.CustomData.Keys)

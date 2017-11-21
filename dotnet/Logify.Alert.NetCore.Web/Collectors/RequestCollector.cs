@@ -9,13 +9,21 @@ namespace DevExpress.Logify.Core.Internal {
     class RequestCollector : IInfoCollector {
         readonly HttpRequest request;
         readonly string name;
-        private ILogger logger;
+        readonly IgnorePropertiesInfo ignoreFormFields;
+        readonly IgnorePropertiesInfo ignoreHeaders;
+        readonly IgnorePropertiesInfo ignoreCookies;
+        readonly IgnorePropertiesInfo ignoreServerVariables;
+        ILogger logger;
 
-        public RequestCollector(HttpRequest request) : this(request, "request") { }
+        public RequestCollector(HttpRequest request, IgnorePropertiesInfoConfig ignoreConfig) : this(request, "request", ignoreConfig) { }
 
-        public RequestCollector(HttpRequest request, string name) {
+        public RequestCollector(HttpRequest request, string name, IgnorePropertiesInfoConfig ignoreConfig) {
             this.request = request;
             this.name = name;
+            this.ignoreFormFields = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreFormFields);
+            this.ignoreHeaders = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreHeaders);
+            this.ignoreCookies = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreCookies);
+            this.ignoreServerVariables = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreServerVariables);
         }
 
         public virtual void Process(Exception e, ILogger logger) {
@@ -26,15 +34,15 @@ namespace DevExpress.Logify.Core.Internal {
                 //this.SerializeBrowserInfo();
                 this.SerializeContentInfo();
                 this.SerializeFileInfo();
-                Utils.SerializeCookieInfo(request.Cookies, logger);
+                Utils.SerializeCookieInfo(request.Cookies, this.ignoreCookies, logger);
                 try {
-                    Utils.SerializeInfo(request.Form, "form", logger);
+                    Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
                 }
                 catch {
                 }
-                Utils.SerializeInfo(request.Headers, "headers", logger);
+                Utils.SerializeInfo(request.Headers, "headers", this.ignoreHeaders, logger);
                 //Utils.SerializeInfo(request.ServerVariables, "serverVariables", logger);
-                Utils.SerializeInfo(request.Query, "queryString", logger);
+                Utils.SerializeInfo(request.Query, "queryString", null, logger);
                 //logger.WriteValue("applicationPath", request.ApplicationPath);
                 logger.WriteValue("httpMethod", request.Method);
                 try {
