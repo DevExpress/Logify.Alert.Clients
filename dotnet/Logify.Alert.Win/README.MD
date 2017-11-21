@@ -124,7 +124,7 @@ LogifyAlert.Instance.Breadcrumbs.Add(new Breadcrumb() {
 #### BreadcrumbsMaxCount
 Integer. Specifies the maximum allowed number of breadcrumbs attached to one crash report. The default value is 1000 instances (or 3 MB).
 ```csharp
-LogifyAlert.Instance.BreadcrumbMaxCount = 2000;
+LogifyAlert.Instance.BreadcrumbsMaxCount = 2000;
 ```
 
 #### CollectBreadcrumbs
