@@ -8,8 +8,7 @@ class logifyAlert {
         this._apiKey = apiKey;
         this._handleReports = false;
         this._breadcrumbs = undefined;
-        this._maxBreadcrumbsCount = 100;
-
+        
         this.applicationName = undefined;
         this.applicationVersion = undefined;
         this.userId = undefined;
@@ -18,6 +17,7 @@ class logifyAlert {
         this.collectSessionStorage = true;
         this.collectCookies = true;
         this.collectInputs = false;
+        this.breadcrumbsMaxCount = 100;
 
         this._collectBreadcrumbs = false;
 
@@ -117,7 +117,7 @@ class logifyAlert {
             this._breadcrumbs = [];
         }
         this._breadcrumbs.push(breadcrumb);
-        if (this._breadcrumbs.length > this._maxBreadcrumbsCount) {
+        if (this._breadcrumbs.length > Math.min(this.breadcrumbsMaxCount, 100)) {
             this._breadcrumbs.shift();
         }
     }
