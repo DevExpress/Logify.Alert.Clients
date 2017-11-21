@@ -78,7 +78,7 @@ Execute the code below so the Logify client uses the created configuration file.
 ### Properties
 
 #### apiKey
-String. Specifies an [API Key](https://logify.devexpress.com/Documentation/CreateApp) used to register an application within the Logify service.
+String. Specifies an [API Key](https://logify.devexpress.com/Alert/Documentation/CreateApp) used to register an application within the Logify service.
 ```PHP
 $client->apiKey = 'SPECIFY_YOUR_API_KEY_HERE';
 ```
