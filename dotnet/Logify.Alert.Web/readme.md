@@ -9,7 +9,7 @@ $ Install-Package Logify.Alert.Web
 ## Quick Start
 ### Automatic error reporting
 #### Modify Application's Web.config File
-Add the Logify Alert settings to the application's **Web.config** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Documentation/CreateApp) generated for it.
+Add the Logify Alert settings to the application's **Web.config** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Alert/Documentation/CreateApp) generated for it.
 ```xml
 <configuration>
   <configSections>
