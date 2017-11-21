@@ -53,7 +53,7 @@ client.applicationVersion = '1.0.1';
 Integer. Specifies the maximum allowed number of breadcrumbs attached to one crash report. The default value is 1000 instances (or 3 MB).
 
 ```javascript
-logify.breadcrumbMaxCount = 2000;
+logify.breadcrumbsMaxCount = 2000;
 ```
 
 #### collectBreadcrumbs
