@@ -13,6 +13,7 @@ namespace DevExpress.Logify.Core.Internal {
         readonly IgnorePropertiesInfo ignoreHeaders;
         readonly IgnorePropertiesInfo ignoreCookies;
         readonly IgnorePropertiesInfo ignoreServerVariables;
+        readonly bool ignoreRequestBody;
         ILogger logger;
 
         public RequestCollector(HttpRequest request, IgnorePropertiesInfoConfig ignoreConfig) : this(request, "request", ignoreConfig) { }
@@ -24,6 +25,7 @@ namespace DevExpress.Logify.Core.Internal {
             this.ignoreHeaders = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreHeaders);
             this.ignoreCookies = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreCookies);
             this.ignoreServerVariables = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreServerVariables);
+            this.ignoreRequestBody = ignoreConfig.IgnoreRequestBody;
         }
 
         public virtual void Process(Exception e, ILogger logger) {
@@ -45,13 +47,17 @@ namespace DevExpress.Logify.Core.Internal {
                 Utils.SerializeInfo(request.Query, "queryString", null, logger);
                 //logger.WriteValue("applicationPath", request.ApplicationPath);
                 logger.WriteValue("httpMethod", request.Method);
-                try {
-                    string content;
-                    using (var reader = new System.IO.StreamReader(request.Body))
-                        content = reader.ReadToEnd();
-                    logger.WriteValue("httpRequestBody", content);
-                }
-                catch {
+                if (!ignoreRequestBody) {
+                    try {
+                        if (request.Body != null && request.Body.CanRead) {
+                            string content;
+                            using (var reader = new System.IO.StreamReader(request.Body))
+                                content = reader.ReadToEnd();
+                            logger.WriteValue("httpRequestBody", content);
+                        }
+                    }
+                    catch {
+                    }
                 }
                 //logger.WriteValue("isUserAuthenticated", request.IsAuthenticated);
                 //logger.WriteValue("isLocalRequest", request.IsLocal);

@@ -31,6 +31,10 @@ namespace DevExpress.Logify.Web {
         //    get { return Config.IgnoreConfig.IgnoreServerVariables; }
         //    set { Config.IgnoreConfig.IgnoreServerVariables = value; }
         //}
+        public bool IgnoreRequestBody {
+            get { return Config.IgnoreConfig.IgnoreRequestBody; }
+            set { Config.IgnoreConfig.IgnoreRequestBody = value; }
+        }
 
         public static new LogifyAlert Instance {
             get {

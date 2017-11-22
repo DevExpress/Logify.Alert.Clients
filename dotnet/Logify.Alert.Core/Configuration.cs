@@ -24,6 +24,7 @@ namespace DevExpress.Logify.Core.Internal {
         public string IgnoreHeaders { get; set; }
         public string IgnoreCookies { get; set; }
         //public string IgnoreServerVariables { get; set; }
+        public bool IgnoreRequestBody { get; set; }
     }
 
     public static class ClientConfigurationLoader {
@@ -66,6 +67,7 @@ namespace DevExpress.Logify.Core.Internal {
                     clientConfig.IgnoreConfig.IgnoreCookies = config.IgnoreCookies;
                 //if (!String.IsNullOrEmpty(config.IgnoreServerVariables))
                 //    clientConfig.IgnoreConfig.IgnoreServerVariables = config.IgnoreServerVariables;
+                clientConfig.IgnoreConfig.IgnoreRequestBody = config.IgnoreRequestBody;
             }
 
             if (config.CustomData != null && config.CustomData.Count > 0) {

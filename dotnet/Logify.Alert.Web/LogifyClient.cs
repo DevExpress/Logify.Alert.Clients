@@ -36,6 +36,10 @@ namespace DevExpress.Logify.Web {
             get { return Config.IgnoreConfig.IgnoreServerVariables; }
             set { Config.IgnoreConfig.IgnoreServerVariables = value; }
         }
+        public bool IgnoreRequestBody {
+            get { return Config.IgnoreConfig.IgnoreRequestBody; }
+            set { Config.IgnoreConfig.IgnoreRequestBody = value; }
+        }
 
         public static new LogifyAlert Instance {
             get {
@@ -123,6 +127,8 @@ namespace DevExpress.Logify.Web {
                 this.IgnoreCookies = section.IgnoreCookies.Value;
             if (section.IgnoreServerVariables != null)
                 this.IgnoreServerVariables = section.IgnoreServerVariables.Value;
+            if (section.IgnoreRequestBody != null)
+                this.IgnoreRequestBody = section.IgnoreRequestBody.ValueAsBool;
         }
         public override void Run() {
             //do nothing

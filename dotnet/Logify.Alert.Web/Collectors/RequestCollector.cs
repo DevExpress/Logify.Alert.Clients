@@ -15,7 +15,8 @@ namespace DevExpress.Logify.Core.Internal {
         readonly IgnorePropertiesInfo ignoreHeaders;
         readonly IgnorePropertiesInfo ignoreCookies;
         readonly IgnorePropertiesInfo ignoreServerVariables;
-        private ILogger logger;
+        readonly bool ignoreRequestBody;
+        ILogger logger;
 
         public RequestCollector(HttpRequest request, IgnorePropertiesInfoConfig ignoreConfig) : this(request, "request", ignoreConfig) { }
 
@@ -26,6 +27,7 @@ namespace DevExpress.Logify.Core.Internal {
             this.ignoreHeaders = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreHeaders);
             this.ignoreCookies = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreCookies);
             this.ignoreServerVariables = IgnorePropertiesInfo.FromString(ignoreConfig.IgnoreServerVariables);
+            this.ignoreRequestBody = ignoreConfig.IgnoreRequestBody;
         }
 
         public virtual void Process(Exception e, ILogger logger) {
@@ -43,7 +45,13 @@ namespace DevExpress.Logify.Core.Internal {
                 Utils.SerializeInfo(request.QueryString, "queryString", null, logger);
                 logger.WriteValue("applicationPath", request.ApplicationPath);
                 logger.WriteValue("httpMethod", request.HttpMethod);
-                try { logger.WriteValue("httpRequestBody", (new System.IO.StreamReader(request.InputStream)).ReadToEnd()); } catch { }
+                if (!ignoreRequestBody) {
+                    try {
+                        if (request.InputStream != null && request.InputStream.CanRead)
+                            logger.WriteValue("httpRequestBody", (new System.IO.StreamReader(request.InputStream)).ReadToEnd());
+                    }
+                    catch { }
+                }
                 logger.WriteValue("isUserAuthenticated", request.IsAuthenticated);
                 logger.WriteValue("isLocalRequest", request.IsLocal);
                 logger.WriteValue("isSecureConnection", request.IsSecureConnection);

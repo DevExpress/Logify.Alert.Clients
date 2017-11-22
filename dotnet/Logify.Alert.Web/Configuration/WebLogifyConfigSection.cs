@@ -17,5 +17,7 @@ namespace DevExpress.Logify {
         public ClientValueElement IgnoreCookies { get { return (ClientValueElement)base["ignoreCookies"]; } }
         [ConfigurationProperty("ignoreServerVariables")]
         public ClientValueElement IgnoreServerVariables { get { return (ClientValueElement)base["ignoreServerVariables"]; } }
+        [ConfigurationProperty("ignoreRequestBody")]
+        public ClientValueElement IgnoreRequestBody { get { return (ClientValueElement)base["ignoreRequestBody"]; } }
     }
 }
