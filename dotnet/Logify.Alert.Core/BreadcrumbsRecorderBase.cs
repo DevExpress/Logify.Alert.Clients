@@ -13,8 +13,11 @@ namespace DevExpress.Logify.Core {
             item.DateTime = DateTime.Now;
             item.Level = BreadcrumbLevel.Info;
             item.ThreadId = GetThreadId();
-            item.Category = "input";
+            item.Category = GetCategory();
             item.IsAuto = true;
+        }
+        protected virtual string GetCategory() {
+            return "input";
         }
         protected abstract string GetThreadId();
     }

@@ -70,10 +70,13 @@ namespace DevExpress.Logify.Web {
             if(breadcrumb != null)
                 breadcrumb.CustomData["status"] = "Failed";
         }
+        protected override string GetCategory() {
+            return "request";
+        }
         protected override string GetThreadId() {
             return Thread.CurrentThread.ManagedThreadId.ToString();
         }
-        const string CookieName = "Logify.Web.Cookie";
+        const string CookieName = "BreadcrumbsCookie";
         string TryGetSessionId(HttpRequest request, HttpResponse response) {
             string cookieValue = null;
             try {
