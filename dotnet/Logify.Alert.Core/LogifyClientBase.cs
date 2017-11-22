@@ -165,10 +165,11 @@ namespace DevExpress.Logify.Core {
         CanReportExceptionEventHandler onCanReportException;
         public event CanReportExceptionEventHandler CanReportException { add { onCanReportException += value; } remove { onCanReportException -= value; } }
         bool RaiseCanReportException(Exception ex) {
-            if (onCanReportException != null) {
+            CanReportExceptionEventHandler handler = onCanReportException;
+            if (handler != null) {
                 CanReportExceptionEventArgs args = new CanReportExceptionEventArgs();
                 args.Exception = ex;
-                onCanReportException(this, args);
+                handler(this, args);
                 return !args.Cancel;
             } else
                 return true;
@@ -177,19 +178,21 @@ namespace DevExpress.Logify.Core {
         BeforeReportExceptionEventHandler onBeforeReportException;
         public event BeforeReportExceptionEventHandler BeforeReportException { add { onBeforeReportException += value; } remove { onBeforeReportException -= value; } }
         void RaiseBeforeReportException(Exception ex) {
-            if (onBeforeReportException != null) {
+            BeforeReportExceptionEventHandler handler = onBeforeReportException;
+            if (handler != null) {
                 BeforeReportExceptionEventArgs args = new BeforeReportExceptionEventArgs();
                 args.Exception = ex;
-                onBeforeReportException(this, args);
+                handler(this, args);
             }
         }
         AfterReportExceptionEventHandler onAfterReportException;
         public event AfterReportExceptionEventHandler AfterReportException { add { onAfterReportException += value; } remove { onAfterReportException -= value; } }
         void RaiseAfterReportException(Exception ex) {
-            if (onAfterReportException != null) {
+            AfterReportExceptionEventHandler handler = onAfterReportException;
+            if (handler != null) {
                 AfterReportExceptionEventArgs args = new AfterReportExceptionEventArgs();
                 args.Exception = ex;
-                onAfterReportException(this, args);
+                handler(this, args);
             }
         }
 

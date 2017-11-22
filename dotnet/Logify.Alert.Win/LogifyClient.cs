@@ -161,12 +161,13 @@ namespace DevExpress.Logify.Win {
             return new ConfirmationDialogModel(report, sendAction);
         }
         protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
-            if(ConfirmationDialogShowing != null) {
+            ConfirmationDialogEventHandler handler = ConfirmationDialogShowing;
+            if (handler != null) {
                 ConfirmationDialogModel actualModel = model as ConfirmationDialogModel;
                 if(actualModel == null)
                     return false;
                 ConfirmationDialogEventArgs args = new ConfirmationDialogEventArgs(actualModel);
-                ConfirmationDialogShowing(this, args);
+                handler(this, args);
                 return args.Handled;
             }
             return false;

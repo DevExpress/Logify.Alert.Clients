@@ -1031,8 +1031,9 @@ namespace DevExpress.Utils.Zip.Internal {
                 return !isStopped;
             this.totalBytesCopied += bytesCopied;
             this.currentProgress = (1.0 * this.totalBytesCopied) / this.totalSize;
-            if (NotifyProgress != null)
-                NotifyProgress(this, EventArgs.Empty);
+            EventHandler handler = NotifyProgress;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
             return !isStopped;
         }
         public void Stop() {

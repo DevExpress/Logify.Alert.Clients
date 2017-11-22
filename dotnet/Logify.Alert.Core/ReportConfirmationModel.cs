@@ -51,8 +51,9 @@ namespace DevExpress.Logify.Core {
         }
 
         void OnPropertyChanged(string name) {
-            if (PropertyChanged != null) {
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) {
+                handler(this, new PropertyChangedEventArgs(name));
             }
         }
     }
