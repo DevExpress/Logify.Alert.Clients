@@ -219,19 +219,21 @@ namespace DevExpress.Logify.Core {
 
         void Init(Dictionary<string, string> configDictionary) {
             this.IsSecondaryInstance = DetectIfSecondaryInstance();
-            //this.innerConfig = CreateClientConfiguration(); // new DefaultClientConfiguration();
             this.stackTraceHelper = CreateStackTraceHelper();
             this.config = new DefaultClientConfiguration();
             this.ConfirmSendReport = false; // do not confirm by default
 
-            IExceptionReportSender reportSender = CreateExceptionReportSender();
-            Configure();
-            InitAfterConfigure(reportSender);
+            Configure(LoadConfiguration());
         }
+        protected internal void Configure(LogifyAlertConfiguration configuration) {
+            if (configuration != null)
+                ApplyConfiguration(configuration);
+            InitAfterConfigure();
+        }
+        protected abstract LogifyAlertConfiguration LoadConfiguration();
         protected internal void InitAfterConfigure() {
-            InitAfterConfigure(CreateExceptionReportSender());
-        }
-        protected void InitAfterConfigure(IExceptionReportSender reportSender) {
+            IExceptionReportSender reportSender = CreateExceptionReportSender();
+
             reportSender.ServiceUrl = this.ServiceUrl;
             reportSender.ApiKey = this.ApiKey;
             reportSender.ConfirmSendReport = this.ConfirmSendReport;
@@ -243,10 +245,6 @@ namespace DevExpress.Logify.Core {
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.IsEnabled = this.OfflineReportsEnabled; });
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.DirectoryName = this.OfflineReportsDirectory; });
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.ReportCount = this.OfflineReportsCount; });
-
-
-            //TODO:
-            //apply values to config
 
             ExceptionLoggerFactory.Instance.PlatformReportSender = CreateBackgroundExceptionReportSender(reportSender);
             ExceptionLoggerFactory.Instance.PlatformCollectorFactory = CreateCollectorFactory();
@@ -261,14 +259,56 @@ namespace DevExpress.Logify.Core {
         protected abstract IInfoCollectorFactory CreateCollectorFactory();
         protected abstract IExceptionIgnoreDetection CreateIgnoreDetection();
         protected abstract string GetAssemblyVersionString(Assembly asm);
-        //protected abstract ILogifyClientConfiguration CreateClientConfiguration();
-        protected abstract void Configure();
         protected abstract IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments);
         protected abstract BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender);
         protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
         protected abstract ISavedReportSender CreateSavedReportsSender();
         protected internal abstract ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction);
         protected abstract IStackTraceHelper CreateStackTraceHelper();
+
+        protected internal virtual void ApplyConfiguration(LogifyAlertConfiguration configuration) {
+            if (!String.IsNullOrEmpty(configuration.ServiceUrl))
+                this.ServiceUrl = configuration.ServiceUrl;
+            if (!String.IsNullOrEmpty(configuration.ApiKey))
+                this.ApiKey = configuration.ApiKey;
+            if (!String.IsNullOrEmpty(configuration.AppName))
+                this.AppName = configuration.AppName;
+            if (!String.IsNullOrEmpty(configuration.AppVersion))
+                this.AppVersion = configuration.AppVersion;
+            this.ConfirmSendReport = configuration.ConfirmSend;
+
+            //if (!String.IsNullOrEmpty(configuration.MiniDumpServiceUrl))
+            //    this.MiniDumpServiceUrl = configuration.MiniDumpServiceUrl;
+
+            this.OfflineReportsEnabled = configuration.OfflineReportsEnabled;
+            if (!String.IsNullOrEmpty(configuration.OfflineReportsDirectory))
+                this.OfflineReportsDirectory = configuration.OfflineReportsDirectory;
+            this.OfflineReportsCount = configuration.OfflineReportsCount;
+
+
+            Config.CollectMiniDump = configuration.CollectMiniDump;
+            Config.CollectScreenshot = configuration.CollectScreenshot;
+            this.CollectBreadcrumbsCore = configuration.CollectBreadcrumbs;
+            if (configuration.BreadcrumbsMaxCount > 1)
+                this.BreadcrumbsMaxCountCore = configuration.BreadcrumbsMaxCount;
+
+            if (Config.IgnoreConfig != null) {
+                if (!String.IsNullOrEmpty(configuration.IgnoreFormFields))
+                    Config.IgnoreConfig.IgnoreFormFields = configuration.IgnoreFormFields;
+                if (!String.IsNullOrEmpty(configuration.IgnoreHeaders))
+                    Config.IgnoreConfig.IgnoreHeaders = configuration.IgnoreHeaders;
+                if (!String.IsNullOrEmpty(configuration.IgnoreCookies))
+                    Config.IgnoreConfig.IgnoreCookies = configuration.IgnoreCookies;
+                if (!String.IsNullOrEmpty(configuration.IgnoreServerVariables))
+                    Config.IgnoreConfig.IgnoreServerVariables = configuration.IgnoreServerVariables;
+                Config.IgnoreConfig.IgnoreRequestBody = configuration.IgnoreRequestBody;
+            }
+
+            if (configuration.CustomData != null && configuration.CustomData.Count > 0) {
+                foreach (string key in configuration.CustomData.Keys)
+                    this.CustomData[key] = configuration.CustomData[key];
+            }
+        }
 
         protected internal abstract bool RaiseConfirmationDialogShowing(ReportConfirmationModel model);
         protected void BeginCollectBreadcrumbs() {
@@ -616,9 +656,8 @@ namespace DevExpress.Logify.Core.Internal {
                 return false;
         }
 
-        public static void AfterConfigure(LogifyClientBase client) {
-            client.ForceUpdateBreadcrumbsMaxCount();
-            client.InitAfterConfigure();
+        public static void Configure(LogifyClientBase client, LogifyAlertConfiguration configuration) {
+            client.Configure(configuration);
         }
     }
 

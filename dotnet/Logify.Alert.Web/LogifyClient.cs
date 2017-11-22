@@ -109,26 +109,26 @@ namespace DevExpress.Logify.Web {
         protected override IExceptionIgnoreDetection CreateIgnoreDetection() {
             return new StackBasedExceptionIgnoreDetection();
         }
-        protected override void Configure() {
-            ClientConfigurationLoader.ApplyClientConfiguration(this);
-            ConfigureWeb();
-            ForceUpdateBreadcrumbsMaxCount();
-        }
-        void ConfigureWeb() {
+        protected override LogifyAlertConfiguration LoadConfiguration() {
             WebLogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as WebLogifyConfigSection;
+            LogifyAlertConfiguration configuration = ClientConfigurationLoader.LoadCommonConfiguration(section);
+            LoadWebConfiguration(section, configuration);
+            return configuration;
+        }
+        static void LoadWebConfiguration(WebLogifyConfigSection section, LogifyAlertConfiguration config) {
             if (section == null)
                 return;
 
             if (section.IgnoreFormFields != null)
-                this.IgnoreFormFields = section.IgnoreFormFields.Value;
+                config.IgnoreFormFields = section.IgnoreFormFields.Value;
             if (section.IgnoreHeaders != null)
-                this.IgnoreHeaders = section.IgnoreHeaders.Value;
+                config.IgnoreHeaders = section.IgnoreHeaders.Value;
             if (section.IgnoreCookies != null)
-                this.IgnoreCookies = section.IgnoreCookies.Value;
+                config.IgnoreCookies = section.IgnoreCookies.Value;
             if (section.IgnoreServerVariables != null)
-                this.IgnoreServerVariables = section.IgnoreServerVariables.Value;
+                config.IgnoreServerVariables = section.IgnoreServerVariables.Value;
             if (section.IgnoreRequestBody != null)
-                this.IgnoreRequestBody = section.IgnoreRequestBody.ValueAsBool;
+                config.IgnoreRequestBody = section.IgnoreRequestBody.ValueAsBool;
         }
         public override void Run() {
             //do nothing

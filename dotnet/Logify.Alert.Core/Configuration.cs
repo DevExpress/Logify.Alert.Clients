@@ -4,76 +4,15 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 
 namespace DevExpress.Logify.Core.Internal {
-    internal class LogifyAlertConfiguration {
-        public LogifyAlertConfiguration() {
-            this.BreadcrumbsMaxCount = 1000;
-        }
-        public string ServiceUrl { get; set; }
-        //public string MiniDumpServiceUrl { get; set; }
-        public string ApiKey { get; set; }
-        public string AppName { get; set; }
-        public string AppVersion { get; set; }
-        public bool ConfirmSend { get; set; }
-        public bool OfflineReportsEnabled { get; set; }
-        public string OfflineReportsDirectory { get; set; }
-        public int OfflineReportsCount { get; set; }
-        public Dictionary<string, string> CustomData { get; set; }
-        public bool CollectBreadcrumbs { get; set; }
-        public int BreadcrumbsMaxCount { get; set; }
-        public string IgnoreFormFields { get; set; }
-        public string IgnoreHeaders { get; set; }
-        public string IgnoreCookies { get; set; }
-        //public string IgnoreServerVariables { get; set; }
-        public bool IgnoreRequestBody { get; set; }
-    }
-
     public static class ClientConfigurationLoader {
         [CLSCompliant(false)]
-        public static void ApplyClientConfiguration(LogifyClientBase client, IConfigurationSection section) {
-            if (section == null)
-                return;
-
+        public static LogifyAlertConfiguration LoadConfiguration(IConfigurationSection section) {
             LogifyAlertConfiguration config = new LogifyAlertConfiguration();
+            if (section == null)
+                return config;
+
             section.Bind(config);
-
-            if (!String.IsNullOrEmpty(config.ServiceUrl))
-                client.ServiceUrl = config.ServiceUrl;
-            if (!String.IsNullOrEmpty(config.ApiKey))
-                client.ApiKey = config.ApiKey;
-            if (!String.IsNullOrEmpty(config.AppName))
-                client.AppName = config.AppName;
-            if (!String.IsNullOrEmpty(config.AppVersion))
-                client.AppVersion = config.AppVersion;
-            client.ConfirmSendReport = config.ConfirmSend;
-
-            //if (!String.IsNullOrEmpty(config.MiniDumpServiceUrl))
-            //    client.MiniDumpServiceUrl = config.MiniDumpServiceUrl;
-
-            client.OfflineReportsEnabled = config.OfflineReportsEnabled;
-            if (!String.IsNullOrEmpty(config.OfflineReportsDirectory))
-                client.OfflineReportsDirectory = config.OfflineReportsDirectory;
-            client.OfflineReportsCount = config.OfflineReportsCount;
-
-            ILogifyClientConfiguration clientConfig = ClientConfigHelper.GetConfig(client);
-            clientConfig.CollectBreadcrumbs = config.CollectBreadcrumbs;
-            if (config.BreadcrumbsMaxCount > 1)
-                clientConfig.BreadcrumbsMaxCount = config.BreadcrumbsMaxCount;
-            if (clientConfig.IgnoreConfig != null) {
-                if (!String.IsNullOrEmpty(config.IgnoreFormFields))
-                    clientConfig.IgnoreConfig.IgnoreFormFields = config.IgnoreFormFields;
-                if (!String.IsNullOrEmpty(config.IgnoreHeaders))
-                    clientConfig.IgnoreConfig.IgnoreHeaders = config.IgnoreHeaders;
-                if (!String.IsNullOrEmpty(config.IgnoreCookies))
-                    clientConfig.IgnoreConfig.IgnoreCookies = config.IgnoreCookies;
-                //if (!String.IsNullOrEmpty(config.IgnoreServerVariables))
-                //    clientConfig.IgnoreConfig.IgnoreServerVariables = config.IgnoreServerVariables;
-                clientConfig.IgnoreConfig.IgnoreRequestBody = config.IgnoreRequestBody;
-            }
-
-            if (config.CustomData != null && config.CustomData.Count > 0) {
-                foreach (string key in config.CustomData.Keys)
-                    client.CustomData[key] = config.CustomData[key];
-            }
+            return config;
         }
     }
 }
@@ -155,53 +94,50 @@ namespace DevExpress.Logify.Core.Internal {
         public static void ConfigureClientFromFile(LogifyClientBase client, string configFileName) {
             ExeConfigurationFileMap map = new ExeConfigurationFileMap();
             map.ExeConfigFilename = configFileName;
+
             Configuration config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
             LogifyConfigSection section = config.GetSection("logifyAlert") as LogifyConfigSection;
-
-            ApplyClientConfiguration(client, section);
-            LogifyClientAccessor.AfterConfigure(client);
+            LogifyClientAccessor.Configure(client, LoadCommonConfiguration(section));
         }
-        public static void ApplyClientConfiguration(LogifyClientBase client) {
-            LogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as LogifyConfigSection;
-            ApplyClientConfiguration(client, section);
-        }
-        public static void ApplyClientConfiguration(LogifyClientBase client, LogifyConfigSection section) {
+        internal static LogifyAlertConfiguration LoadCommonConfiguration(LogifyConfigSection section) {
+            LogifyAlertConfiguration config = new LogifyAlertConfiguration();
             if (section == null)
-                return;
+                return config;
 
             if (section.ServiceUrl != null && !String.IsNullOrEmpty(section.ServiceUrl.Value))
-                client.ServiceUrl = section.ServiceUrl.Value;
+                config.ServiceUrl = section.ServiceUrl.Value;
             //if (section.LogId != null)
             //    reportSender.LogId = section.LogId.Value;
             if (section.ApiKey != null)
-                client.ApiKey = section.ApiKey.Value;
+                config.ApiKey = section.ApiKey.Value;
             if (section.ConfirmSend != null)
-                client.ConfirmSendReport = section.ConfirmSend.ValueAsBool;
+                config.ConfirmSend = section.ConfirmSend.ValueAsBool;
 
             //if (section.MiniDumpServiceUrl != null)
             //    client.MiniDumpServiceUrl = section.MiniDumpServiceUrl.Value;
 
             if (section.OfflineReportsEnabled != null)
-                client.OfflineReportsEnabled = section.OfflineReportsEnabled.ValueAsBool;
+                config.OfflineReportsEnabled = section.OfflineReportsEnabled.ValueAsBool;
             if (section.OfflineReportsDirectory != null)
-                client.OfflineReportsDirectory = section.OfflineReportsDirectory.Value;
+                config.OfflineReportsDirectory = section.OfflineReportsDirectory.Value;
             if (section.OfflineReportsCount != null)
-                client.OfflineReportsCount = section.OfflineReportsCount.ValueAsInt;
+                config.OfflineReportsCount = section.OfflineReportsCount.ValueAsInt;
 
             if (section.CollectMiniDump != null)
-                ClientConfigHelper.GetConfig(client).CollectMiniDump = section.CollectMiniDump.ValueAsBool;
+                config.CollectMiniDump = section.CollectMiniDump.ValueAsBool;
             if (section.CollectBreadcrumbs != null)
-                ClientConfigHelper.GetConfig(client).CollectBreadcrumbs = section.CollectBreadcrumbs.ValueAsBool;
+                config.CollectBreadcrumbs = section.CollectBreadcrumbs.ValueAsBool;
             if (section.BreadcrumbsMaxCount != null) {
                 int value = section.BreadcrumbsMaxCount.ValueAsInt;
                 if (value > 1)
-                    ClientConfigHelper.GetConfig(client).BreadcrumbsMaxCount = value;
+                    config.BreadcrumbsMaxCount = value;
             }
 
             if (section.CustomData != null && section.CustomData.Count > 0) {
                 foreach (KeyValueConfigurationElement element in section.CustomData)
-                    client.CustomData[element.Key] = element.Value;
+                    config.CustomData[element.Key] = element.Value;
             }
+            return config;
         }
     }
 }

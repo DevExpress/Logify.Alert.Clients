@@ -101,11 +101,10 @@ namespace DevExpress.Logify.WPF {
         protected override IExceptionIgnoreDetection CreateIgnoreDetection() {
             return new StackBasedExceptionIgnoreDetection();
         }
-        protected override void Configure() {
-            ClientConfigurationLoader.ApplyClientConfiguration(this);
-            ForceUpdateBreadcrumbsMaxCount();
+        protected override LogifyAlertConfiguration LoadConfiguration() {
+            LogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as LogifyConfigSection;
+            return ClientConfigurationLoader.LoadCommonConfiguration(section);
         }
-
         public override void Run() {
             if (!IsSecondaryInstance) {
                 //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);

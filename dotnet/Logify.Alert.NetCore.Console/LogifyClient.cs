@@ -91,13 +91,12 @@ namespace DevExpress.Logify.Console {
         protected override IExceptionIgnoreDetection CreateIgnoreDetection() {
             return new StackBasedExceptionIgnoreDetection();
         }
-        protected override void Configure() {
-            //ClientConfigurationLoader.ApplyClientConfiguration(this);
+        protected override LogifyAlertConfiguration LoadConfiguration() {
+            return new LogifyAlertConfiguration();
         }
         [CLSCompliant(false)]
         public void Configure(IConfigurationSection section) {
-            ClientConfigurationLoader.ApplyClientConfiguration(this, section);
-            ForceUpdateBreadcrumbsMaxCount();
+            Configure(ClientConfigurationLoader.LoadConfiguration(section));
         }
 
         public override void Run() {

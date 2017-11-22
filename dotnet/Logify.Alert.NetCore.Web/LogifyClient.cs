@@ -105,13 +105,11 @@ namespace DevExpress.Logify.Web {
         protected override IExceptionIgnoreDetection CreateIgnoreDetection() {
             return new StackBasedExceptionIgnoreDetection();
         }
-        protected override void Configure() {
-            //TODO:
-            //ClientConfigurationLoader.ApplyClientConfiguration(this);
+        protected override LogifyAlertConfiguration LoadConfiguration() {
+            return new LogifyAlertConfiguration();
         }
         internal void Configure(IConfigurationSection section) {
-            ClientConfigurationLoader.ApplyClientConfiguration(this, section);
-            ForceUpdateBreadcrumbsMaxCount();
+            Configure(ClientConfigurationLoader.LoadConfiguration(section));
         }
 
         public override void Run() {
