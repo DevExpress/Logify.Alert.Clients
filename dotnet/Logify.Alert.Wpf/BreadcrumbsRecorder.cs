@@ -149,7 +149,7 @@ namespace DevExpress.Logify.WPF {
             if(previousArgs == null) {
                 previousArgs = new PreviousArgs() { EventArgs = e, Id = (currentId++).ToString("X") };
             } else {
-                if(e == null || !Object.Equals(previousArgs.EventArgs, e)) {
+                if(e == null || !Object.ReferenceEquals(previousArgs.EventArgs, e)) {
                     previousArgs = new PreviousArgs() { EventArgs = e, Id = (currentId++).ToString("X") };
                 }
             }
