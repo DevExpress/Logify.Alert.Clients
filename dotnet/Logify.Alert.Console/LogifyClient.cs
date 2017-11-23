@@ -64,7 +64,7 @@ namespace DevExpress.Logify.Console {
             return result;
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
-            ConsoleExceptionReportSender defaultSender = new ConsoleExceptionReportSender();
+            IExceptionReportSender defaultSender = CreateEmptyPlatformExceptionReportSender();
             defaultSender.ConfirmSendReport = ConfirmSendReport;
             defaultSender.ProxyCredentials = ProxyCredentials;
             if (ConfirmSendReport)

@@ -52,7 +52,7 @@ namespace DevExpress.Logify.Core {
 }
 
 namespace DevExpress.Logify.Core.Internal {
-    public abstract class ServiceExceptionReportSender : ExceptionReportSenderSkeleton {
+    public abstract class ServiceExceptionReportSender : ExceptionReportSenderSkeleton, IRemoteConfigurationProvider {
         protected override bool SendExceptionReportCore(LogifyClientExceptionReport report) {
             return SendViaHttpWebRequest(report);
         }
@@ -61,15 +61,18 @@ namespace DevExpress.Logify.Core.Internal {
             return await SendViaHttpWebRequestAsync(report);
         }
 #endif
-
-        WebRequest CreateAndSetupHttpWebRequest(LogifyClientExceptionReport report) {
-            string url = ServiceUrl;
+        static string CreateEndPointUrl(string serviceUrl, string queryString) {
+            string url = serviceUrl;
             if (!string.IsNullOrEmpty(url)) {
                 if (url[url.Length - 1] != '/')
                     url += '/';
-                url += "newreport";
+                url += queryString;
             }
-            WebRequest request = WebRequest.Create(url);
+            return url;
+        }
+
+        WebRequest CreateAndSetupHttpWebRequest(LogifyClientExceptionReport report) {
+            WebRequest request = WebRequest.Create(CreateEndPointUrl(ServiceUrl, "api/report/newreport"));
             SetupProxy(request);
 
             request.Method = "POST";
@@ -109,6 +112,7 @@ namespace DevExpress.Logify.Core.Internal {
             HttpWebResponse response = request.GetResponse() as HttpWebResponse;
             return response != null && response.StatusCode == HttpStatusCode.OK;
         }
+
 #if ALLOW_ASYNC
         async Task<bool> SendViaHttpWebRequestAsync(LogifyClientExceptionReport report) {
             WebRequest request = CreateAndSetupHttpWebRequest(report);
@@ -116,6 +120,37 @@ namespace DevExpress.Logify.Core.Internal {
             return response != null && response.StatusCode == HttpStatusCode.OK;
         }
 #endif
+        public LogifyAlertRemoteConfiguration GetConfiguration(string serviceUrl, string apiKey) {
+            try {
+                string json = GetConfigurationJson(serviceUrl, apiKey);
+                if (String.IsNullOrEmpty(json))
+                    return null;
+                return JsonLite.DeserializeObject<LogifyAlertRemoteConfiguration>(json);
+            }
+            catch {
+                return null;
+            }
+        }
+        string GetConfigurationJson(string serviceUrl, string apiKey) {
+            try {
+                WebRequest request = WebRequest.Create(CreateEndPointUrl(serviceUrl, "api/config/get"));
+                SetupProxy(request);
+                request.Method = "GET";
+                request.Headers.Add("Authorization", "amx " + apiKey);
+                //request.ContentType = "application/json";
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                if (response == null || response.StatusCode != HttpStatusCode.OK)
+                    return String.Empty;
+                using (Stream stream = response.GetResponseStream()) {
+                    using (StreamReader reader = new StreamReader(stream)) {
+                        return reader.ReadToEnd();
+                    }
+                }
+            }
+            catch {
+                return String.Empty;
+            }
+        }
     }
 
 

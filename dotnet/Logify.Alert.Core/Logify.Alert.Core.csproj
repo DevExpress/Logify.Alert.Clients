@@ -87,6 +87,7 @@
     <Compile Include="ExceptionLoggerFactory.cs" />
     <Compile Include="FastCharacterMultiReplacement.cs" />
     <Compile Include="IgnoreProperties.cs" />
+    <Compile Include="JsonLite.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\JsonTextWriterLogger.cs" />
     <Compile Include="LogifyClientBase.cs" />

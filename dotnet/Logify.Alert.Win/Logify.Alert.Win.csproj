@@ -171,6 +171,9 @@
     <Compile Include="..\Logify.Alert.Core\Tests\Collectors\OperatingSystemCollectorTests.cs">
       <Link>Tests\Collectors\OperatingSystemCollectorTests.cs</Link>
     </Compile>
+    <Compile Include="..\Logify.Alert.Core\Tests\JsonLiteTests.cs">
+      <Link>Tests\JsonLiteTests.cs</Link>
+    </Compile>
     <Compile Include="..\Logify.Alert.Core\Tests\Logger\JsonTextWriterLoggerTests.cs">
       <Link>Tests\Logger\JsonTextWriterLoggerTests.cs</Link>
     </Compile>

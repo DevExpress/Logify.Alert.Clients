@@ -24,6 +24,9 @@ namespace DevExpress.Logify.Core.Internal {
         IExceptionReportSender Clone();
         void CopyFrom(IExceptionReportSender instance);
     }
+    public interface IRemoteConfigurationProvider {
+        LogifyAlertRemoteConfiguration GetConfiguration(string serviceUrl, string apiKey);
+    }
     public interface IExceptionReportSenderWrapper {
         IExceptionReportSender InnerSender { get; }
     }

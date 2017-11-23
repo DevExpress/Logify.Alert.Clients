@@ -53,5 +53,9 @@ namespace DevExpress.Logify.Core.Internal {
         public string IgnoreCookies { get; set; }
         public string IgnoreServerVariables { get; set; }
         public bool IgnoreRequestBody { get; set; }
+
+        public bool AllowRemoteConfiguration { get; set; }
+    }
+    public class LogifyAlertRemoteConfiguration : LogifyAlertConfiguration {
     }
 }

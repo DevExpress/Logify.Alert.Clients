@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 //using System.Security.Cryptography;
 //using System.Text;
@@ -226,9 +227,11 @@ namespace DevExpress.Logify.Core {
             Configure(LoadConfiguration());
         }
         protected internal void Configure(LogifyAlertConfiguration configuration) {
-            if (configuration != null)
-                ApplyConfiguration(configuration);
-            InitAfterConfigure();
+            lock (this) {
+                if (configuration != null)
+                    ApplyConfiguration(configuration);
+                InitAfterConfigure();
+            }
         }
         protected abstract LogifyAlertConfiguration LoadConfiguration();
         protected internal void InitAfterConfigure() {
@@ -253,6 +256,17 @@ namespace DevExpress.Logify.Core {
 
         protected virtual bool DetectIfSecondaryInstance() {
             return false;
+        }
+        protected IExceptionReportSender CreateConfiguredPlatformExceptionReportSender() {
+            IExceptionReportSender result = CreateEmptyPlatformExceptionReportSender();
+            result.ConfirmSendReport = ConfirmSendReport;
+            result.ProxyCredentials = ProxyCredentials;
+#if NETSTANDARD
+            result.Proxy = this.Proxy;
+#endif
+            result.ApiKey = this.ApiKey;
+            result.ServiceUrl = this.ServiceUrl;
+            return result;
         }
 
         protected abstract IExceptionReportSender CreateExceptionReportSender();
@@ -331,17 +345,17 @@ namespace DevExpress.Logify.Core {
                 if (!OfflineReportsEnabled)
                     return;
 
-                IExceptionReportSender innerSender = CreateEmptyPlatformExceptionReportSender();
+                IExceptionReportSender innerSender = CreateConfiguredPlatformExceptionReportSender();
                 if (innerSender == null)
                     return;
 
                 innerSender.ConfirmSendReport = false;
-                innerSender.ProxyCredentials = this.proxyCredentials;
-#if NETSTANDARD
-                innerSender.Proxy = this.Proxy;
-#endif
-                innerSender.ApiKey = this.ApiKey;
-                innerSender.ServiceUrl = this.ServiceUrl;
+//                innerSender.ProxyCredentials = this.proxyCredentials;
+//#if NETSTANDARD
+//                innerSender.Proxy = this.Proxy;
+//#endif
+//                innerSender.ApiKey = this.ApiKey;
+//                innerSender.ServiceUrl = this.ServiceUrl;
                 //innerSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
 
                 ISavedReportSender savedReportsSender = CreateSavedReportsSender();
@@ -599,6 +613,111 @@ namespace DevExpress.Logify.Core {
             }
         }
 #endif
+
+        Timer timer;
+
+        bool allowRemoteConfiguration;
+        /*public*/ bool AllowRemoteConfiguration {
+            get { return allowRemoteConfiguration; }
+            set {
+                if (allowRemoteConfiguration == value)
+                    return;
+                StopConfigPoll();
+                this.allowRemoteConfiguration = value;
+                StartConfigPoll();
+            }
+        }
+        const int remoteConfigurationFetchMinInterval = 1000; // 1 min
+        const int initialTimerDelay = 2000;
+
+        int remoteConfigurationFetchInterval = 5 * remoteConfigurationFetchMinInterval;
+        int RemoteConfigurationFetchInterval {
+            get { return remoteConfigurationFetchInterval; }
+            set {
+                value = GetActualRemoteConfigurationUpdateInterval(value);
+
+                if (remoteConfigurationFetchInterval == value)
+                    return;
+
+                StopConfigPoll();
+                this.remoteConfigurationFetchInterval = value;
+                StartConfigPoll();
+            }
+        }
+
+        int GetActualRemoteConfigurationUpdateInterval(int value) {
+            const int minInterval = remoteConfigurationFetchMinInterval;
+            return Math.Max(minInterval, value);
+        }
+
+        void StartConfigPoll() {
+            try {
+                if (!AllowRemoteConfiguration)
+                    return;
+
+                if (timer == null)
+                    timer = new Timer(FetchAndApplyRemoteConfiguration, this, initialTimerDelay, RemoteConfigurationFetchInterval);
+                else
+                    timer.Change(initialTimerDelay, RemoteConfigurationFetchInterval);
+            }
+            catch {
+            }
+        }
+
+        void StopConfigPoll() {
+            if (timer == null)
+                return;
+
+            try {
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+                timer.Dispose();
+                timer = null;
+            }
+            catch {
+            }
+        }
+        AutoResetEvent wait = new AutoResetEvent(false);
+        AutoResetEvent remoteConfigurationAllowed = new AutoResetEvent(true);
+        void FetchAndApplyRemoteConfiguration(object state) {
+            try {
+                if (String.IsNullOrEmpty(this.ApiKey))
+                    return;
+
+                if (!remoteConfigurationAllowed.WaitOne(0)) {
+                    System.Diagnostics.Debug.WriteLine("->FetchAndApplyRemoteConfiguration:in progress, exiting");
+                    return;
+                }
+                try {
+                    LogifyAlertRemoteConfiguration configuration = GetRemoteConfiguration();
+                    if (configuration == null)
+                        return;
+
+                    configuration.ApiKey = this.ApiKey; // disallow to overwrite ApiKey by remote config
+                    configuration.AllowRemoteConfiguration = true; // this.AllowRemoteConfiguration; // disallow to switch off remote config
+                    Configure(configuration);
+
+                    //System.Diagnostics.Debug.WriteLine("->FetchAndApplyRemoteConfiguration");
+                    //wait.WaitOne(20000);
+                }
+                finally {
+                    remoteConfigurationAllowed.Set();
+                }
+            }
+            catch {
+            }
+        }
+
+        LogifyAlertRemoteConfiguration GetRemoteConfiguration() {
+            IExceptionReportSender sender = CreateEmptyPlatformExceptionReportSender();
+            if (sender == null)
+                return null;
+
+            IRemoteConfigurationProvider provider = sender as IRemoteConfigurationProvider;
+            if (provider == null)
+                return null;
+
+            return provider.GetConfiguration(this.ServiceUrl, this.ApiKey);
+        }
     }
 
 
