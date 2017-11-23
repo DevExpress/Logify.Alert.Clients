@@ -84,12 +84,16 @@ namespace DevExpress.Logify.Web {
                 //if(standardCookie != null)
                 //    cookieValue = standardCookie.Value;
                 //if(string.IsNullOrEmpty(cookieValue)) {
-                HttpCookie logifyCookie = request.Cookies[CookieName];
-                if(logifyCookie != null) {
-                    cookieValue = logifyCookie.Value;
+                HttpCookie cookie = request.Cookies[CookieName];
+                if(cookie != null) {
+                    Guid validGuid = Guid.Empty;
+                    if(Guid.TryParse(cookie.Value, out validGuid))
+                        cookieValue = cookie.Value;
                 } else {
                     cookieValue = Guid.NewGuid().ToString();
-                    response.Cookies.Add(new HttpCookie(CookieName, cookieValue));
+                    cookie = new HttpCookie(CookieName, cookieValue);
+                    cookie.HttpOnly = true;
+                    response.Cookies.Add(cookie);
                 }
                 //}
             } catch { }

@@ -69,10 +69,12 @@ namespace DevExpress.Logify.Web {
         string TryGetSessionId(HttpContext context) {
             string cookieValue = null;
             try {
-                cookieValue = context.Request.Cookies[CookieName];
+                Guid validGuid = Guid.Empty;
+                if(Guid.TryParse(context.Request.Cookies[CookieName], out validGuid))
+                    cookieValue = context.Request.Cookies[CookieName];
                 if(string.IsNullOrEmpty(cookieValue)) {
                     cookieValue = Guid.NewGuid().ToString();
-                    context.Response.Cookies.Append(CookieName, cookieValue);
+                    context.Response.Cookies.Append(CookieName, cookieValue, new CookieOptions() { HttpOnly = true });
                 }
             } catch { }
             return cookieValue;
