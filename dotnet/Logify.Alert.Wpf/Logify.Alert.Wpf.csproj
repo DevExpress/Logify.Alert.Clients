@@ -84,57 +84,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Logify.Alert.Core\Collectors\AppDomainCollector.cs">
-      <Link>Collectors\AppDomainCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\ApplicationCollector.cs">
-      <Link>Collectors\ApplicationCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\AssemblyCollector.cs">
-      <Link>Collectors\AssemblyCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\AttachmentsCollector.cs">
-      <Link>Collectors\AttachmentsCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\CompositeInfoCollector.cs">
-      <Link>Collectors\CompositeInfoCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\CultureCollector.cs">
-      <Link>Collectors\CultureCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\DesktopEnvironmentCollector.cs">
-      <Link>Collectors\DesktopEnvironmentCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\DisplayCollector.cs">
-      <Link>Collectors\DisplayCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\EnvironmentCollector.cs">
-      <Link>Collectors\EnvironmentCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\ExceptionObjectCollector.cs">
-      <Link>Collectors\ExceptionObjectCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\FrameworkVersionsCollector.cs">
-      <Link>Collectors\FrameworkVersionsCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\GuiResourcesCollector.cs">
-      <Link>Collectors\GuiResourcesCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\MemoryCollector.cs">
-      <Link>Collectors\MemoryCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\MiniDumpCollector.cs">
-      <Link>Collectors\MiniDumpCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\OperatingSystemCollector.cs">
-      <Link>Collectors\OperatingSystemCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\ScreenShotCollector.cs">
-      <Link>Collectors\ScreenShotCollector.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Collectors\VirtualMachineCollector.cs">
-      <Link>Collectors\VirtualMachineCollector.cs</Link>
-    </Compile>
     <Compile Include="..\Logify.Alert.Core\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
@@ -161,24 +110,6 @@
     </Compile>
     <Compile Include="..\Logify.Alert.Core\StackTraceHelper.cs">
       <Link>StackTraceHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Tests\Collectors\BreadcrumbsCollectorTests.cs">
-      <Link>Tests\Collectors\BreadcrumbsCollectorTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Tests\Collectors\CultureCollectorTests.cs">
-      <Link>Tests\Collectors\CultureCollectorTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Tests\Collectors\DesktopEnvironmentCollectorTests.cs">
-      <Link>Tests\Collectors\DesktopEnvironmentCollectorTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Tests\Collectors\OperatingSystemCollectorTests.cs">
-      <Link>Tests\Collectors\OperatingSystemCollectorTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Tests\JsonLiteTests.cs">
-      <Link>Tests\JsonLiteTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Logify.Alert.Core\Tests\Logger\JsonTextWriterLoggerTests.cs">
-      <Link>Tests\Logger\JsonTextWriterLoggerTests.cs</Link>
     </Compile>
     <Compile Include="..\Logify.Alert.Core\TraceListenerBase.cs">
       <Link>TraceListenerBase.cs</Link>

@@ -128,7 +128,7 @@ namespace DevExpress.Logify.Core.Internal {
             }
         }
 
-        internal static string NormalizeStackTrace(string stackTrace) {
+        public static string NormalizeStackTrace(string stackTrace) {
             if (String.IsNullOrEmpty(stackTrace))
                 return String.Empty;
             string[] frames = stackTrace.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);

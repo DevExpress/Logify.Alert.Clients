@@ -12,9 +12,6 @@
     <AssemblyName>Logify.Alert.Core</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug40|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +22,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <TargetFrameworkProfile>Profile328</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release40|AnyCPU' ">
@@ -36,9 +32,23 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <TargetFrameworkProfile>Profile328</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility" />
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
@@ -54,7 +64,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug45|AnyCPU'">
@@ -66,7 +75,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -74,13 +82,31 @@
     <Compile Include="Attachment.cs" />
     <Compile Include="Breadcrumbs.cs" />
     <Compile Include="BreadcrumbsRecorderBase.cs" />
+    <Compile Include="Collectors\AppDomainCollector.cs" />
+    <Compile Include="Collectors\ApplicationCollector.cs" />
+    <Compile Include="Collectors\AssemblyCollector.cs" />
+    <Compile Include="Collectors\AttachmentsCollector.cs" />
     <Compile Include="Collectors\BreadcrumbsCollector.cs" />
+    <Compile Include="Collectors\CompositeInfoCollector.cs" />
+    <Compile Include="Collectors\CultureCollector.cs" />
     <Compile Include="Collectors\CustomDataCollector.cs" />
+    <Compile Include="Collectors\DesktopEnvironmentCollector.cs" />
     <Compile Include="Collectors\DevelopementPlatformCollector.cs" />
     <Compile Include="Collectors\DebuggerCollector.cs" />
+    <Compile Include="Collectors\DevExpressVersionsInStackCollector.cs" />
+    <Compile Include="Collectors\DisplayCollector.cs" />
+    <Compile Include="Collectors\EnvironmentCollector.cs" />
+    <Compile Include="Collectors\ExceptionObjectCollector.cs" />
+    <Compile Include="Collectors\FrameworkVersionsCollector.cs" />
+    <Compile Include="Collectors\GuiResourcesCollector.cs" />
     <Compile Include="Collectors\LogifyAppInfoCollector.cs" />
     <Compile Include="Collectors\LogifyProtocolVersionCollectior.cs" />
     <Compile Include="Collectors\LogifyReportGenerationDateTimeCollector.cs" />
+    <Compile Include="Collectors\MemoryCollector.cs" />
+    <Compile Include="Collectors\MiniDumpCollector.cs" />
+    <Compile Include="Collectors\OperatingSystemCollector.cs" />
+    <Compile Include="Collectors\ScreenShotCollector.cs" />
+    <Compile Include="Collectors\VirtualMachineCollector.cs" />
     <Compile Include="Configuration\ClientConfiguration.cs" />
     <Compile Include="crc32.cs" />
     <Compile Include="ExceptionLogger.cs" />
@@ -102,12 +128,19 @@
     <Compile Include="ReportSender\ExceptionReportSenderSkeleton.cs" />
     <Compile Include="Collectors\IInfoCollector.cs" />
     <Compile Include="Collectors\InfoCollectorFactory.cs" />
+    <Compile Include="Tests\Collectors\AttachmentsCollectorTests.cs" />
+    <Compile Include="Tests\Collectors\BreadcrumbsCollectorTests.cs" />
+    <Compile Include="Tests\Collectors\CultureCollectorTests.cs" />
+    <Compile Include="Tests\Collectors\DesktopEnvironmentCollectorTests.cs" />
+    <Compile Include="Tests\Collectors\OperatingSystemCollectorTests.cs" />
+    <Compile Include="Tests\JsonLiteTests.cs" />
+    <Compile Include="Tests\Logger\JsonTextWriterLoggerTests.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Tests\Collectors\" />
-    <Folder Include="Tests\Logger\" />
+    <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
