@@ -11,6 +11,18 @@
     <apiKey value="YOUR_API_KEY" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <appName value="YOUR_APP_NAME" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <version value="YOUR_APP_VERSION" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <confirmSend value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <offlineReportsEnabled value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <offlineReportsDirectory value="offlineReports" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <offlineReportsCount value="10" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <collectMiniDump value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <collectBreadcrumbs value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <breadcrumbsMaxCount value="500" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <ignoreFormFields value="" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <ignoreHeaders value="" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <ignoreCookies value="" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <ignoreServerVariables value="" xdt:Transform="Remove" xdt:Locator="Match(value)" />
+    <ignoreRequestBody value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <customData>
       <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" xdt:Transform="Remove" xdt:Locator="Match(key)" />
     </customData>
