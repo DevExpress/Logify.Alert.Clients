@@ -3,21 +3,21 @@ using System.Configuration;
 
 namespace DevExpress.Logify {
     internal class WebLogifyConfigSection : LogifyConfigSection {
-        [ConfigurationProperty("version")]
+        [ConfigurationProperty("version", IsRequired = false)]
         public ClientValueElement Version { get { return (ClientValueElement)base["version"]; } }
 
-        [ConfigurationProperty("appName")]
+        [ConfigurationProperty("appName", IsRequired = false)]
         public ClientValueElement AppName { get { return (ClientValueElement)base["appName"]; } }
 
-        [ConfigurationProperty("ignoreFormFields")]
+        [ConfigurationProperty("ignoreFormFields", IsRequired = false)]
         public ClientValueElement IgnoreFormFields { get { return (ClientValueElement)base["ignoreFormFields"]; } }
-        [ConfigurationProperty("ignoreHeaders")]
+        [ConfigurationProperty("ignoreHeaders", IsRequired = false)]
         public ClientValueElement IgnoreHeaders { get { return (ClientValueElement)base["ignoreHeaders"]; } }
-        [ConfigurationProperty("ignoreCookies")]
+        [ConfigurationProperty("ignoreCookies", IsRequired = false)]
         public ClientValueElement IgnoreCookies { get { return (ClientValueElement)base["ignoreCookies"]; } }
-        [ConfigurationProperty("ignoreServerVariables")]
+        [ConfigurationProperty("ignoreServerVariables", IsRequired = false)]
         public ClientValueElement IgnoreServerVariables { get { return (ClientValueElement)base["ignoreServerVariables"]; } }
-        [ConfigurationProperty("ignoreRequestBody")]
+        [ConfigurationProperty("ignoreRequestBody", IsRequired = false)]
         public ClientValueElement IgnoreRequestBody { get { return (ClientValueElement)base["ignoreRequestBody"]; } }
     }
 }
