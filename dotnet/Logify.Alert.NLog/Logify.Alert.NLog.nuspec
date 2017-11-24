@@ -8,7 +8,7 @@
     <owners>$author$</owners>
     <licenseUrl>https://logify.devexpress.com/Terms</licenseUrl>
     <projectUrl>https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.NLog</projectUrl>
-    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <iconUrl>https://secure.gravatar.com/avatar/abb60c275d6f175df3393a6369988c3a?s=128&amp;r=g</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
