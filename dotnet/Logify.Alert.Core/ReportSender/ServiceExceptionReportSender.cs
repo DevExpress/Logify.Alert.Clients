@@ -20,8 +20,12 @@ namespace DevExpress.Logify.Core {
         public Thread Thread { get; set; }
         public bool SendComplete { get; set; }
         public bool SendResult { get; set; }
+    }
+}
 
-        internal static BackgroundSendModel SendReportInBackgroundThread(Func<bool> sendAction) {
+namespace DevExpress.Logify.Core.Internal {
+    public class BackgroundSendModelAccessor {
+        public static BackgroundSendModel SendReportInBackgroundThread(Func<bool> sendAction) {
             Thread thread = new Thread(BackgroundSend);
             BackgroundSendModel sendModel = new BackgroundSendModel();
             sendModel.SendAction = sendAction;
@@ -29,7 +33,6 @@ namespace DevExpress.Logify.Core {
             thread.Start(sendModel);
             return sendModel;
         }
-
         static void BackgroundSend(object obj) {
             BackgroundSendModel model = obj as BackgroundSendModel;
             if (model == null)
@@ -44,14 +47,12 @@ namespace DevExpress.Logify.Core {
 
                 model.SendResult = model.SendAction();
                 //model.SendComplete = true;
-            } finally {
+            }
+            finally {
                 model.SendComplete = true;
             }
         }
     }
-}
-
-namespace DevExpress.Logify.Core.Internal {
     public abstract class ServiceExceptionReportSender : ExceptionReportSenderSkeleton, IRemoteConfigurationProvider {
         protected override bool SendExceptionReportCore(LogifyClientExceptionReport report) {
             return SendViaHttpWebRequest(report);

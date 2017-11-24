@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.Logify.Core;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Win {
     public partial class ConfirmReportSendForm : Form {
@@ -38,7 +39,7 @@ namespace DevExpress.Logify.Win {
 
                 Model.Comments = txtComments.Text;
 
-                BackgroundSendModel sendModel = BackgroundSendModel.SendReportInBackgroundThread(Model.SendReport);
+                BackgroundSendModel sendModel = BackgroundSendModelAccessor.SendReportInBackgroundThread(Model.SendReport);
 
                 ReportSendProgressForm progressForm = new ReportSendProgressForm(sendModel);
                 DialogResult result = progressForm.ShowDialog(this);

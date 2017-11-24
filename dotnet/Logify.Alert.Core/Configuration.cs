@@ -99,7 +99,7 @@ namespace DevExpress.Logify.Core.Internal {
             LogifyConfigSection section = config.GetSection("logifyAlert") as LogifyConfigSection;
             LogifyClientAccessor.Configure(client, LoadCommonConfiguration(section));
         }
-        internal static LogifyAlertConfiguration LoadCommonConfiguration(LogifyConfigSection section) {
+        public static LogifyAlertConfiguration LoadCommonConfiguration(LogifyConfigSection section) {
             LogifyAlertConfiguration config = new LogifyAlertConfiguration();
             if (section == null)
                 return config;

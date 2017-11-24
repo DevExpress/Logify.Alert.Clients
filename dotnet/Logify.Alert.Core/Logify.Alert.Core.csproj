@@ -107,6 +107,7 @@
     <Compile Include="Collectors\OperatingSystemCollector.cs" />
     <Compile Include="Collectors\ScreenShotCollector.cs" />
     <Compile Include="Collectors\VirtualMachineCollector.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Configuration\ClientConfiguration.cs" />
     <Compile Include="crc32.cs" />
     <Compile Include="ExceptionLogger.cs" />
@@ -123,11 +124,19 @@
     <Compile Include="ReportSender\BackgroundExceptionReportSender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ReportSender\BackgroundThreadExceptionReportSender.cs" />
     <Compile Include="ReportSender\CompositeExceptionReportSender.cs" />
+    <Compile Include="ReportSender\ExternalProcessReportSender.cs" />
+    <Compile Include="ReportSender\FileExceptionReportSender.cs" />
     <Compile Include="ReportSender\IExceptionReportSender.cs" />
     <Compile Include="ReportSender\ExceptionReportSenderSkeleton.cs" />
     <Compile Include="Collectors\IInfoCollector.cs" />
     <Compile Include="Collectors\InfoCollectorFactory.cs" />
+    <Compile Include="ReportSender\SavedExceptionReportSender.cs" />
+    <Compile Include="ReportSender\ServiceExceptionReportSender.cs" />
+    <Compile Include="ReportSender\TempDirectoryExceptionReportSender.cs" />
+    <Compile Include="StackBasedIgnoreDetection.cs" />
+    <Compile Include="StackTraceHelper.cs" />
     <Compile Include="Tests\Collectors\AttachmentsCollectorTests.cs" />
     <Compile Include="Tests\Collectors\BreadcrumbsCollectorTests.cs" />
     <Compile Include="Tests\Collectors\CultureCollectorTests.cs" />
@@ -135,6 +144,7 @@
     <Compile Include="Tests\Collectors\OperatingSystemCollectorTests.cs" />
     <Compile Include="Tests\JsonLiteTests.cs" />
     <Compile Include="Tests\Logger\JsonTextWriterLoggerTests.cs" />
+    <Compile Include="TraceListenerBase.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

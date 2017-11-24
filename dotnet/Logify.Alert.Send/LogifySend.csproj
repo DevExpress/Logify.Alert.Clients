@@ -68,9 +68,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Logify.Alert.Core\ReportSender\ServiceExceptionReportSender.cs">
-      <Link>ReportSender\ServiceExceptionReportSender.cs</Link>
-    </Compile>
     <Compile Include="CheckSumStream.cs" />
     <Compile Include="MiniDumpSender\MiniDumpSender.cs" />
     <Compile Include="Program.cs" />

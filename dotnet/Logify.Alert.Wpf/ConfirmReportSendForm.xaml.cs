@@ -1,4 +1,5 @@
 ﻿using DevExpress.Logify.Core;
+using DevExpress.Logify.Core.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace DevExpress.Logify.WPF {
                     return;
 
                 Model.Comments = txtComments.Text;
-                BackgroundSendModel sendModel = BackgroundSendModel.SendReportInBackgroundThread(Model.SendReport);
+                BackgroundSendModel sendModel = BackgroundSendModelAccessor.SendReportInBackgroundThread(Model.SendReport);
 
                 ReportSendProgressForm progressForm = new ReportSendProgressForm(sendModel);
                 progressForm.Owner = this;
