@@ -45,11 +45,7 @@ gulp.task('convert-for-release', ['clean-for-release'], function () {
 gulp.task('remove-test-file', ['convert-for-release'], function () {
     return del(['./bundle/src/testApp.js']);
 });
-gulp.task('copy-package', ['remove-test-file'], function () {
-    return gulp.src('./package.json')
-        .pipe(gulp.dest('./bundle'));
-});
-gulp.task('prepare-release', ['copy-package'], function () {
-    return gulp.src('./README.md')
+gulp.task('prepare-release', ['remove-test-file'], function () {
+    return gulp.src(['./package.json', './LICENSE', './README.md'])
         .pipe(gulp.dest('./bundle'));
 });
