@@ -28,7 +28,7 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(false, client.CollectMiniDump);
             Assert.AreEqual(false, client.CollectBreadcrumbs);
             //Assert.AreEqual(null, client.MiniDumpServiceUrl);
-            Assert.AreEqual("https://logify.devexpress.com/api/report/", client.ServiceUrl);
+            Assert.AreEqual("https://logify.devexpress.com", client.ServiceUrl);
             Assert.AreEqual(null, client.UserId);
             Assert.AreEqual(true, client.CustomData != null);
             Assert.AreEqual(0, client.CustomData.Count);
@@ -67,7 +67,7 @@ namespace DevExpress.Logify.Core.Tests {
         }
         [Test]
         public void ServiceUrl() {
-            Assert.AreEqual("https://logify.devexpress.com/api/report/", client.ServiceUrl);
+            Assert.AreEqual("https://logify.devexpress.com", client.ServiceUrl);
             client.ServiceUrl = "<my-service>";
             Assert.AreEqual("<my-service>", client.ServiceUrl);
             Predicate<IExceptionReportSender> predicate = (s) => {

@@ -18,7 +18,6 @@ namespace DevExpress.Logify.Core.Internal {
         //public virtual string MiniDumpServiceUrl { get; set; }
 
         protected ExceptionReportSenderSkeleton() {
-            //this.ServiceUrl = "http://172.22.6.206:5001/api/report/";
             this.RetryCount = 3;
             this.ReportTimeoutMilliseconds = 5000;
         }

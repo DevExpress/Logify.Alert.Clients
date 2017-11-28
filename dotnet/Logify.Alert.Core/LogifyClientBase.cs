@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace DevExpress.Logify.Core {
     public abstract class LogifyClientBase {
-        string serviceUrl = "https://logify.devexpress.com/api/report/";
+        string serviceUrl = "https://logify.devexpress.com";
         string apiKey;
         bool confirmSendReport;
         //string miniDumpServiceUrl;
@@ -398,7 +398,7 @@ namespace DevExpress.Logify.Core {
             }*/
             string[] info = GetServiceInfo(asm);
             if (info != null && info.Length == 2) {
-                this.ServiceUrl = info[0]; // "http://logify.devexpress.com/api/report/";
+                this.ServiceUrl = info[0]; // "http://logify.devexpress.com";
                 this.ApiKey = info[1]; // "12345678FEE1DEADBEEF4B1DBABEFACE";
                 //if (this.ServiceUrl.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase)) {
                 if (CultureInfo.InvariantCulture.CompareInfo.IsPrefix(this.ServiceUrl, "http://", CompareOptions.IgnoreCase)) {
@@ -449,7 +449,7 @@ namespace DevExpress.Logify.Core {
 #endif
 
             if (password == "b88d1754d700e49a")
-                return new string[] { "https://logify.devexpress.com/api/report/", "12345678FEE1DEADBEEF4B1DBABEFACE" };
+                return new string[] { "https://logify.devexpress.com", "12345678FEE1DEADBEEF4B1DBABEFACE" };
 
             return new string[2];
         }

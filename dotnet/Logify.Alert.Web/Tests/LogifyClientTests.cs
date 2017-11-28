@@ -25,7 +25,7 @@ namespace DevExpress.Logify.Core.Tests {
             Assert.AreEqual(null, client.AppVersion);
             Assert.AreEqual(false, client.ConfirmSendReport);
             //Assert.AreEqual(null, client.MiniDumpServiceUrl);
-            Assert.AreEqual("https://logify.devexpress.com/api/report/", client.ServiceUrl);
+            Assert.AreEqual("https://logify.devexpress.com", client.ServiceUrl);
             Assert.AreEqual(null, client.UserId);
             Assert.AreEqual(null, client.ProxyCredentials);
             Assert.AreEqual(true, client.CustomData != null);
@@ -69,7 +69,7 @@ namespace DevExpress.Logify.Core.Tests {
         }
         [Test]
         public void ServiceUrl() {
-            Assert.AreEqual("https://logify.devexpress.com/api/report/", client.ServiceUrl);
+            Assert.AreEqual("https://logify.devexpress.com", client.ServiceUrl);
             client.ServiceUrl = "<my-service>";
             Assert.AreEqual("<my-service>", client.ServiceUrl);
             Predicate<IExceptionReportSender> predicate = (s) => {

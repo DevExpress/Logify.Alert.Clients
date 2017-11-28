@@ -22,13 +22,13 @@ namespace DevExpress.Logify.Core.Tests {
             client.ReportToDevExpress("myLog", "exception.log", GetType().Assembly);
 
             Assert.AreEqual("12345678FEE1DEADBEEF4B1DBABEFACE", client.ApiKey);
-            Assert.AreEqual("https://logify.devexpress.com/api/report/", client.ServiceUrl);
+            Assert.AreEqual("https://logify.devexpress.com", client.ServiceUrl);
             CheckReportToDevExpressFileNameSpecified(ExceptionLoggerFactory.Instance.PlatformReportSender);
             CheckReportToDevExpressFileNameSpecified(ExceptionLoggerFactory.Instance.PlatformReportSender.Clone());
         }
         void CheckReportToDevExpressFileNameSpecified(IExceptionReportSender rootSender) {
             const string apiKey = "12345678FEE1DEADBEEF4B1DBABEFACE";
-            const string serviceUrl = "https://logify.devexpress.com/api/report/";
+            const string serviceUrl = "https://logify.devexpress.com";
             EmptyBackgroundExceptionReportSender root = rootSender as EmptyBackgroundExceptionReportSender;
             Assert.AreEqual(true, root != null);
             Assert.AreEqual(apiKey, root.ApiKey);
