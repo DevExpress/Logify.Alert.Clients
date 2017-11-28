@@ -15,7 +15,7 @@ namespace DevExpress.Logify.Core.Internal {
                 int count = pairs.Length;
                 for (int i = 0; i < count; i++) {
                     if (!ShouldIgnorePair(pairs[i], ignoreFormFields)) {
-                        if (i > 0)
+                        if (result.Length > 0)
                             result.Append('&');
                         result.Append(pairs[i]);
                     }
