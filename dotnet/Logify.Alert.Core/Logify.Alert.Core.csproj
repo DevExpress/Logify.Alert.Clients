@@ -107,7 +107,7 @@
     <Compile Include="Collectors\OperatingSystemCollector.cs" />
     <Compile Include="Collectors\ScreenShotCollector.cs" />
     <Compile Include="Collectors\VirtualMachineCollector.cs" />
-    <Compile Include="Configuration.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\ClientConfiguration.cs" />
     <Compile Include="Utils\crc32.cs" />
     <Compile Include="ExceptionLogger.cs" />

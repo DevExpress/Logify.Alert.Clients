@@ -1,10 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace DevExpress.Logify.Core.Internal {
     public class StackTraceHelper : IStackTraceHelper {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public string GetOuterStackTrace(int skipFrames) {
             try {
                 StackTrace trace = new StackTrace(skipFrames + 1, true); // remove GetOuterStackTrace call from stack trace
@@ -14,6 +16,7 @@ namespace DevExpress.Logify.Core.Internal {
                 return String.Empty;
             }
         }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public string GetOuterNormalizedStackTrace(int skipFrames) {
             CultureInfo prevCulture = Thread.CurrentThread.CurrentCulture;
             CultureInfo prevUICulture = Thread.CurrentThread.CurrentUICulture;

@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 //using System.Security.Cryptography;
@@ -483,18 +484,21 @@ namespace DevExpress.Logify.Core {
             return Encoding.UTF8.GetString(bytes).Split('$');
         }
         */
+        [MethodImpl(MethodImplOptions.NoInlining)]
         string GetOuterStackTrace(int skipFrames) {
             if (stackTraceHelper != null)
                 return stackTraceHelper.GetOuterStackTrace(skipFrames + 1); // remove GetOuterStackTrace call from stack trace
             else
                 return String.Empty;
         }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         string GetOuterNormalizedStackTrace(int skipFrames) {
             if (stackTraceHelper != null)
                 return stackTraceHelper.GetOuterNormalizedStackTrace(skipFrames + 1); // remove GetOuterNormalizedStackTrace call from stack trace
             else
                 return String.Empty;
         }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         void AppendOuterStack(Exception ex, int skipFrames) {
             try {
                 if (ex != null && ex.Data != null) {
@@ -519,6 +523,7 @@ namespace DevExpress.Logify.Core {
         }
 
         const int skipFramesForAppendOuterStackRootMethod = 2; // remove from stacktrace Send call and calling method
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void Send(Exception ex) {
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
             try {
@@ -528,6 +533,7 @@ namespace DevExpress.Logify.Core {
                 RemoveOuterStack(ex);
             }
         }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData) {
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
@@ -537,6 +543,7 @@ namespace DevExpress.Logify.Core {
                 RemoveOuterStack(ex);
             }
         }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
@@ -547,6 +554,7 @@ namespace DevExpress.Logify.Core {
             }
         }
 #if ALLOW_ASYNC
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public async Task<bool> SendAsync(Exception ex) {
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
@@ -556,6 +564,7 @@ namespace DevExpress.Logify.Core {
                 RemoveOuterStack(ex);
             }
         }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData) {
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
@@ -565,6 +574,7 @@ namespace DevExpress.Logify.Core {
                 RemoveOuterStack(ex);
             }
         }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
@@ -781,7 +791,9 @@ namespace DevExpress.Logify.Core.Internal {
     }
 
     public interface IStackTraceHelper {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         string GetOuterStackTrace(int skipFrames);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         string GetOuterNormalizedStackTrace(int skipFrames);
     }
     public static class OuterStackKeys {

@@ -78,6 +78,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Collectors\ConsoleApplicationCollector.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="LogifyClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportSender\ReportSender.cs" />

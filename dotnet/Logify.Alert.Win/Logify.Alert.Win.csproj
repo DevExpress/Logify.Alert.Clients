@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="BreadcrumbsRecorder.cs" />
     <Compile Include="Collectors\WinFormsApplicationCollector.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="ConfirmReportSend.cs">
       <SubType>Form</SubType>
     </Compile>

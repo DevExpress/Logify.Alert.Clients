@@ -2,7 +2,7 @@
 using System.Configuration;
 
 namespace DevExpress.Logify {
-    internal class WebLogifyConfigSection : LogifyConfigSection {
+    internal class WebLogifyConfigSection : LogifyConfigSectionBase {
         [ConfigurationProperty("version", IsRequired = false)]
         public ClientValueElement Version { get { return (ClientValueElement)base["version"]; } }
 

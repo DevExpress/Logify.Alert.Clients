@@ -21,7 +21,7 @@ using System;
 using System.Configuration;
 
 namespace DevExpress.Logify {
-    public class LogifyConfigSection : ConfigurationSection {
+    public class LogifyConfigSectionBase : ConfigurationSection {
         [ConfigurationProperty("serviceUrl", IsRequired = false)]
         public ClientValueElement ServiceUrl { get { return (ClientValueElement)base["serviceUrl"]; } }
 
@@ -96,10 +96,10 @@ namespace DevExpress.Logify.Core.Internal {
             map.ExeConfigFilename = configFileName;
 
             Configuration config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-            LogifyConfigSection section = config.GetSection("logifyAlert") as LogifyConfigSection;
+            LogifyConfigSectionBase section = config.GetSection("logifyAlert") as LogifyConfigSectionBase;
             LogifyClientAccessor.Configure(client, LoadCommonConfiguration(section));
         }
-        public static LogifyAlertConfiguration LoadCommonConfiguration(LogifyConfigSection section) {
+        public static LogifyAlertConfiguration LoadCommonConfiguration(LogifyConfigSectionBase section) {
             LogifyAlertConfiguration config = new LogifyAlertConfiguration();
             if (section == null)
                 return config;

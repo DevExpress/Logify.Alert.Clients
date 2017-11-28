@@ -91,6 +91,7 @@
     <Compile Include="Collectors\TaskShedulerCollector.cs" />
     <Compile Include="Collectors\WPFCollector.cs" />
     <Compile Include="Collectors\WPFEnvironmentCollector.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="ConfirmReportSendForm.xaml.cs">
       <DependentUpon>ConfirmReportSendForm.xaml</DependentUpon>
     </Compile>
