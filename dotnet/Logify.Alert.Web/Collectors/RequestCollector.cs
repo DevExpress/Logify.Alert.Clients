@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 using System.Web;
-
-using DevExpress.Logify.Core;
-using System.Collections.Generic;
 
 namespace DevExpress.Logify.Core.Internal {
     class RequestCollector : IInfoCollector {
@@ -39,7 +33,8 @@ namespace DevExpress.Logify.Core.Internal {
                 this.SerializeContentInfo();
                 this.SerializeFileInfo();
                 Utils.SerializeCookieInfo(request.Cookies, this.ignoreCookies, logger);
-                Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
+                if (!ignoreRequestBody)
+                    Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
                 Utils.SerializeInfo(request.Headers, "headers", this.ignoreHeaders, logger);
                 Utils.SerializeInfo(request.ServerVariables, "serverVariables", this.ignoreServerVariables, logger);
                 Utils.SerializeInfo(request.QueryString, "queryString", null, logger);
@@ -47,8 +42,12 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.WriteValue("httpMethod", request.HttpMethod);
                 if (!ignoreRequestBody) {
                     try {
-                        if (request.InputStream != null && request.InputStream.CanRead)
-                            logger.WriteValue("httpRequestBody", (new System.IO.StreamReader(request.InputStream)).ReadToEnd());
+                        if (request.InputStream != null && request.InputStream.CanRead) {
+                            string content = new System.IO.StreamReader(request.InputStream).ReadToEnd();
+                            if (this.ignoreFormFields.IsConfigured)
+                                content = RequestBodyFilter.FilterRequestBody(content, this.ignoreFormFields);
+                            logger.WriteValue("httpRequestBody", content);
+                        }
                     }
                     catch { }
                 }

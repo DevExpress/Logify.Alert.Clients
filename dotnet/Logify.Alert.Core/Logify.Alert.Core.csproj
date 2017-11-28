@@ -109,12 +109,12 @@
     <Compile Include="Collectors\VirtualMachineCollector.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Configuration\ClientConfiguration.cs" />
-    <Compile Include="crc32.cs" />
+    <Compile Include="Utils\crc32.cs" />
     <Compile Include="ExceptionLogger.cs" />
     <Compile Include="ExceptionLoggerFactory.cs" />
-    <Compile Include="FastCharacterMultiReplacement.cs" />
+    <Compile Include="Utils\FastCharacterMultiReplacement.cs" />
     <Compile Include="IgnoreProperties.cs" />
-    <Compile Include="JsonLite.cs" />
+    <Compile Include="Utils\JsonLite.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\JsonTextWriterLogger.cs" />
     <Compile Include="LogifyClientBase.cs" />
@@ -135,7 +135,8 @@
     <Compile Include="ReportSender\SavedExceptionReportSender.cs" />
     <Compile Include="ReportSender\ServiceExceptionReportSender.cs" />
     <Compile Include="ReportSender\TempDirectoryExceptionReportSender.cs" />
-    <Compile Include="StackBasedIgnoreDetection.cs" />
+    <Compile Include="Utils\RequestBodyFilter.cs" />
+    <Compile Include="Utils\StackBasedIgnoreDetection.cs" />
     <Compile Include="StackTraceHelper.cs" />
     <Compile Include="Tests\Collectors\AttachmentsCollectorTests.cs" />
     <Compile Include="Tests\Collectors\BreadcrumbsCollectorTests.cs" />

@@ -10,6 +10,16 @@ namespace DevExpress.Logify.Core.Internal {
         public List<string> IgnoreNamesEndsWith { get; set; }
         public List<string> IgnoreNamesContains { get; set; }
 
+        public bool IsConfigured {
+            get {
+                return IgnoreAll == true ||
+                    (IgnoreNamesExact != null && IgnoreNamesExact.Count > 0) ||
+                    (IgnoreNamesStartsWith != null && IgnoreNamesStartsWith.Count > 0) ||
+                    (IgnoreNamesEndsWith != null && IgnoreNamesEndsWith.Count > 0) ||
+                    (IgnoreNamesContains != null && IgnoreNamesContains.Count > 0);
+            }
+        }
+
         public bool ShouldIgnore(string name) {
             if (IgnoreAll)
                 return true;

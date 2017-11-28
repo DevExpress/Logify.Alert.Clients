@@ -38,7 +38,8 @@ namespace DevExpress.Logify.Core.Internal {
                 this.SerializeFileInfo();
                 Utils.SerializeCookieInfo(request.Cookies, this.ignoreCookies, logger);
                 try {
-                    Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
+                    if (!ignoreRequestBody)
+                        Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
                 }
                 catch {
                 }
@@ -53,6 +54,8 @@ namespace DevExpress.Logify.Core.Internal {
                             string content;
                             using (var reader = new System.IO.StreamReader(request.Body))
                                 content = reader.ReadToEnd();
+                            if (this.ignoreFormFields.IsConfigured)
+                                content = RequestBodyFilter.FilterRequestBody(content, this.ignoreFormFields);
                             logger.WriteValue("httpRequestBody", content);
                         }
                     }
