@@ -8,7 +8,7 @@ namespace DevExpress.Logify.Core.Internal {
         public static string ValueStripped { get { return "stripped_by_logify_client"; } }
 
         public static string GetRequestContent(string method, string contentType, Stream contentStream, Dictionary<string, string> ignoredFormFields) {
-            if (contentStream == null || !contentStream.CanRead)
+            if (contentStream == null)
                 return null;
 
             if (String.Compare(method, "GET", StringComparison.InvariantCultureIgnoreCase) == 0)
@@ -16,7 +16,12 @@ namespace DevExpress.Logify.Core.Internal {
             if (!String.IsNullOrEmpty(contentType) && contentType.IndexOf("application/x-www-form-urlencoded", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 return null;
 
+            if (!contentStream.CanRead || !contentStream.CanSeek)
+                return null;
+
+            long position = contentStream.Position;
             string content = new StreamReader(contentStream).ReadToEnd();
+            contentStream.Seek(position, SeekOrigin.Begin);
             if (!String.IsNullOrEmpty(contentType) && contentType.IndexOf("multipart/form-data", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 return FilterMultiPartFormDataRequestBody(content, ignoredFormFields);
 
