@@ -12,7 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace DevExpress.Logify.WPF {
+namespace DevExpress.Logify.Core.Internal {
     public class WPFBreadcrumbsRecorder: BreadcrumbsRecorderBase {
         static WPFBreadcrumbsRecorder instance = null;
         public static WPFBreadcrumbsRecorder Instance {

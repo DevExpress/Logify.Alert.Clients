@@ -1,7 +1,6 @@
 ﻿using System;
-using DevExpress.Logify.Core.Internal;
 
-namespace DevExpress.Logify.Core {
+namespace DevExpress.Logify.Core.Internal {
     public abstract class BreadcrumbsRecorderBase {
         protected void AddBreadcrumb(Breadcrumb item) {
             if(LogifyClientBase.Instance != null) {

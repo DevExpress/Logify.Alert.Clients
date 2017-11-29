@@ -6,7 +6,7 @@ using System.Web;
 using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     public class AspBreadcrumbsRecorder : BreadcrumbsRecorderBase {
         static volatile AspBreadcrumbsRecorder instance = null;
         public static AspBreadcrumbsRecorder Instance {
