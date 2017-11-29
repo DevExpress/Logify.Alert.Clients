@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using DevExpress.Logify.Core.Internal;
 
 namespace DevExpress.Logify.Web {
     public class AspExceptionHandler : HttpModuleBase {

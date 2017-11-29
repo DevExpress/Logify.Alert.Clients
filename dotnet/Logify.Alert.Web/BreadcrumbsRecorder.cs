@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using DevExpress.Logify.Core;
-using DevExpress.Logify.Core.Internal;
+using DevExpress.Logify.Web;
 
 namespace DevExpress.Logify.Core.Internal {
     public class AspBreadcrumbsRecorder : BreadcrumbsRecorderBase {

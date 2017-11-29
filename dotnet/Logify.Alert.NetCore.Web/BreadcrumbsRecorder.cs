@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using DevExpress.Logify.Core;
-using DevExpress.Logify.Core.Internal;
+using DevExpress.Logify.Web;
 using Microsoft.AspNetCore.Http;
 
-namespace DevExpress.Logify.Web {
+namespace DevExpress.Logify.Core.Internal {
     public class NetCoreWebBreadcrumbsRecorder : BreadcrumbsRecorderBase {
         static volatile NetCoreWebBreadcrumbsRecorder instance = null;
         public static NetCoreWebBreadcrumbsRecorder Instance {
