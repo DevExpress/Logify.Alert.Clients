@@ -14,17 +14,18 @@ namespace DevExpress.Logify.Core.Internal {
                 try {
                     logger.BeginWriteObject("cookie");
                     foreach (string key in cookies.Keys) {
-                        if (ignoreInfo == null || !ignoreInfo.ShouldIgnore(key)) {
-                            string cookie = cookies[key];
-                            logger.BeginWriteObject(key);
-                            //logger.WriteValue("domain", cookie.Domain);
-                            //logger.WriteValue("expires", cookie.Expires.ToString());
-                            logger.WriteValue("name", key);
-                            //logger.WriteValue("secure", cookie.Secure);
-                            //logger.WriteValue("value", cookie.Value);
+                        string cookie = cookies[key];
+                        logger.BeginWriteObject(key);
+                        //logger.WriteValue("domain", cookie.Domain);
+                        //logger.WriteValue("expires", cookie.Expires.ToString());
+                        logger.WriteValue("name", key);
+                        //logger.WriteValue("secure", cookie.Secure);
+                        //logger.WriteValue("value", cookie.Value);
+                        if (ignoreInfo != null && ignoreInfo.ShouldIgnore(key))
+                            logger.WriteValue("value", RequestBodyFilter.ValueStripped);
+                        else
                             logger.WriteValue("value", cookie);
-                            logger.EndWriteObject(key);
-                        }
+                        logger.EndWriteObject(key);
                     }
                 }
                 finally {
@@ -32,8 +33,8 @@ namespace DevExpress.Logify.Core.Internal {
                 }
             }
         }
-        public static void SerializeInfo(IFormCollection info, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
-            SerializeInfoCore(info, name, ignoreInfo, logger);
+        public static Dictionary<string, string> SerializeInfo(IFormCollection info, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
+            return SerializeInfoCore(info, name, ignoreInfo, logger);
         }
         public static void SerializeInfo(IHeaderDictionary headers, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
             SerializeInfoCore(headers, name, ignoreInfo, logger);
@@ -41,25 +42,33 @@ namespace DevExpress.Logify.Core.Internal {
         public static void SerializeInfo(IQueryCollection query, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
             SerializeInfoCore(query, name, ignoreInfo, logger);
         }
-        static void SerializeInfoCore(IEnumerable<KeyValuePair<string, StringValues>> info, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
+        static Dictionary<string, string> SerializeInfoCore(IEnumerable<KeyValuePair<string, StringValues>> info, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
             if (info == null)
-                return;
+                return null;
 
+            Dictionary<string, string> result = null;
             int written = 0;
             try {
                 foreach (KeyValuePair<string, StringValues> pair in info) {
-                    if (ignoreInfo == null || !ignoreInfo.ShouldIgnore(pair.Key)) {
-                        if (written == 0)
-                            logger.BeginWriteObject(name);
-                        written++;
-                        logger.WriteValue(pair.Key, pair.Value.ToString());
+                    if (written == 0)
+                        logger.BeginWriteObject(name);
+                    written++;
+                    if (ignoreInfo != null && ignoreInfo.ShouldIgnore(pair.Key)) {
+                        if (result == null)
+                            result = new Dictionary<string, string>();
+                        result[pair.Key] = pair.Value.ToString();
+
+                        logger.WriteValue(pair.Key, RequestBodyFilter.ValueStripped);
                     }
+                    else
+                        logger.WriteValue(pair.Key, pair.Value.ToString());
                 }
             }
             finally {
                 if (written > 0)
                     logger.EndWriteObject(name);
             }
+            return result;
         }
         /*
         public static void SerializeInfo(QueryString queryString, string name, ILogger logger) {

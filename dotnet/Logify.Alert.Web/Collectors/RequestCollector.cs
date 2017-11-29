@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web;
 
 namespace DevExpress.Logify.Core.Internal {
@@ -33,8 +34,9 @@ namespace DevExpress.Logify.Core.Internal {
                 this.SerializeContentInfo();
                 this.SerializeFileInfo();
                 Utils.SerializeCookieInfo(request.Cookies, this.ignoreCookies, logger);
+                Dictionary<string, string> ignoredFormFields = null;
                 if (!ignoreRequestBody)
-                    Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
+                    ignoredFormFields = Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
                 Utils.SerializeInfo(request.Headers, "headers", this.ignoreHeaders, logger);
                 Utils.SerializeInfo(request.ServerVariables, "serverVariables", this.ignoreServerVariables, logger);
                 Utils.SerializeInfo(request.QueryString, "queryString", null, logger);
@@ -42,12 +44,9 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.WriteValue("httpMethod", request.HttpMethod);
                 if (!ignoreRequestBody) {
                     try {
-                        if (request.InputStream != null && request.InputStream.CanRead) {
-                            string content = new System.IO.StreamReader(request.InputStream).ReadToEnd();
-                            if (this.ignoreFormFields.IsConfigured)
-                                content = RequestBodyFilter.FilterRequestBody(content, this.ignoreFormFields);
+                        string content = RequestBodyFilter.GetRequestContent(request.RequestType, request.ContentType, request.InputStream, ignoredFormFields);
+                        if (content != null)
                             logger.WriteValue("httpRequestBody", content);
-                        }
                     }
                     catch { }
                 }

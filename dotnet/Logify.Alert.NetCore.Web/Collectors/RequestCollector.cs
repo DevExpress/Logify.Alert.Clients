@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using DevExpress.Logify.Core;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace DevExpress.Logify.Core.Internal {
     class RequestCollector : IInfoCollector {
@@ -37,9 +38,10 @@ namespace DevExpress.Logify.Core.Internal {
                 this.SerializeContentInfo();
                 this.SerializeFileInfo();
                 Utils.SerializeCookieInfo(request.Cookies, this.ignoreCookies, logger);
+                Dictionary<string, string> ignoredFormFields = null;
                 try {
                     if (!ignoreRequestBody)
-                        Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
+                        ignoredFormFields = Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
                 }
                 catch {
                 }
@@ -50,14 +52,9 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.WriteValue("httpMethod", request.Method);
                 if (!ignoreRequestBody) {
                     try {
-                        if (request.Body != null && request.Body.CanRead) {
-                            string content;
-                            using (var reader = new System.IO.StreamReader(request.Body))
-                                content = reader.ReadToEnd();
-                            if (this.ignoreFormFields.IsConfigured)
-                                content = RequestBodyFilter.FilterRequestBody(content, this.ignoreFormFields);
+                        string content = RequestBodyFilter.GetRequestContent(request.Method, request.ContentType, request.Body, ignoredFormFields);
+                        if (content != null)
                             logger.WriteValue("httpRequestBody", content);
-                        }
                     }
                     catch {
                     }
