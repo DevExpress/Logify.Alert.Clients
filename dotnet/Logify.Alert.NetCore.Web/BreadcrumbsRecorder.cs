@@ -34,7 +34,7 @@ namespace DevExpress.Logify.Core.Internal {
                 breadcrumb.Event = BreadcrumbEvent.Request;
                 breadcrumb.CustomData = new Dictionary<string, string>() {
                     { "method", context.Request.Method },
-                    { "url", context.Request.Path.ToString() },
+                    { "url", context.Request.Path.Value },
                     { "status", context.Response.StatusCode.ToString() },
                     { "session", TryGetSessionId(context) }
                 };
@@ -52,7 +52,8 @@ namespace DevExpress.Logify.Core.Internal {
                 b.Event == BreadcrumbEvent.Request &&
                 b.CustomData != null &&
                 b.CustomData["method"] == context.Request.Method &&
-                b.CustomData["url"] == context.Request.Path.ToString()
+                b.CustomData["url"] == context.Request.Path.Value &&
+                b.CustomData["session"] == TryGetSessionId(context)
             ).First();
 
             if(breadcrumb != null)

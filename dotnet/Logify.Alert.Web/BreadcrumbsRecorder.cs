@@ -58,12 +58,17 @@ namespace DevExpress.Logify.Core.Internal {
             if(request == null)
                 return;
 
+            HttpResponse response = httpApplication.Context.Response;
+            if(response == null)
+                return;
+
             Breadcrumb breadcrumb = LogifyAlert.Instance.Breadcrumbs.Where(b =>
                 b.GetIsAuto() &&
                 b.Event == BreadcrumbEvent.Request &&
                 b.CustomData != null &&
                 b.CustomData["method"] == request.HttpMethod &&
-                b.CustomData["url"] == request.Url.ToString()
+                b.CustomData["url"] == request.Url.ToString() &&
+                b.CustomData["session"] == TryGetSessionId(request, response)
             ).First();
 
             if(breadcrumb != null)
