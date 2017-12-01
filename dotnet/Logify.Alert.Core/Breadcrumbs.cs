@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Logify.Core.Internal;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -38,6 +39,7 @@ namespace DevExpress.Logify.Core {
             return result;
         }
 
+        [IgnoreCallTracking]
         internal void AddCore(Breadcrumb item) {
             items[nextIndex] = item;
             nextIndex = (nextIndex + 1) % maxSize;
@@ -210,6 +212,7 @@ namespace DevExpress.Logify.Core.Internal {
     }
     //public void Add(Breadcrumb item, [CallerMember])
     public static class BreadcrumbCollectionExtensions {
+        [IgnoreCallTracking]
         public static void AddSimple(this BreadcrumbCollection items, Breadcrumb item) {
             items.AddCore(item);
         }

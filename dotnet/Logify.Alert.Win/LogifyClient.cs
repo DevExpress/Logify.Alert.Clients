@@ -52,30 +52,21 @@ namespace DevExpress.Logify.Win {
         }
 
         public event ConfirmationDialogEventHandler ConfirmationDialogShowing;
-        //public bool SendReportInSeparateProcess { get; set; }
 
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override IInfoCollectorFactory CreateCollectorFactory() {
-            return new WinFormsExceptionCollectorFactory();
+        protected override RootInfoCollector CreateDefaultCollectorCore() {
+            return new WinFormsExceptionCollector(Config);
         }
-        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            WinFormsExceptionCollector result = new WinFormsExceptionCollector(Config);
-            result.AppName = this.AppName;
-            result.AppVersion = this.AppVersion;
-            result.UserId = this.UserId;
-            result.Collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
-            result.Collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
-            result.Collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
-            return result;
+        protected override ILogifyAppInfo CreateAppInfo() {
+            return new WinFormsApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
             IExceptionReportSender defaultSender = CreateConfiguredPlatformExceptionReportSender();
             if (ConfirmSendReport)
                 return defaultSender;
 
-            //IExceptionReportSender winDefaultSender = base.CreateExceptionReportSender();
             CompositeExceptionReportSender sender = new CompositeExceptionReportSender();
             sender.StopWhenFirstSuccess = true;
             sender.Senders.Add(new ExternalProcessExceptionReportSender());
@@ -86,27 +77,12 @@ namespace DevExpress.Logify.Win {
         protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender() {
             return new WinFormsExceptionReportSender();
         }
-        protected override ISavedReportSender CreateSavedReportsSender() {
-            return new SavedExceptionReportSender();
-        }
-        protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
-            return new EmptyBackgroundExceptionReportSender(reportSender);
-        }
-
-        protected override string GetAssemblyVersionString(Assembly asm) {
-            return asm.GetName().Version.ToString();
-        }
-
-        protected override IExceptionIgnoreDetection CreateIgnoreDetection() {
-            return new StackBasedExceptionIgnoreDetection();
-        }
         protected override LogifyAlertConfiguration LoadConfiguration() {
             LogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as LogifyConfigSection;
             return ClientConfigurationLoader.LoadCommonConfiguration(section);
         }
         public override void Run() {
             if (!IsSecondaryInstance) {
-                //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
                 Application.ThreadException += OnApplicationThreadException;
 
@@ -119,33 +95,39 @@ namespace DevExpress.Logify.Win {
         public override void Stop() {
             if (!IsSecondaryInstance) {
                 EndCollectBreadcrumbs();
-                //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.Automatic);
                 AppDomain.CurrentDomain.UnhandledException -= OnCurrentDomainUnhandledException;
                 Application.ThreadException -= OnApplicationThreadException;
             }
         }
-        protected override IStackTraceHelper CreateStackTraceHelper() {
-            return new StackTraceHelper();
-        }
 
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
+        [IgnoreCallTracking]
         void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
             Exception ex = e.ExceptionObject as Exception;
 
-            if (ex != null)
-                ReportException(ex, null, null);
+            if (ex != null) {
+                var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
+                ReportException(ex, null, null, callArgumentsMap);
+            }
         }
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
+        [IgnoreCallTracking]
         void OnApplicationThreadException(object sender, ThreadExceptionEventArgs e) {
             if (e != null && e.Exception != null) {
-                ReportException(e.Exception, null, null);
+                var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
+                AppendOuterStack(e.Exception, 5);
+                try {
+                    ReportException(e.Exception, null, null, callArgumentsMap);
+                }
+                finally {
+                    RemoveOuterStack(e.Exception);
+                }
             }
         }
-
         protected override void BeginCollectBreadcrumbsCore() {
             Win32HookManager.Instance.RemoveHook();
             Win32HookManager.Instance.AddHook(breadcrumbsRecorder);

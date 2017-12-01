@@ -82,7 +82,6 @@
     <Compile Include="LogifyClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportSender\ReportSender.cs" />
-    <Compile Include="CollectorFactory.cs" />
     <Compile Include="Collectors\ConsoleEnvironmentCollector.cs" />
     <Compile Include="Collectors\ConsoleCollector.cs" />
     <Compile Include="Tests\LogifyClientTests.cs" />

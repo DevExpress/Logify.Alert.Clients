@@ -234,7 +234,6 @@ namespace DevExpress.Logify.Core {
                 InitAfterConfigure();
             }
         }
-        protected abstract LogifyAlertConfiguration LoadConfiguration();
         protected internal void InitAfterConfigure() {
             IExceptionReportSender reportSender = CreateExceptionReportSender();
 
@@ -251,8 +250,7 @@ namespace DevExpress.Logify.Core {
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.ReportCount = this.OfflineReportsCount; });
 
             ExceptionLoggerFactory.Instance.PlatformReportSender = CreateBackgroundExceptionReportSender(reportSender);
-            ExceptionLoggerFactory.Instance.PlatformCollectorFactory = CreateCollectorFactory();
-            ExceptionLoggerFactory.Instance.PlatformIgnoreDetection = CreateIgnoreDetection();
+            //ExceptionLoggerFactory.Instance.PlatformIgnoreDetection = CreateIgnoreDetection();
         }
 
         protected virtual bool DetectIfSecondaryInstance() {
@@ -271,15 +269,52 @@ namespace DevExpress.Logify.Core {
         }
 
         protected abstract IExceptionReportSender CreateExceptionReportSender();
-        protected abstract IInfoCollectorFactory CreateCollectorFactory();
-        protected abstract IExceptionIgnoreDetection CreateIgnoreDetection();
-        protected abstract string GetAssemblyVersionString(Assembly asm);
-        protected abstract IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments);
-        protected abstract BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender);
+        protected abstract RootInfoCollector CreateDefaultCollectorCore();
+        protected abstract ILogifyAppInfo CreateAppInfo();
         protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
-        protected abstract ISavedReportSender CreateSavedReportsSender();
         protected internal abstract ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction);
-        protected abstract IStackTraceHelper CreateStackTraceHelper();
+        protected abstract LogifyAlertConfiguration LoadConfiguration();
+
+        protected IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments, MethodCallArgumentMap callArgumentsMap) {
+            RootInfoCollector result = CreateDefaultCollectorCore();
+
+            IList<IInfoCollector> collectors = result.Collectors;
+            LogifyAppInfoCollector logifyAppInfoCollector = new LogifyAppInfoCollector(CreateAppInfo());
+            logifyAppInfoCollector.AppName = this.AppName;
+            logifyAppInfoCollector.AppVersion = this.AppVersion;
+            logifyAppInfoCollector.UserId = this.UserId;
+
+            collectors.Insert(0, logifyAppInfoCollector);
+            collectors.Insert(0, new LogifyReportGenerationDateTimeCollector());
+            collectors.Insert(0, new LogifyProtocolVersionCollector());            
+
+            collectors.Add(new ExceptionObjectInfoCollector(Config, callArgumentsMap));
+            collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
+            collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
+            collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
+
+            AddCollectors(result);
+
+            return result;
+        }
+        protected virtual void AddCollectors(RootInfoCollector root) {
+            //do nothing
+        }
+        protected virtual string GetAssemblyVersionString(Assembly asm) {
+            return asm.GetName().Version.ToString();
+        }
+        protected virtual IExceptionIgnoreDetection CreateIgnoreDetection() {
+            return new StackBasedExceptionIgnoreDetection();
+        }
+        protected virtual BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
+            return new EmptyBackgroundExceptionReportSender(reportSender);
+        }
+        protected virtual IStackTraceHelper CreateStackTraceHelper() {
+            return new StackTraceHelper();
+        }
+        protected virtual ISavedReportSender CreateSavedReportsSender() {
+            return new SavedExceptionReportSender();
+        }
 
         protected internal virtual void ApplyConfiguration(LogifyAlertConfiguration configuration) {
             if (!String.IsNullOrEmpty(configuration.ServiceUrl))
@@ -431,7 +466,6 @@ namespace DevExpress.Logify.Core {
                 return String.Empty;
 
             return GetAssemblyVersionString(asm);
-            //return asm.GetName().Version.ToString();
         }
         string[] GetServiceInfo(Assembly asm) {
             if (asm == null)
@@ -485,21 +519,21 @@ namespace DevExpress.Logify.Core {
         }
         */
         [MethodImpl(MethodImplOptions.NoInlining)]
-        string GetOuterStackTrace(int skipFrames) {
+        protected string GetOuterStackTrace(int skipFrames) {
             if (stackTraceHelper != null)
                 return stackTraceHelper.GetOuterStackTrace(skipFrames + 1); // remove GetOuterStackTrace call from stack trace
             else
                 return String.Empty;
         }
         [MethodImpl(MethodImplOptions.NoInlining)]
-        string GetOuterNormalizedStackTrace(int skipFrames) {
+        protected string GetOuterNormalizedStackTrace(int skipFrames) {
             if (stackTraceHelper != null)
                 return stackTraceHelper.GetOuterNormalizedStackTrace(skipFrames + 1); // remove GetOuterNormalizedStackTrace call from stack trace
             else
                 return String.Empty;
         }
         [MethodImpl(MethodImplOptions.NoInlining)]
-        void AppendOuterStack(Exception ex, int skipFrames) {
+        protected void AppendOuterStack(Exception ex, int skipFrames) {
             try {
                 if (ex != null && ex.Data != null) {
                     ex.Data[OuterStackKeys.Stack] = GetOuterStackTrace(skipFrames + 1); // remove AppendOuterStack from stacktrace
@@ -509,7 +543,7 @@ namespace DevExpress.Logify.Core {
             catch {
             }
         }
-        void RemoveOuterStack(Exception ex) {
+        protected void RemoveOuterStack(Exception ex) {
             try {
                 if (ex != null && ex.Data != null) {
                     if (ex.Data.Contains(OuterStackKeys.Stack))
@@ -524,20 +558,24 @@ namespace DevExpress.Logify.Core {
 
         const int skipFramesForAppendOuterStackRootMethod = 2; // remove from stacktrace Send call and calling method
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
         public void Send(Exception ex) {
+            var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
             try {
-                ReportException(ex, null, null);
+                ReportException(ex, null, null, callArgumentsMap);
             }
             finally {
                 RemoveOuterStack(ex);
             }
         }
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData) {
+            var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                ReportException(ex, additionalCustomData, null);
+                ReportException(ex, additionalCustomData, null, callArgumentsMap);
             }
             finally {
                 RemoveOuterStack(ex);
@@ -545,9 +583,10 @@ namespace DevExpress.Logify.Core {
         }
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                ReportException(ex, additionalCustomData, additionalAttachments);
+                ReportException(ex, additionalCustomData, additionalAttachments, callArgumentsMap);
             }
             finally {
                 RemoveOuterStack(ex);
@@ -555,48 +594,59 @@ namespace DevExpress.Logify.Core {
         }
 #if ALLOW_ASYNC
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex) {
+            var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                return await ReportExceptionAsync(ex, null, null);
+                return await ReportExceptionAsync(ex, null, null, callArgumentsMap);
             }
             finally {
                 RemoveOuterStack(ex);
             }
         }
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData) {
+            var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                return await ReportExceptionAsync(ex, additionalCustomData, null);
+                return await ReportExceptionAsync(ex, additionalCustomData, null, callArgumentsMap);
             }
             finally {
                 RemoveOuterStack(ex);
             }
         }
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+            var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                return await ReportExceptionAsync(ex, additionalCustomData, additionalAttachments);
+                return await ReportExceptionAsync(ex, additionalCustomData, additionalAttachments, callArgumentsMap);
             }
             finally {
                 RemoveOuterStack(ex);
             }
         }
 #endif
-        protected bool ReportException(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+        bool ShouldIgnoreException(Exception ex) {
+            IExceptionIgnoreDetection detect = CreateIgnoreDetection();
+            if (detect != null && detect.ShouldIgnoreException(ex) == ShouldIgnoreResult.Ignore)
+                return true;
+            return false;
+        }
+        protected bool ReportException(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments, MethodCallArgumentMap callArgumentsMap) {
             try {
                 if (!RaiseCanReportException(ex))
                     return false;
 
-                if (ExceptionLoggerFactory.Instance.PlatformIgnoreDetection != null &&
-                    ExceptionLoggerFactory.Instance.PlatformIgnoreDetection.ShouldIgnoreException(ex) == ShouldIgnoreResult.Ignore)
+                if (ShouldIgnoreException(ex))
                     return false;
 
                 RaiseBeforeReportException(ex);
 
-                bool success = ExceptionLogger.ReportException(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments));
+                bool success = ExceptionLogger.ReportException(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments, callArgumentsMap));
                 RaiseAfterReportException(ex);
                 return success;
             } catch {
@@ -604,18 +654,17 @@ namespace DevExpress.Logify.Core {
             }
         }
 #if ALLOW_ASYNC
-        protected async Task<bool> ReportExceptionAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
+        protected async Task<bool> ReportExceptionAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments, MethodCallArgumentMap callArgumentsMap) {
             try {
                 if (!RaiseCanReportException(ex))
                     return false;
 
-                if (ExceptionLoggerFactory.Instance.PlatformIgnoreDetection != null &&
-                    ExceptionLoggerFactory.Instance.PlatformIgnoreDetection.ShouldIgnoreException(ex) == ShouldIgnoreResult.Ignore)
+                if (ShouldIgnoreException(ex))
                     return false;
 
                 RaiseBeforeReportException(ex);
 
-                bool success = await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments));
+                bool success = await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments, callArgumentsMap));
                 RaiseAfterReportException(ex);
                 return success;
             } catch {

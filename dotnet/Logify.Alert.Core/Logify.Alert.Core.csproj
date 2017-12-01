@@ -109,6 +109,8 @@
     <Compile Include="Collectors\VirtualMachineCollector.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\ClientConfiguration.cs" />
+    <Compile Include="IgnoreCallTrackingAttribute.cs" />
+    <Compile Include="MethodCallArgumentsStorage.cs" />
     <Compile Include="Utils\crc32.cs" />
     <Compile Include="ExceptionLogger.cs" />
     <Compile Include="ExceptionLoggerFactory.cs" />
@@ -131,13 +133,12 @@
     <Compile Include="ReportSender\IExceptionReportSender.cs" />
     <Compile Include="ReportSender\ExceptionReportSenderSkeleton.cs" />
     <Compile Include="Collectors\IInfoCollector.cs" />
-    <Compile Include="Collectors\InfoCollectorFactory.cs" />
     <Compile Include="ReportSender\SavedExceptionReportSender.cs" />
     <Compile Include="ReportSender\ServiceExceptionReportSender.cs" />
     <Compile Include="ReportSender\TempDirectoryExceptionReportSender.cs" />
     <Compile Include="Utils\RequestBodyFilter.cs" />
     <Compile Include="Utils\StackBasedIgnoreDetection.cs" />
-    <Compile Include="StackTraceHelper.cs" />
+    <Compile Include="Utils\StackTraceHelper.cs" />
     <Compile Include="Tests\Collectors\AttachmentsCollectorTests.cs" />
     <Compile Include="Tests\Collectors\BreadcrumbsCollectorTests.cs" />
     <Compile Include="Tests\Collectors\CultureCollectorTests.cs" />

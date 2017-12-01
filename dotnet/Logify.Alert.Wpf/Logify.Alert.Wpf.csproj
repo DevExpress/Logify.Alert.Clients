@@ -99,7 +99,6 @@
     <Compile Include="Utils\ConfirmationDialogEventArgs.cs" />
     <Compile Include="Utils\ConfirmationDialogModel.cs" />
     <Compile Include="ReportSender\ReportSender.cs" />
-    <Compile Include="CollectorFactory.cs" />
     <Compile Include="ReportSendProgressForm.xaml.cs">
       <DependentUpon>ReportSendProgressForm.xaml</DependentUpon>
     </Compile>

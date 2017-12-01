@@ -50,6 +50,7 @@ namespace DevExpress.Logify.Core.Internal {
 
             base.AddBreadcrumb(breadcrumb);
         }
+        [IgnoreCallTracking]
         internal void UpdateBreadcrumb(HttpApplication httpApplication) {
             if(httpApplication == null)
                 return;

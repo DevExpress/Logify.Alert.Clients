@@ -58,18 +58,12 @@ namespace DevExpress.Logify.WPF {
         protected override void EndCollectBreadcrumbsCore() {
             WPFBreadcrumbsRecorder.Instance.EndCollect();
         }
-        protected override IInfoCollectorFactory CreateCollectorFactory() {
-            return new WPFExceptionCollectorFactory();
+
+        protected override RootInfoCollector CreateDefaultCollectorCore() {
+            return new WPFExceptionCollector(Config);
         }
-        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            WPFExceptionCollector result = new WPFExceptionCollector(Config);
-            result.AppName = this.AppName;
-            result.AppVersion = this.AppVersion;
-            result.UserId = this.UserId;
-            result.Collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
-            result.Collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
-            result.Collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
-            return result;
+        protected override ILogifyAppInfo CreateAppInfo() {
+            return new WpfApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
             IExceptionReportSender defaultSender = CreateConfiguredPlatformExceptionReportSender();
@@ -85,19 +79,6 @@ namespace DevExpress.Logify.WPF {
         }
         protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender() {
             return new WPFExceptionReportSender();
-        }
-        protected override ISavedReportSender CreateSavedReportsSender() {
-            return new SavedExceptionReportSender();
-        }
-        protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
-            return new EmptyBackgroundExceptionReportSender(reportSender);
-        }
-
-        protected override string GetAssemblyVersionString(Assembly asm) {
-            return asm.GetName().Version.ToString();
-        }
-        protected override IExceptionIgnoreDetection CreateIgnoreDetection() {
-            return new StackBasedExceptionIgnoreDetection();
         }
         protected override LogifyAlertConfiguration LoadConfiguration() {
             LogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as LogifyConfigSection;
@@ -124,19 +105,18 @@ namespace DevExpress.Logify.WPF {
                     Application.Current.DispatcherUnhandledException -= OnCurrentDispatcherUnhandledException;
             }
         }
-        protected override IStackTraceHelper CreateStackTraceHelper() {
-            return new StackTraceHelper();
-        }
 
         Exception lastReportedException;
 
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
+        [IgnoreCallTracking]
         void OnCurrentDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {
             if (e != null && e.Exception != null) {
                 if (!Object.ReferenceEquals(e.Exception, lastReportedException)) {
                     lastReportedException = e.Exception;
-                    ReportException(e.Exception, null, null);
+                    var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
+                    ReportException(e.Exception, null, null, callArgumentsMap);
                 }
             }
         }
@@ -160,6 +140,7 @@ namespace DevExpress.Logify.WPF {
 
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
+        [IgnoreCallTracking]
         void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
@@ -169,7 +150,8 @@ namespace DevExpress.Logify.WPF {
             if (ex != null) {
                 if (!Object.ReferenceEquals(ex, lastReportedException)) {
                     lastReportedException = ex;
-                    ReportException(ex, null, null);
+                    var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
+                    ReportException(ex, null, null, callArgumentsMap);
                 }
             }
         }

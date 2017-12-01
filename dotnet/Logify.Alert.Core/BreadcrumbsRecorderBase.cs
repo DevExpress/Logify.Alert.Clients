@@ -2,12 +2,14 @@
 
 namespace DevExpress.Logify.Core.Internal {
     public abstract class BreadcrumbsRecorderBase {
+        [IgnoreCallTracking]
         protected void AddBreadcrumb(Breadcrumb item) {
             if(LogifyClientBase.Instance != null) {
                 PopulateCommonBreadcrumbInfo(item);
                 LogifyClientBase.Instance.Breadcrumbs.AddSimple(item);
             }
         }
+        [IgnoreCallTracking]
         void PopulateCommonBreadcrumbInfo(Breadcrumb item) {
             item.DateTime = DateTime.Now;
             item.Level = BreadcrumbLevel.Info;

@@ -26,4 +26,9 @@ namespace DevExpress.Logify.Core.Internal {
 
         protected abstract void RegisterCollectors(ILogifyClientConfiguration config);
     }
+
+    public abstract class RootInfoCollector : CompositeInfoCollector {
+        protected RootInfoCollector(ILogifyClientConfiguration config) : base(config) {
+        }
+    }
 }

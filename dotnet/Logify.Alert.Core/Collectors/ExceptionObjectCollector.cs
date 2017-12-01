@@ -4,17 +4,20 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using DevExpress.Logify.Core.Internal;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace DevExpress.Logify.Core.Internal {
     public class ExceptionObjectInfoCollector : CompositeInfoCollector {
-        public ExceptionObjectInfoCollector(ILogifyClientConfiguration config)
+        public ExceptionObjectInfoCollector(ILogifyClientConfiguration config, MethodCallArgumentMap callArgumentsMap)
             : base(config) {
+            Collectors.Add(new ExceptionMethodCallArgumentsCollector(callArgumentsMap));
         }
 
         public override void Process(Exception ex, ILogger logger) {
             logger.BeginWriteArray("exception");
             try {
-                for (; ; ) {
+                for (;;) {
                     logger.BeginWriteObject(String.Empty);
                     try {
                         base.Process(ex, logger);
@@ -150,4 +153,72 @@ namespace DevExpress.Logify.Core.Internal {
         }
     }
 
+    public class ExceptionMethodCallArgumentsCollector : IInfoCollector {
+        readonly MethodCallArgumentMap callArgumentsMap;
+        public ExceptionMethodCallArgumentsCollector(MethodCallArgumentMap callArgumentsMap) {
+            this.callArgumentsMap = callArgumentsMap;
+        }
+        public virtual void Process(Exception ex, ILogger logger) {
+            CultureInfo prevCulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo prevUICulture = Thread.CurrentThread.CurrentUICulture;
+            try {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
+                WriteCallParameters(ex, logger);
+            }
+            finally {
+                Thread.CurrentThread.CurrentCulture = prevCulture;
+                Thread.CurrentThread.CurrentUICulture = prevUICulture;
+            }
+        }
+
+        void WriteCallParameters(Exception ex, ILogger logger) {
+            if (callArgumentsMap == null || callArgumentsMap.Count <= 0)
+                return;
+
+            MethodCallStackArgumentMap map;
+            if (!callArgumentsMap.TryGetValue(ex, out map) || map == null)
+                return;
+            logger.BeginWriteArray("callParams");
+            try {
+                foreach (int frame in map.Keys) {
+                    MethodCallInfo methodCallInfo = map[frame];
+                    if (methodCallInfo == null || methodCallInfo.Arguments == null || methodCallInfo.Arguments.Count <= 0 || methodCallInfo.Method == null)
+                        continue;
+
+                    logger.BeginWriteObject(String.Empty);
+                    try {
+                        logger.WriteValue("index", frame);
+                        WriteMethodCallParameters(methodCallInfo, logger);
+                    }
+                    catch {
+                    }
+                    finally {
+                        logger.EndWriteObject(String.Empty);
+                    }
+                }
+            }
+            finally {
+                logger.EndWriteArray("callParams");
+            }
+        }
+        void WriteMethodCallParameters(MethodCallInfo info, ILogger logger) {
+            logger.BeginWriteObject("params");
+            try {
+                ParameterInfo[] parameters = info.Method.GetParameters();
+                if (parameters == null)
+                    return;
+
+                int count = Math.Min(parameters.Length, info.Arguments.Count);
+                for (int i = 0; i < count; i++)
+                    logger.WriteValue(parameters[i].Name, info.Arguments[i].ToString());
+            }
+            catch {
+            }
+            finally {
+                logger.EndWriteObject("params");
+            }
+        }
+    }
 }

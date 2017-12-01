@@ -28,6 +28,7 @@ namespace DevExpress.Logify.Core.Internal {
             }
         }
 
+        [IgnoreCallTracking]
         internal void AddBreadcrumb(HttpContext context) {
             if(context.Request != null && context.Request.Path != null && context.Response != null) {
                 Breadcrumb breadcrumb = new Breadcrumb();

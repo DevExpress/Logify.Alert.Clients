@@ -37,6 +37,7 @@ namespace DevExpress.Logify.Web {
                 }
             }
         }
+        [IgnoreCallTracking]
         string Create404ExceptionMessage(HttpContext context) {
             try {
                 if (context.Request == null || context.Request.Path == null)
@@ -47,6 +48,7 @@ namespace DevExpress.Logify.Web {
                 return String.Empty;
             }
         }
+        [IgnoreCallTracking]
         void ReportException(Exception ex, HttpContext context) {
             LogifyHttpContext.Current = context;
             try {
@@ -63,14 +65,17 @@ namespace DevExpress.Logify.Web {
     class LogifyHttpException : Exception {
         readonly int httpStatusCode;
 
+        [IgnoreCallTracking]
         public LogifyHttpException(int httpStatusCode) {
             this.httpStatusCode = httpStatusCode;
         }
 
+        [IgnoreCallTracking]
         public LogifyHttpException(int httpStatusCode, string message) : base(message) {
             this.httpStatusCode = httpStatusCode;
         }
 
+        [IgnoreCallTracking]
         public LogifyHttpException(int httpStatusCode, string message, Exception inner) : base(message, inner) {
             this.httpStatusCode = httpStatusCode;
         }

@@ -2,37 +2,13 @@ using System;
 using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Core.Internal {
-    public class NetCoreConsoleExceptionCollector : CompositeInfoCollector {
-        LogifyAppInfoCollector logifyAppInfoCollector;
-
+    public class NetCoreConsoleExceptionCollector : RootInfoCollector {
         public NetCoreConsoleExceptionCollector(ILogifyClientConfiguration config) : base(config) {
         }
 
-        public string AppName { get; set; }
-        public string AppVersion { get; set; }
-        public string UserId { get; set; }
-
-        LogifyAppInfoCollector LogifyAppInfoCollector {
-            get {
-                if (logifyAppInfoCollector == null)
-                    logifyAppInfoCollector = new LogifyAppInfoCollector(new NetCoreConsoleApplicationCollector());
-                return logifyAppInfoCollector;
-            }
-        }
-
-        public override void Process(Exception ex, ILogger logger) {
-            LogifyAppInfoCollector.AppName = this.AppName;
-            LogifyAppInfoCollector.AppVersion = this.AppVersion;
-            LogifyAppInfoCollector.UserId = this.UserId;
-            base.Process(ex, logger);
-        }
-
         protected override void RegisterCollectors(ILogifyClientConfiguration config) {
-            Collectors.Add(new LogifyProtocolVersionCollector());
-            Collectors.Add(LogifyAppInfoCollector);
             Collectors.Add(new DevelopementPlatformCollector(Platform.NETCORE_CONSOLE)); // added in constuctor
             Collectors.Add(new NetCoreConsoleApplicationCollector());
-            Collectors.Add(new ExceptionObjectInfoCollector(config));
 
             //HttpContext context = LogifyHttpContext.Current;
             //if (context != null) {

@@ -2,9 +2,7 @@
     public class ExceptionLoggerFactory {
         static ExceptionLoggerFactory instance;
 
-        public IInfoCollectorFactory PlatformCollectorFactory { get; set; }
         public IExceptionReportSender PlatformReportSender { get; set; }
-        public IExceptionIgnoreDetection PlatformIgnoreDetection { get; set; }
 
         public static ExceptionLoggerFactory Instance {
             get {

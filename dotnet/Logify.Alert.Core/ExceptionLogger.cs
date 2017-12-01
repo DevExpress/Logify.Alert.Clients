@@ -49,21 +49,11 @@ namespace DevExpress.Logify.Core {
     }
 }
 namespace DevExpress.Logify.Core.Internal {
-    public class ExceptionLogger {
-        public IExceptionReportSender ReportSender { get; set; }
+    //TODO: move to LogifyCientBase
+    class ExceptionLogger {
+        internal IExceptionReportSender ReportSender { get; set; }
 
-        public static void ReportException(Exception ex) {
-            IInfoCollectorFactory factory = ExceptionLoggerFactory.Instance.PlatformCollectorFactory;
-            if (factory == null)
-                return;
-
-            IInfoCollector collector = factory.CreateDefaultCollector(new DefaultClientConfiguration());
-            if (collector == null)
-                return;
-
-            ReportException(ex, collector);
-        }
-        public static bool ReportException(Exception ex, IInfoCollector collector) {
+        internal static bool ReportException(Exception ex, IInfoCollector collector) {
             IExceptionReportSender reportSender = ExceptionLoggerFactory.Instance.PlatformReportSender;
             if (reportSender == null)
                 return false;
@@ -78,7 +68,7 @@ namespace DevExpress.Logify.Core.Internal {
             return logger.PerformReportException(ex, collector);
         }
 #if ALLOW_ASYNC
-        public static async Task<bool> ReportExceptionAsync(Exception ex, IInfoCollector collector) {
+        internal static async Task<bool> ReportExceptionAsync(Exception ex, IInfoCollector collector) {
             IExceptionReportSender reportSender = ExceptionLoggerFactory.Instance.PlatformReportSender;
             if (reportSender == null)
                 return false;

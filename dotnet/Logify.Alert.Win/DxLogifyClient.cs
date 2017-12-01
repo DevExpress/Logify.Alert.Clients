@@ -18,14 +18,9 @@ namespace DevExpress.Logify.Win {
             ReportToDevExpressCore(logId, lastExceptionReportFileName, asm, new Dictionary<string, string>());
         }
 
-
-        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            IInfoCollector result = base.CreateDefaultCollector(additionalCustomData, additionalAttachments);
-            CompositeInfoCollector collector = result as CompositeInfoCollector;
-            if (collector != null) {
-                collector.Collectors.Add(new DevExpressVersionsInStackCollector());
-            }
-            return result;
+        protected override void AddCollectors(RootInfoCollector root) {
+            base.AddCollectors(root);
+            root.Collectors.Add(new DevExpressVersionsInStackCollector());
         }
 
         //protected override IExceptionReportSender CreateExceptionReportSender() {

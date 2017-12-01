@@ -60,31 +60,20 @@ namespace DevExpress.Logify.Web {
             }
         }
 
-        //public bool SendReportInSeparateProcess { get; set; }
-
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override IInfoCollectorFactory CreateCollectorFactory() {
-            //return new WinFormsExceptionCollectorFactory();
-            return new WebDefaultExceptionCollectorFactory(Platform.ASP);
+        protected override RootInfoCollector CreateDefaultCollectorCore() {
+            return new WebExceptionCollector(Config, Platform.ASP);
         }
-        protected override IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            WebExceptionCollector result = new WebExceptionCollector(Config, Platform.ASP);
-            result.AppName = this.AppName;
-            result.AppVersion = this.AppVersion;
-            result.UserId = this.UserId;
-            result.Collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
-            result.Collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
-            result.Collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
-            return result;
+        protected override ILogifyAppInfo CreateAppInfo() {
+            return new WebApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
             IExceptionReportSender defaultSender = CreateConfiguredPlatformExceptionReportSender();
             if (ConfirmSendReport)
                 return defaultSender;
 
-            //IExceptionReportSender winDefaultSender = base.CreateExceptionReportSender();
             CompositeExceptionReportSender sender = new CompositeExceptionReportSender();
             sender.StopWhenFirstSuccess = true;
             //sender.Senders.Add(new ExternalProcessExceptionReportSender());
@@ -94,18 +83,6 @@ namespace DevExpress.Logify.Web {
         }
         protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender() {
             return new WebExceptionReportSender();
-        }
-        protected override ISavedReportSender CreateSavedReportsSender() {
-            return new SavedExceptionReportSender();
-        }
-        protected override BackgroundExceptionReportSender CreateBackgroundExceptionReportSender(IExceptionReportSender reportSender) {
-            return new EmptyBackgroundExceptionReportSender(reportSender);
-        }
-        protected override string GetAssemblyVersionString(Assembly asm) {
-            return asm.GetName().Version.ToString();
-        }
-        protected override IExceptionIgnoreDetection CreateIgnoreDetection() {
-            return new StackBasedExceptionIgnoreDetection();
         }
         protected override LogifyAlertConfiguration LoadConfiguration() {
             WebLogifyConfigSection section = ConfigurationManager.GetSection("logifyAlert") as WebLogifyConfigSection;
@@ -134,9 +111,6 @@ namespace DevExpress.Logify.Web {
         }
         public override void Stop() {
             //do nothing
-        }
-        protected override IStackTraceHelper CreateStackTraceHelper() {
-            return new StackTraceHelper();
         }
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
             return null;
