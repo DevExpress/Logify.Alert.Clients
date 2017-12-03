@@ -38,44 +38,71 @@ namespace DevExpress.Logify.Core.Internal {
             if (methodArgumentsMap == null)
                 methodArgumentsMap = new MethodCallArgumentMap();
         }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
+        public static void TrackException(Exception ex, object instance, params object[] args) {
+            try {
+                if (ex == null)
+                    return;
+
+                MethodCallInfo call = new MethodCallInfo() {
+                    Instance = instance,
+                    Arguments = args
+                };
+
+                StackTrace trace = new StackTrace(0, false);
+                int frameCount = trace.FrameCount;
+                if (frameCount > 0)
+                    call.Method = trace.GetFrame(1).GetMethod();
+
+                TrackException(ex, frameCount, call);
+            }
+            catch {
+            }
+        }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         [IgnoreCallTracking]
-        public static void AddException(Exception ex, MethodCallInfo call, int skipFrames = 1) {
-            if (ex == null || call == null || call.Arguments == null || call.Arguments.Count <= 0)
-                return;
-
-            TryCreate();
-            StackTrace trace = new StackTrace(0, false);
-            MethodCallStackArgumentMap map;
-            if (!MethodArgumentsMap.TryGetValue(ex, out map)) {
-                map = new MethodCallStackArgumentMap();
-                map.FirstChanceFrameCount = trace.FrameCount;
-                //map.FirstChanceStackTrace = trace;
-                //map.FirstChanceNormalizedStackTrace = CreateNormalizedStackTrace(trace);
-                MethodArgumentsMap[ex] = map;
-            }
-            int lineIndex = map.FirstChanceFrameCount - trace.FrameCount;
-            map[lineIndex] = call;
-            //map[trace.FrameCount - skipFrames - 1] = call;
-        }
-        /*
-        [IgnoreCallTracking]
-        static string CreateNormalizedStackTrace(StackTrace trace) {
-            CultureInfo prevCulture = Thread.CurrentThread.CurrentCulture;
-            CultureInfo prevUICulture = Thread.CurrentThread.CurrentUICulture;
+        public static void TrackException(Exception ex, MethodCallInfo call, int skipFrames = 1) {
             try {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+                if (ex == null || call == null || call.Arguments == null || call.Arguments.Count <= 0)
+                    return;
 
-                return ExceptionNormalizedStackCollector.NormalizeStackTrace(trace.ToString());
+                StackTrace trace = new StackTrace(0, false);
+                int frameCount = trace.FrameCount;
+                if (call.Method == null)
+                    call.Method = trace.GetFrame(skipFrames).GetMethod();
+
+                TrackException(ex, frameCount, call);
             }
-            finally {
-                Thread.CurrentThread.CurrentCulture = prevCulture;
-                Thread.CurrentThread.CurrentUICulture = prevUICulture;
+            catch {
             }
         }
-        */
-    }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
+        public static void TrackException(Exception ex, int frameCount, MethodCallInfo call) {
+            try {
+                if (ex == null || call == null || call.Arguments == null || call.Arguments.Count <= 0)
+                    return;
+                if (call.Method == null)
+                    return;
 
+                TryCreate();
+
+                MethodCallStackArgumentMap map;
+                if (!MethodArgumentsMap.TryGetValue(ex, out map)) {
+                    map = new MethodCallStackArgumentMap();
+                    map.FirstChanceFrameCount = frameCount;
+                    //map.FirstChanceStackTrace = trace;
+                    //map.FirstChanceNormalizedStackTrace = CreateNormalizedStackTrace(trace);
+                    MethodArgumentsMap[ex] = map;
+                }
+                int lineIndex = map.FirstChanceFrameCount - frameCount;
+                map[lineIndex] = call;
+                //map[trace.FrameCount - skipFrames - 1] = call;
+            }
+            catch {
+            }
+        }
+    }
 }

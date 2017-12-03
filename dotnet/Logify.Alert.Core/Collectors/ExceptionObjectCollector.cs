@@ -212,12 +212,29 @@ namespace DevExpress.Logify.Core.Internal {
 
                 int count = Math.Min(parameters.Length, info.Arguments.Count);
                 for (int i = 0; i < count; i++)
-                    logger.WriteValue(parameters[i].Name, info.Arguments[i].ToString());
+                    WriteCallParameterValue(parameters[i], info.Arguments[i], logger);
             }
             catch {
             }
             finally {
                 logger.EndWriteObject("params");
+            }
+        }
+        void WriteCallParameterValue(ParameterInfo parameter, object argument, ILogger logger) {
+            if (parameter == null)
+                return;
+
+            logger.BeginWriteObject(parameter.Name);
+            try {
+                string value = argument != null ? argument.ToString() : "null";
+                string type = argument != null ? argument.GetType().FullName : parameter.ParameterType.FullName;
+                logger.WriteValue("value", value);
+                logger.WriteValue("type", type);
+            }
+            catch {
+            }
+            finally {
+                logger.EndWriteObject(parameter.Name);
             }
         }
     }
