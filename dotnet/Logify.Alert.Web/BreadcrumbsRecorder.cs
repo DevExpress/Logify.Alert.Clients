@@ -85,10 +85,6 @@ namespace DevExpress.Logify.Core.Internal {
         string TryGetSessionId(HttpRequest request, HttpResponse response) {
             string cookieValue = null;
             try {
-                //HttpCookie standardCookie = request.Cookies["ASP.NET_SessionId"];
-                //if(standardCookie != null)
-                //    cookieValue = standardCookie.Value;
-                //if(string.IsNullOrEmpty(cookieValue)) {
                 HttpCookie cookie = request.Cookies[CookieName];
                 if(cookie != null) {
                     Guid validGuid = Guid.Empty;
@@ -100,7 +96,6 @@ namespace DevExpress.Logify.Core.Internal {
                     cookie.HttpOnly = true;
                     response.Cookies.Add(cookie);
                 }
-                //}
             } catch { }
             return cookieValue;
         }
