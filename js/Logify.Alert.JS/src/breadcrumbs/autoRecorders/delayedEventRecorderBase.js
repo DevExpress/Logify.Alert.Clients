@@ -8,7 +8,7 @@ export default class delayedEventRecorderBase extends eventRecorderBase {
 
         this.delayListening = false;
         this.lastArguments = [];
-        this._timeOut = 300;
+        this._timeOut = 50;
         this._timeOutId;
     }
 

@@ -11,8 +11,10 @@ export default class eventRecorderBase {
     startListening(win, owner, eventCallback) {
         this._owner = owner;
 
-        this._mainCallback = function (event) {        
-            this.collectBreadcrumb(event, eventCallback);
+        this._mainCallback = function (event) {      
+            try {  
+                this.collectBreadcrumb(event, eventCallback);
+            } catch (ex) { }
         }.bind(this);
 
         for (let i = 0; i < this._events.length; i++) {
@@ -50,7 +52,8 @@ export default class eventRecorderBase {
         return eventType;
     }
     parseEventData(event, breadcrumb) {
-        let element = event.target;
+        let target = event.target;
+        let element = this.isTextElement(target) ? this.getTextElement(target) : target;
         this.setCategory(breadcrumb);
         const elementData = this.parseElementInfo(element);
         Object.assign(breadcrumb.customData, breadcrumb.customData, elementData);
@@ -75,6 +78,12 @@ export default class eventRecorderBase {
         if (element.checked != undefined)
             data.checked = element.checked;
         return data;
+    }
+    isTextElement(element) {
+        return element.nodeType === 3;
+    }
+    getTextElement(element) {
+        return element.parentNode;
     }
     setCategory(breadcrumb) {
         if (this.category) {
