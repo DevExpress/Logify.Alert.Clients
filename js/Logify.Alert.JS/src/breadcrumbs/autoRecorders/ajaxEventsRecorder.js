@@ -6,15 +6,21 @@ export default class ajaxEventsRecorder {
     constructor() {
         this._event = "xhr";
         this.category = "request";
+        this._callbackEvents = [
+            "onload",
+            "onabort",
+            "onerror"
+        ];
     }
 
     startListening(win, owner, eventCallback) {
         this._owner = owner;
 
         this.addXMLRequestListenerCallback(
-            function (request) {
-                if (request.target != undefined)
-                    this.collectBreadcrumb(request.target, eventCallback);
+            function (request, additionalData) {
+                const requestTarget = request.target;
+                if (requestTarget && requestTarget.readyState === 4)
+                    this.collectBreadcrumb(request.type, requestTarget, additionalData, eventCallback);
             }.bind(this)
         );
     }
@@ -35,21 +41,15 @@ export default class ajaxEventsRecorder {
             const wrapper = this;
 
             XMLHttpRequest.prototype.open = function () {
-                const xhr = this;
-                try {
-                    if ('onload' in xhr) {
-                        if (!xhr.onload) {
-                            xhr.onload = callback;
-                        } else {
-                            const oldFunction = xhr.onload;
-                            xhr.onload = function() {
-                                callback(Array.prototype.slice.call(arguments));
-                                oldFunction.apply(this, arguments);
-                            }
-                        }
-                    }
-                } catch (e) {
-                    this.onreadystatechange = callback;
+                let initTime = new Date().getTime();
+                const requestInfo = {
+                    method: arguments[0],
+                    requestUrl: arguments[1],
+                    initTime: initTime
+                };
+
+                for (let i = 0; i < wrapper._callbackEvents.length; i++) {
+                    wrapper.addXhrWrapper(this, wrapper._callbackEvents[i], requestInfo, callback);
                 }
 
                 wrapper._defaultCallback.apply(this, arguments);
@@ -57,16 +57,44 @@ export default class ajaxEventsRecorder {
         }
     }
 
-    collectBreadcrumb(request, eventCallback) {
+    addXhrWrapper(xhr, functionName, requestInfo, callback) {
+        try {
+            if (functionName in xhr) {
+                let oldFunction;
+                if (xhr[functionName]) {
+                    oldFunction = xhr[functionName];
+                }
+
+                xhr[functionName] = function () {
+                    if (arguments && arguments[0])
+                        callback(arguments[0], requestInfo);
+                    if (oldFunction) {
+                        oldFunction.apply(this, arguments);
+                    }
+                }
+            }
+        } catch (e) { }
+    }
+
+    collectBreadcrumb(type, request, additionalData, eventCallback) {
         let breadcrumbsModel = new autoRecordedBreadcrumb("", this._event);
         breadcrumbsModel.level = "Info";
         breadcrumbsModel.category = this.category;
 
         breadcrumbsModel.customData = {};
+        breadcrumbsModel.customData["type"] = type;
         breadcrumbsModel.customData["readyState"] = request.readyState;
         breadcrumbsModel.customData["status"] = request.status;
         breadcrumbsModel.customData["statusText"] = request.statusText;
         breadcrumbsModel.customData["responseURL"] = request.responseURL;
+        if (additionalData) {
+            if (additionalData.requestUrl)
+                breadcrumbsModel.customData["requestUrl"] = additionalData.requestUrl;
+            if (additionalData.method)
+                breadcrumbsModel.customData["method"] = additionalData.method;
+            if (additionalData.initTime)
+                breadcrumbsModel.customData["duration"] = (new Date().getTime() - additionalData.initTime);
+        }
 
         eventCallback(breadcrumbsModel);
     }
