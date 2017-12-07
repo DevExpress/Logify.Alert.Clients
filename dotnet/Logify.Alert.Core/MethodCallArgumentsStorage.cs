@@ -13,25 +13,19 @@ namespace DevExpress.Logify.Core.Internal {
         public IList<object> Arguments { get; set; }
     }
     public class MethodCallStackArgumentMap : Dictionary<int, MethodCallInfo> {
-        //public StackTrace FirstChanceStackTrace { get; set; }
-        //public string FirstChanceNormalizedStackTrace { get; set; }
         public int FirstChanceFrameCount { get; set; }
     }
     public class MethodCallArgumentMap : Dictionary<Exception, MethodCallStackArgumentMap> {
     }
-    public static class MethodCallArgumentsStorage {
+    public static class MethodCallTracker {
         [ThreadStatic]
         static MethodCallArgumentMap methodArgumentsMap;
 
         public static MethodCallArgumentMap MethodArgumentsMap { get { return methodArgumentsMap; } }
 
         [IgnoreCallTracking]
-        public static void Clear() {
-            //if (methodArgumentsMap != null) {
-            //methodArgumentsMap.Clear();
-            if (methodArgumentsMap != null)
-                methodArgumentsMap = null;
-            //}
+        public static void Reset() {
+             methodArgumentsMap = null;
         }
         [IgnoreCallTracking]
         static void TryCreate() {
@@ -93,13 +87,10 @@ namespace DevExpress.Logify.Core.Internal {
                 if (!MethodArgumentsMap.TryGetValue(ex, out map)) {
                     map = new MethodCallStackArgumentMap();
                     map.FirstChanceFrameCount = frameCount;
-                    //map.FirstChanceStackTrace = trace;
-                    //map.FirstChanceNormalizedStackTrace = CreateNormalizedStackTrace(trace);
                     MethodArgumentsMap[ex] = map;
                 }
                 int lineIndex = map.FirstChanceFrameCount - frameCount;
                 map[lineIndex] = call;
-                //map[trace.FrameCount - skipFrames - 1] = call;
             }
             catch {
             }

@@ -109,7 +109,7 @@ namespace DevExpress.Logify.Win {
             Exception ex = e.ExceptionObject as Exception;
 
             if (ex != null) {
-                var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
+                var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
                 ReportException(ex, null, null, callArgumentsMap);
             }
         }
@@ -118,7 +118,7 @@ namespace DevExpress.Logify.Win {
         [IgnoreCallTracking]
         void OnApplicationThreadException(object sender, ThreadExceptionEventArgs e) {
             if (e != null && e.Exception != null) {
-                var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
+                var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
                 AppendOuterStack(e.Exception, 5);
                 try {
                     ReportException(e.Exception, null, null, callArgumentsMap);

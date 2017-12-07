@@ -100,7 +100,7 @@ namespace DevExpress.Logify.Console {
             Exception ex = e.ExceptionObject as Exception;
 
             if (ex != null) {
-                var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
+                var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
                 ReportException(ex, null, null, callArgumentsMap);
             }
         }
@@ -108,7 +108,7 @@ namespace DevExpress.Logify.Console {
         [HandleProcessCorruptedStateExceptions]
         void OnApplicationThreadException(object sender, ThreadExceptionEventArgs e) {
             if (e != null && e.Exception != null) {
-                var callArgumentsMap = MethodCallArgumentsStorage.MethodArgumentsMap; // this call should be done before any inner calls
+                var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
                 ReportException(e.Exception, null, null, callArgumentsMap);
             }
         }
