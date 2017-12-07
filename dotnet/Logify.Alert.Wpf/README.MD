@@ -136,6 +136,12 @@ LogifyAlert.Instance.CollectBreadcrumbs = true;
 LogifyAlert.Instance.StartExceptionsHandling();
 ```
 
+#### CollectMiniDump
+Boolean. Specifies whether automatic minidumps collecting is enabled. The default value is **false**.
+```csharp
+LogifyAlert.Instance.CollectMiniDump = true;  
+```
+
 #### ConfirmSendReport
 Boolean. Specifies whether or not a user must confirm sending reports to the Logify Alert service.
 By default, the **ConfirmSendReport** property is set to **false** and all uncaught exceptions are automatically processed and sent to the Logify Alert service.
