@@ -561,6 +561,7 @@ namespace DevExpress.Logify.Core {
         [IgnoreCallTracking]
         public void Send(Exception ex) {
             var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
+            MethodCallTracker.Reset();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
             try {
                 ReportException(ex, null, null, callArgumentsMap);
@@ -573,6 +574,7 @@ namespace DevExpress.Logify.Core {
         [IgnoreCallTracking]
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData) {
             var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
+            MethodCallTracker.Reset();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 ReportException(ex, additionalCustomData, null, callArgumentsMap);
@@ -584,6 +586,7 @@ namespace DevExpress.Logify.Core {
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
+            MethodCallTracker.Reset();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 ReportException(ex, additionalCustomData, additionalAttachments, callArgumentsMap);
@@ -597,6 +600,7 @@ namespace DevExpress.Logify.Core {
         [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex) {
             var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
+            MethodCallTracker.Reset();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 return await ReportExceptionAsync(ex, null, null, callArgumentsMap);
@@ -609,6 +613,7 @@ namespace DevExpress.Logify.Core {
         [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData) {
             var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
+            MethodCallTracker.Reset();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 return await ReportExceptionAsync(ex, additionalCustomData, null, callArgumentsMap);
@@ -621,6 +626,7 @@ namespace DevExpress.Logify.Core {
         [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
+            MethodCallTracker.Reset();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 return await ReportExceptionAsync(ex, additionalCustomData, additionalAttachments, callArgumentsMap);
