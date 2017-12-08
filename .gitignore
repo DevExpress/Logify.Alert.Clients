@@ -28,3 +28,7 @@ Logify.NodeJS/bundle/
 js/Logify.Alert.NodeJS/bundle/
 js/Logify.Alert.JS/lib/
 js/Logify.Alert.NodeJS/lib/
+dotnet/Logify.Alert.Inject/InjectManagedAssembly/x64/
+dotnet/Logify.Alert.Inject/InjectManagedAssembly/Debug/
+dotnet/Logify.Alert.Inject/InjectManagedAssembly/Release/
+dotnet/Logify.Alert.Inject/Logify.Alert.Inject.sdf
