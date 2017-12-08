@@ -171,6 +171,46 @@ Use the **CustomData** property to attach additional information to the generate
 ```csharp
 client.CustomData["CustomerName"] = "Mary";
 ```
+
+#### IgnoreCookies
+String. Specifies cookies that should be excluded from a crash report.  
+Provide a comma separated list of names to ignore several cookies. Set this property to the asterisk (\*) character to remove all cookies from a Logify Alert report.  Also, use the asterisk (\*) character as a wildcard to substitute any character(s) when specifying a cookie to be ignored. This property is case-insensitive.
+
+```csharp
+LogifyAlert.Instance.IgnoreCookies = "*";
+```
+
+#### IgnoreFormFields
+String. Specifies form fields that should be excluded from a crash report.  
+Provide a comma separated list of names to ignore several form fields. Set this property to the asterisk (\*) character to remove all form data from a Logify Alert report.  Also, use the asterisk (\*) character as a wildcard to substitute any character(s) when specifying a form field to be ignored. For example, when you set *IgnoreFormFields ="\*Password\*"*, Logify Alert will ignore all form fields containing the *“password”* in the name. This property is case-insensitive.
+
+```csharp
+LogifyAlert.Instance.IgnoreFormFields = "creditcard,password";
+```
+
+#### IgnoreHeaders
+String. Specifies request headers that should be excluded from a crash report.  
+Provide a comma separated list of names to ignore several headers. Set this property to the asterisk (\*) character to remove all headers from a Logify Alert report.  Also, use the asterisk (\*) character as a wildcard to substitute any character(s) when specifying a header to be ignored. This property is case-insensitive.
+
+```csharp
+LogifyAlert.Instance.IgnoreHeaders = "*";
+```
+
+#### IgnoreServerVariables
+String. Specifies server variables that should be excluded from a crash report.  
+Provide a comma separated list of names to ignore several server variables. Set this property to the asterisk (\*) character to remove all server variables from a Logify Alert report.  Also, use the asterisk (\*) character as a wildcard to substitute any character(s) when specifying a server variable to be ignored. This property is case-insensitive.
+
+```csharp
+LogifyAlert.Instance.IgnoreServerVariables = "HTTP*";
+```
+
+#### IgnoreRequestBody
+Boolean. Specifies whether raw request body content should be ignored. 
+
+```csharp
+LogifyAlert.Instance.IgnoreRequestBody = true;
+```
+
 #### Instance
 Singleton. Returns the single instance of the LogifyAlert class.
 ```csharp
