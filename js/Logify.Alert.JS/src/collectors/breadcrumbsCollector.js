@@ -18,6 +18,7 @@ export default class breadcrumbsCollector extends collectorBase {
         }
 
         if (this.owner._breadcrumbs != undefined && this.owner._breadcrumbs.length > 0)
-            report.breadcrumbs = this.owner._breadcrumbs.reverse();
+            report.breadcrumbs = this.owner._breadcrumbs;
+            report.breadcrumbs.reverse();
     }
 }
