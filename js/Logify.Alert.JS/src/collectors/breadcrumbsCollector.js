@@ -17,8 +17,9 @@ export default class breadcrumbsCollector extends collectorBase {
             this.owner._breadcrumbsListener.beforeReadBreadcrumbs();
         }
 
-        if (this.owner._breadcrumbs != undefined && this.owner._breadcrumbs.length > 0)
+        if (this.owner._breadcrumbs != undefined && this.owner._breadcrumbs.length > 0) {
             report.breadcrumbs = this.owner._breadcrumbs;
             report.breadcrumbs.reverse();
+        }
     }
 }
