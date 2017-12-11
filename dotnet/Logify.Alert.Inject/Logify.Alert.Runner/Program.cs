@@ -142,7 +142,7 @@ namespace DevExpress.Logify.Core.Internal {
             if (!CheckLogifyConfigExists(process))
                 return false;
 
-            injector.ManagedAssemblyPath = Path.Combine(path, "Logify.Alert.Inject.dll");
+            injector.ManagedAssemblyPath = "\"" + Path.Combine(path, "Logify.Alert.Inject.dll") + "\"";
             injector.ManagedClassName = @"DevExpress.Logify.Core.Internal.LogifyInit";
             injector.ManagedMethodName = winForms ? @"RunWinForms" : @"RunWpf";
             injector.ManagedMethodParameter = @"";
