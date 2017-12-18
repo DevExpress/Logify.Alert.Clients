@@ -115,8 +115,8 @@ namespace DevExpress.Logify.WPF {
             if (e != null && e.Exception != null) {
                 if (!Object.ReferenceEquals(e.Exception, lastReportedException)) {
                     lastReportedException = e.Exception;
-                    var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-                    MethodCallTracker.Reset();
+                    var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+                    ResetTrackArguments();
                     ReportException(e.Exception, null, null, callArgumentsMap);
                 }
             }
@@ -151,8 +151,8 @@ namespace DevExpress.Logify.WPF {
             if (ex != null) {
                 if (!Object.ReferenceEquals(ex, lastReportedException)) {
                     lastReportedException = ex;
-                    var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-                    MethodCallTracker.Reset();
+                    var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+                    ResetTrackArguments();
                     ReportException(ex, null, null, callArgumentsMap);
                 }
             }

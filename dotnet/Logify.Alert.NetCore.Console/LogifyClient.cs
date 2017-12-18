@@ -101,8 +101,8 @@ namespace DevExpress.Logify.Console {
             Exception ex = e.ExceptionObject as Exception;
 
             if (ex != null) {
-                var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-                MethodCallTracker.Reset();
+                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+                ResetTrackArguments();
                 ReportException(ex, null, null, callArgumentsMap);
             }
         }

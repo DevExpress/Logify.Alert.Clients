@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 //using System.Configuration;
 using System.IO;
@@ -560,8 +561,8 @@ namespace DevExpress.Logify.Core {
         [MethodImpl(MethodImplOptions.NoInlining)]
         [IgnoreCallTracking]
         public void Send(Exception ex) {
-            var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-            MethodCallTracker.Reset();
+            var callArgumentsMap = MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
             try {
                 ReportException(ex, null, null, callArgumentsMap);
@@ -573,8 +574,8 @@ namespace DevExpress.Logify.Core {
         [MethodImpl(MethodImplOptions.NoInlining)]
         [IgnoreCallTracking]
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData) {
-            var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-            MethodCallTracker.Reset();
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 ReportException(ex, additionalCustomData, null, callArgumentsMap);
@@ -585,8 +586,8 @@ namespace DevExpress.Logify.Core {
         }
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-            MethodCallTracker.Reset();
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 ReportException(ex, additionalCustomData, additionalAttachments, callArgumentsMap);
@@ -599,8 +600,8 @@ namespace DevExpress.Logify.Core {
         [MethodImpl(MethodImplOptions.NoInlining)]
         [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex) {
-            var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-            MethodCallTracker.Reset();
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 return await ReportExceptionAsync(ex, null, null, callArgumentsMap);
@@ -612,8 +613,8 @@ namespace DevExpress.Logify.Core {
         [MethodImpl(MethodImplOptions.NoInlining)]
         [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData) {
-            var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-            MethodCallTracker.Reset();
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 return await ReportExceptionAsync(ex, additionalCustomData, null, callArgumentsMap);
@@ -625,8 +626,8 @@ namespace DevExpress.Logify.Core {
         [MethodImpl(MethodImplOptions.NoInlining)]
         [IgnoreCallTracking]
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
-            var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-            MethodCallTracker.Reset();
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
                 return await ReportExceptionAsync(ex, additionalCustomData, additionalAttachments, callArgumentsMap);
@@ -679,6 +680,7 @@ namespace DevExpress.Logify.Core {
         }
 #endif
 
+        #region Remote Configuration System
         Timer timer;
 
         bool allowRemoteConfiguration;
@@ -783,6 +785,86 @@ namespace DevExpress.Logify.Core {
 
             return provider.GetConfiguration(this.ServiceUrl, this.ApiKey);
         }
+        #endregion
+
+        #region Call Argument Tracking methods
+        [ThreadStatic]
+        static MethodCallArgumentMap methodArgumentsMap;
+        protected MethodCallArgumentMap MethodArgumentsMap { get { return methodArgumentsMap; } }
+
+        [IgnoreCallTracking]
+        public void ResetTrackArguments() {
+            methodArgumentsMap = null;
+        }
+        [IgnoreCallTracking]
+        void TryCreate() {
+            if (methodArgumentsMap == null)
+                methodArgumentsMap = new MethodCallArgumentMap();
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
+        public void TrackArguments(Exception ex, object instance, params object[] args) {
+            try {
+                if (ex == null)
+                    return;
+
+                MethodCallInfo call = new MethodCallInfo() {
+                    Instance = instance,
+                    Arguments = args
+                };
+
+                StackTrace trace = new StackTrace(0, false);
+                int frameCount = trace.FrameCount;
+                if (frameCount > 0)
+                    call.Method = trace.GetFrame(1).GetMethod();
+
+                TrackArguments(ex, frameCount, call);
+            }
+            catch {
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
+        public void TrackArguments(Exception ex, MethodCallInfo call, int skipFrames = 1) {
+            try {
+                if (ex == null || call == null || call.Arguments == null || call.Arguments.Count <= 0)
+                    return;
+
+                StackTrace trace = new StackTrace(0, false);
+                int frameCount = trace.FrameCount;
+                if (call.Method == null)
+                    call.Method = trace.GetFrame(skipFrames).GetMethod();
+
+                TrackArguments(ex, frameCount, call);
+            }
+            catch {
+            }
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
+        public void TrackArguments(Exception ex, int frameCount, MethodCallInfo call) {
+            try {
+                if (ex == null || call == null || call.Arguments == null || call.Arguments.Count <= 0)
+                    return;
+                if (call.Method == null)
+                    return;
+
+                TryCreate();
+
+                MethodCallStackArgumentMap map;
+                if (!MethodArgumentsMap.TryGetValue(ex, out map)) {
+                    map = new MethodCallStackArgumentMap();
+                    map.FirstChanceFrameCount = frameCount;
+                    MethodArgumentsMap[ex] = map;
+                }
+                int lineIndex = map.FirstChanceFrameCount - frameCount;
+                map[lineIndex] = call;
+            }
+            catch {
+            }
+        }
+        #endregion
     }
 
 

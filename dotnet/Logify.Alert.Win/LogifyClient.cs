@@ -109,8 +109,8 @@ namespace DevExpress.Logify.Win {
             Exception ex = e.ExceptionObject as Exception;
 
             if (ex != null) {
-                var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-                MethodCallTracker.Reset();
+                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+                ResetTrackArguments();
                 ReportException(ex, null, null, callArgumentsMap);
             }
         }
@@ -119,8 +119,8 @@ namespace DevExpress.Logify.Win {
         [IgnoreCallTracking]
         void OnApplicationThreadException(object sender, ThreadExceptionEventArgs e) {
             if (e != null && e.Exception != null) {
-                var callArgumentsMap = MethodCallTracker.MethodArgumentsMap; // this call should be done before any inner calls
-                MethodCallTracker.Reset();
+                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+                ResetTrackArguments();
                 AppendOuterStack(e.Exception, 5);
                 try {
                     ReportException(e.Exception, null, null, callArgumentsMap);
