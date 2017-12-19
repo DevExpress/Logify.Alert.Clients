@@ -167,15 +167,15 @@ namespace DevExpress.Logify.Core.Internal {
             return Win32.ClientToScreen(hWnd, new Point(x, y));
         }
         int GetMouseX(IntPtr param) {
-            int value = param.ToInt32();
+            int value = (int)param.ToInt64();
             return value & 0xFFFF;
         }
         int GetMouseY(IntPtr param) {
-            int value = param.ToInt32();
+            int value = (int)param.ToInt64();
             return (value >> 16) & 0xFFFF;
         }
         int GetScanCode(IntPtr param) {
-            int value = param.ToInt32();
+            int value = (int)param.ToInt64();
             return (value >> 16) & 0xFF;
         }
         bool ShouldMaskMessage(ref Message m) {
