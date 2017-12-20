@@ -287,7 +287,8 @@ namespace DevExpress.Logify.Core {
 
             collectors.Insert(0, logifyAppInfoCollector);
             collectors.Insert(0, new LogifyReportGenerationDateTimeCollector());
-            collectors.Insert(0, new LogifyProtocolVersionCollector());            
+            collectors.Insert(0, new LogifyHardwareIdCollector());
+            collectors.Insert(0, new LogifyProtocolVersionCollector());
 
             collectors.Add(new ExceptionObjectInfoCollector(Config, callArgumentsMap));
             collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));

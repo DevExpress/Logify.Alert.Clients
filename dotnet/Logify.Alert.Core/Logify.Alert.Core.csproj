@@ -100,6 +100,7 @@
     <Compile Include="Collectors\FrameworkVersionsCollector.cs" />
     <Compile Include="Collectors\GuiResourcesCollector.cs" />
     <Compile Include="Collectors\LogifyAppInfoCollector.cs" />
+    <Compile Include="Collectors\LogifyHardwareIdCollector.cs" />
     <Compile Include="Collectors\LogifyProtocolVersionCollectior.cs" />
     <Compile Include="Collectors\LogifyReportGenerationDateTimeCollector.cs" />
     <Compile Include="Collectors\MemoryCollector.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="ExceptionLoggerFactory.cs" />
     <Compile Include="Utils\FastCharacterMultiReplacement.cs" />
     <Compile Include="IgnoreProperties.cs" />
+    <Compile Include="Utils\HardwareId.cs" />
     <Compile Include="Utils\JsonLite.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\JsonTextWriterLogger.cs" />

@@ -134,7 +134,8 @@ namespace DevExpress.Logify.Core.Internal {
         }
         string GetConfigurationJson(string serviceUrl, string apiKey) {
             try {
-                WebRequest request = WebRequest.Create(CreateEndPointUrl(serviceUrl, "api/config/get"));
+                string instanceId = HardwareId.Get();
+                WebRequest request = WebRequest.Create(CreateEndPointUrl(serviceUrl, String.Format("api/config/get?instanceId={0}", instanceId)));
                 SetupProxy(request);
                 request.Method = "GET";
                 request.Headers.Add("Authorization", "amx " + apiKey);
