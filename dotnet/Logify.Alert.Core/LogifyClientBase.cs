@@ -287,7 +287,8 @@ namespace DevExpress.Logify.Core {
 
             collectors.Insert(0, logifyAppInfoCollector);
             collectors.Insert(0, new LogifyReportGenerationDateTimeCollector());
-            collectors.Insert(0, new LogifyHardwareIdCollector());
+            if (this.AllowRemoteConfiguration)
+                collectors.Insert(0, new LogifyHardwareIdCollector());
             collectors.Insert(0, new LogifyProtocolVersionCollector());
 
             collectors.Add(new ExceptionObjectInfoCollector(Config, callArgumentsMap));
@@ -328,6 +329,9 @@ namespace DevExpress.Logify.Core {
             if (!String.IsNullOrEmpty(configuration.AppVersion))
                 this.AppVersion = configuration.AppVersion;
             this.ConfirmSendReport = configuration.ConfirmSend;
+
+            this.AllowRemoteConfiguration = configuration.AllowRemoteConfiguration;
+            this.RemoteConfigurationFetchInterval = configuration.RemoteConfigurationFetchInterval;
 
             //if (!String.IsNullOrEmpty(configuration.MiniDumpServiceUrl))
             //    this.MiniDumpServiceUrl = configuration.MiniDumpServiceUrl;
@@ -685,7 +689,7 @@ namespace DevExpress.Logify.Core {
         Timer timer;
 
         bool allowRemoteConfiguration;
-        /*public*/ bool AllowRemoteConfiguration {
+        public bool AllowRemoteConfiguration {
             get { return allowRemoteConfiguration; }
             set {
                 if (allowRemoteConfiguration == value)
@@ -695,11 +699,11 @@ namespace DevExpress.Logify.Core {
                 StartConfigPoll();
             }
         }
-        const int remoteConfigurationFetchMinInterval = 1000; // 1 min
+        const int remoteConfigurationFetchMinInterval = 1; // 1 min
         const int initialTimerDelay = 2000;
 
-        int remoteConfigurationFetchInterval = 5 * remoteConfigurationFetchMinInterval;
-        int RemoteConfigurationFetchInterval {
+        int remoteConfigurationFetchInterval = 10 * remoteConfigurationFetchMinInterval;
+        public int RemoteConfigurationFetchInterval {
             get { return remoteConfigurationFetchInterval; }
             set {
                 value = GetActualRemoteConfigurationUpdateInterval(value);
@@ -712,6 +716,7 @@ namespace DevExpress.Logify.Core {
                 StartConfigPoll();
             }
         }
+        int RemoteConfigurationFetchIntervalMilliseconds { get { return RemoteConfigurationFetchInterval * 60 * 1000; } }
 
         int GetActualRemoteConfigurationUpdateInterval(int value) {
             const int minInterval = remoteConfigurationFetchMinInterval;
@@ -724,9 +729,9 @@ namespace DevExpress.Logify.Core {
                     return;
 
                 if (timer == null)
-                    timer = new Timer(FetchAndApplyRemoteConfiguration, this, initialTimerDelay, RemoteConfigurationFetchInterval);
+                    timer = new Timer(FetchAndApplyRemoteConfiguration, this, initialTimerDelay, RemoteConfigurationFetchIntervalMilliseconds);
                 else
-                    timer.Change(initialTimerDelay, RemoteConfigurationFetchInterval);
+                    timer.Change(initialTimerDelay, RemoteConfigurationFetchIntervalMilliseconds);
             }
             catch {
             }
@@ -747,12 +752,28 @@ namespace DevExpress.Logify.Core {
         AutoResetEvent wait = new AutoResetEvent(false);
         AutoResetEvent remoteConfigurationAllowed = new AutoResetEvent(true);
         void FetchAndApplyRemoteConfiguration(object state) {
+            LoadRemoteConfiguration();
+        }
+
+        LogifyAlertRemoteConfiguration GetRemoteConfiguration() {
+            IExceptionReportSender sender = CreateEmptyPlatformExceptionReportSender();
+            if (sender == null)
+                return null;
+
+            IRemoteConfigurationProvider provider = sender as IRemoteConfigurationProvider;
+            if (provider == null)
+                return null;
+
+            return provider.GetConfiguration(this.ServiceUrl, this.ApiKey);
+        }
+        public void LoadRemoteConfiguration() {
             try {
                 if (String.IsNullOrEmpty(this.ApiKey))
                     return;
 
+
                 if (!remoteConfigurationAllowed.WaitOne(0)) {
-                    System.Diagnostics.Debug.WriteLine("->FetchAndApplyRemoteConfiguration:in progress, exiting");
+                    //System.Diagnostics.Debug.WriteLine("->LoadRemoteConfiguration:in progress, exiting");
                     return;
                 }
                 try {
@@ -773,18 +794,6 @@ namespace DevExpress.Logify.Core {
             }
             catch {
             }
-        }
-
-        LogifyAlertRemoteConfiguration GetRemoteConfiguration() {
-            IExceptionReportSender sender = CreateEmptyPlatformExceptionReportSender();
-            if (sender == null)
-                return null;
-
-            IRemoteConfigurationProvider provider = sender as IRemoteConfigurationProvider;
-            if (provider == null)
-                return null;
-
-            return provider.GetConfiguration(this.ServiceUrl, this.ApiKey);
         }
         #endregion
 

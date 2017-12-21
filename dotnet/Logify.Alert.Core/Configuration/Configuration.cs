@@ -50,6 +50,11 @@ namespace DevExpress.Logify {
         public ClientValueElement CollectBreadcrumbs { get { return (ClientValueElement)base["collectBreadcrumbs"]; } }
         [ConfigurationProperty("breadcrumbsMaxCount", IsRequired = false)]
         public ClientValueElement BreadcrumbsMaxCount { get { return (ClientValueElement)base["breadcrumbsMaxCount"]; } }
+
+        [ConfigurationProperty("allowRemoteConfiguration", IsRequired = false)]
+        public ClientValueElement AllowRemoteConfiguration { get { return (ClientValueElement)base["allowRemoteConfiguration"]; } }
+        [ConfigurationProperty("remoteConfigurationFetchInterval", IsRequired = false)]
+        public ClientValueElement RemoteConfigurationFetchInterval { get { return (ClientValueElement)base["remoteConfigurationFetchInterval"]; } }
     }
 
     public class ClientValueElement : ConfigurationElement {
@@ -112,6 +117,11 @@ namespace DevExpress.Logify.Core.Internal {
                 config.ApiKey = section.ApiKey.Value;
             if (section.ConfirmSend != null)
                 config.ConfirmSend = section.ConfirmSend.ValueAsBool;
+
+            if (section.AllowRemoteConfiguration != null)
+                config.AllowRemoteConfiguration = section.AllowRemoteConfiguration.ValueAsBool;
+            if (section.RemoteConfigurationFetchInterval != null)
+                config.RemoteConfigurationFetchInterval = section.RemoteConfigurationFetchInterval.ValueAsInt;
 
             //if (section.MiniDumpServiceUrl != null)
             //    client.MiniDumpServiceUrl = section.MiniDumpServiceUrl.Value;

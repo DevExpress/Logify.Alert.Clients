@@ -55,6 +55,7 @@ namespace DevExpress.Logify.Core.Internal {
         public bool IgnoreRequestBody { get; set; }
 
         public bool AllowRemoteConfiguration { get; set; }
+        public int RemoteConfigurationFetchInterval { get; set; }
     }
     public class LogifyAlertRemoteConfiguration : LogifyAlertConfiguration {
     }
