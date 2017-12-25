@@ -11,7 +11,7 @@ namespace DevExpress.Logify.Core.Internal {
         }
         [IgnoreCallTracking]
         void PopulateCommonBreadcrumbInfo(Breadcrumb item) {
-            item.DateTime = DateTime.Now;
+            item.DateTime = DateTime.UtcNow;
             item.Level = BreadcrumbLevel.Info;
             item.ThreadId = GetThreadId();
             item.Category = GetCategory();

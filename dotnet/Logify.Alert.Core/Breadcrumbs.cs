@@ -41,6 +41,8 @@ namespace DevExpress.Logify.Core {
 
         [IgnoreCallTracking]
         internal void AddCore(Breadcrumb item) {
+            if (item.DateTime == DateTime.MinValue)
+                item.DateTime = DateTime.UtcNow;
             items[nextIndex] = item;
             nextIndex = (nextIndex + 1) % maxSize;
             if (spaceLeft > 0)
