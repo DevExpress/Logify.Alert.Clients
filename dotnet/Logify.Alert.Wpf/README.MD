@@ -66,6 +66,12 @@ You can setup the Logify Alert client using **App.config** file as follows
   </configSections>
   <logifyAlert>
     <apiKey value="My Api Key" />
+    <confirmSend value="false" />
+    <offlineReportsEnabled value="true" />
+    <offlineReportsCount value="20" />
+    <collectBreadcrumbs value="true" />
+    <breadcrumbsMaxCount value="500" />
+    <collectMiniDump value="true" />
     <customData>
       <add key="MACHINE_NAME" value="My Server" />
     </customData>
@@ -91,6 +97,13 @@ String. Specifies the application version.
 ```csharp
 client.AppVersion = "1.0.2";
 ```
+
+#### AllowRemoteConfiguration
+Boolean. Gets or sets whether a Logify Alert client configuration can be specified [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration). The default value is **false**.
+```csharp
+client.AllowRemoteConfiguration = true;
+```
+To load client configuration parameters specified remotely, call the *LoadRemoteConfiguration* method. You can also use the *RemoteConfigurationFetchInterval* property to set a time interval specifying how often configuration parameters should be loaded from the server.
 
 #### Attachments
 AttachmentCollection. Specifies a collection of files attached to a report. The total attachments size must not be more than **3 Mb** per one crash report. The attachment name must be unique within one crash report.
@@ -190,6 +203,12 @@ client.OfflineReportsDirectory = "<directory-for-offline-reports>";
 ICredentials. Specifies proxy credentials (a user name and a password) to be used by Logify Alert to authenticate within your system proxy server. The use of this property resolves the "*407 Proxy Authentication Required*" proxy error.
 ```csharp
 client.ProxyCredentials = new NetworkCredential("MyProxyUserName", "MyProxyPassword");
+```
+
+#### RemoteConfigurationFetchInterval
+Specifies a time interval, in minutes, in which client configuration set [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration) should be automatically loaded from the server. The minimum value is 2.
+```csharp
+client.RemoteConfigurationFetchInterval = 5;
 ```
 
 #### UserId
@@ -310,6 +329,44 @@ catch (Exception e) {
 
 #### SendOfflineReports
 Sends all reports saved in the *OfflineReportsDirectory* folder to the Logify Alert service.
+
+### Methods for collecting method arguments
+When analyzing an exception’s call stack, it can be useful to review arguments of methods that were being executed when an exception occurred. Logify Alert provides the following methods to support this functionality:
+
+#### TrackArguments(Exception ex, object instance, params object[] args)
+#### TrackArguments(Exception ex, int frameCount, MethodCallInfo call)
+#### TrackArguments(Exception ex, MethodCallInfo call, int skipFrames)
+Collects arguments passed to the invoked method. Call *TrackArguments* when handling an exception that occurs during a method execution.
+
+#### ResetTrackArguments()
+Removes method argument values which *TrackArguments* collected previously. Call *ResetTrackArguments* before a method execution and after method execution succeeds.
+
+```csharp
+public void DoWork(string work) {
+    LogifyAlert.Instance.ResetTrackArguments();
+    try {
+        DoInnerWork(work, 5);
+        LogifyAlert.Instance.ResetTrackArguments();
+    }
+    catch (Exception ex) {
+        LogifyAlert.Instance.TrackArguments(ex, work);
+        throw;
+    }
+}
+public void DoInnerWork(string innerWork, this, int times) {
+    LogifyAlert.Instance.ResetTrackArguments();
+    try {
+        object o = null;
+        o.ToString();
+        LogifyAlert.Instance.ResetTrackArguments();
+    }
+    catch (Exception ex) {
+        LogifyAlert.Instance.TrackArguments(ex, this, innerWork, times);
+        throw;
+    }
+}
+```
+See the [Collect Method Arguments](https://logify.devexpress.com/Alert/Documentation/Send/MethodArguments) document for details.
 
 ### Events
 
