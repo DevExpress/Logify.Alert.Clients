@@ -87,13 +87,6 @@ String. Specifies an [API Key](https://logify.devexpress.com/Alert/Documentation
 client.ApiKey = "My Api Key";
 ```
 
-#### AllowRemoteConfiguration
-Boolean. Gets or sets whether a Logify Alert client configuration can be specified [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration). The default value is **false**.
-```csharp
-client.AllowRemoteConfiguration = true;
-```
-To load client configuration parameters specified remotely, call the *LoadRemoteConfiguration* method. You can also use the *RemoteConfigurationFetchInterval* property to set a time interval specifying how often configuration parameters should be loaded from the server.
-
 #### AppName
 String. Specifies the application name.
 ```csharp
@@ -104,6 +97,13 @@ String. Specifies the application version.
 ```csharp
 client.AppVersion = "1.0.2";
 ```
+#### AllowRemoteConfiguration
+Boolean. Gets or sets whether a Logify Alert client configuration can be specified [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration). The default value is **false**.
+```csharp
+client.AllowRemoteConfiguration = true;
+```
+To load client configuration parameters specified remotely, call the *LoadRemoteConfiguration* method. You can also use the *RemoteConfigurationFetchInterval* property to set a time interval specifying how often configuration parameters should be loaded from the server.
+
 #### Attachments
 AttachmentCollection. Specifies a collection of files attached to a report. The total attachments size must not be more than **3 Mb** per one crash report. The attachment name must be unique within one crash report.
 ```csharp
@@ -198,16 +198,16 @@ client.OfflineReportsCount = 20; // Keeps the last 20 reports
 client.OfflineReportsDirectory = "<directory-for-offline-reports>";
 ```
 
-#### RemoteConfigurationFetchInterval
-Specifies a time interval, in minutes, in which client configuration set [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration) should be automatically loaded from the server. The minimum value is 2.
-```csharp
-client.RemoteConfigurationFetchInterval = 5;
-```
-
 #### ProxyCredentials
 ICredentials. Specifies proxy credentials (a user name and a password) to be used by Logify Alert to authenticate within your system proxy server. The use of this property resolves the "*407 Proxy Authentication Required*" proxy error.
 ```csharp
 client.ProxyCredentials = new NetworkCredential("MyProxyUserName", "MyProxyPassword");
+```
+
+#### RemoteConfigurationFetchInterval
+Specifies a time interval, in minutes, in which client configuration set [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration) should be automatically loaded from the server. The minimum value is 2.
+```csharp
+client.RemoteConfigurationFetchInterval = 5;
 ```
 
 #### UserId
