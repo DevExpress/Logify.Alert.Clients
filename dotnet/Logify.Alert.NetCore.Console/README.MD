@@ -1,5 +1,7 @@
 # Logify Alert for .NET Core console applications
-A console client to report exceptions to [Logify Alert](https://logify.devexpress.com).
+A console client to report exceptions to [Logify Alert](https://logify.devexpress.com). 
+
+Starting with the package version v1.0.37, the .Net Standard v2.0 target framework is only supported.
 
 ## Install <a href="https://www.nuget.org/packages/Logify.Alert.Console/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Console.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Console.svg" style="max-width:100%;" /></a>
 ```sh
