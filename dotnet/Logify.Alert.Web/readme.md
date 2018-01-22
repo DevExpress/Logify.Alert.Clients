@@ -188,6 +188,13 @@ Use the **CustomData** property to attach additional information to the generate
 client.CustomData["CustomerName"] = "Mary";
 ```
 
+#### Tags
+IDictionary<String, String>. Gets the collection of tags specifying additional fields from a raw report, which will be used in auto ignoring, filtering or detecting duplicates. A key is a tag name (a string that consists of a-z, A-Z, 0-9, and _ characters), and a value is a path to the required field from a raw report. A new tag is added with **Allow search** enabled.
+
+```csharp
+client.Tags["OS"] = "OS.DisplayName";
+```
+
 #### IgnoreCookies
 String. Specifies cookies that should be excluded from a crash report.  
 Provide a comma separated list of names to ignore several cookies. Set this property to the asterisk (\*) character to remove all cookies from a Logify Alert report.  Also, use the asterisk (\*) character as a wildcard to substitute any character(s) when specifying a cookie to be ignored. This property is case-insensitive.
