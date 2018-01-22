@@ -132,6 +132,7 @@ describe('jsCollector tests', function() {
         owner.collectSessionStorage = true;
         owner.collectCookies = true;
         owner.customData = "mocCustomData";
+        owner.tags = "mocTags";
         return new jsCollector(owner, true);
     }
 
@@ -188,6 +189,7 @@ describe('jsCollector tests', function() {
         assert.equal("1.0", collector.reportData.logifyProtocolVersion);
 
         assert.equal("mocCustomData", collector.reportData.customData);
+        assert.equal("mocTags", collector.reportData.tags);
 
         assert.equal(1, collector.reportData.scripts.length);
         assert.equal("mocId", collector.reportData.domState.activeElementId);

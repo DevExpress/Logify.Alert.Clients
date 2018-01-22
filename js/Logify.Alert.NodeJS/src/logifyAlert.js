@@ -1,6 +1,7 @@
 'use strict';
 import nodeCollector from "./collectors/nodeCollector.js";
 import customDataCollector from "./collectors/customDataCollector.js";
+import tagsCollector from "./collectors/tagsCollector.js";
 import nodeReportSender from "./reportSender/nodeReportSender.js";
 
 class logifyAlert {
@@ -11,6 +12,7 @@ class logifyAlert {
         this.applicationVersion = undefined;
         this.userId = undefined;
         this.customData = undefined;
+        this.tags = undefined;
         this.beforeReportException = undefined;
         this.afterReportException = undefined;
     }
@@ -63,6 +65,7 @@ class logifyAlert {
         collector.applicationVersion = this.applicationVersion;
         collector.userId = this.userId;
         collector.collectors.push(new customDataCollector(this.customData));
+        collector.collectors.push(new tagsCollector(this.tags));
         return collector;
     }
 

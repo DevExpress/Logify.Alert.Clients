@@ -44,6 +44,7 @@ namespace DevExpress.Logify.Core.Internal {
         public string OfflineReportsDirectory { get; set; }
         public int OfflineReportsCount { get; set; }
         public Dictionary<string, string> CustomData { get; set; }
+        public Dictionary<string, string> Tags { get; set; }
         public bool CollectMiniDump { get; set; }
         public bool CollectScreenshot { get; set; }
         public bool CollectBreadcrumbs { get; set; }

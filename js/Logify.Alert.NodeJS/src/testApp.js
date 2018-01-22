@@ -5,6 +5,7 @@ let client = new logifyAlert("B05B3BA1E17C4726ADEB59B3DB84967E");
 client.applicationName = "testApp";
 client.applicationVersion = "123";
 client.customData = {"Key1":  "Data1", "Key2": "Data2"};
+client.tags = {"TagKey1":  "TagData1", "TagKey2": "TagData2"};
 
 let afterReportExceptionCallback = function (e) {
 };

@@ -107,6 +107,7 @@
     <Compile Include="Collectors\MiniDumpCollector.cs" />
     <Compile Include="Collectors\OperatingSystemCollector.cs" />
     <Compile Include="Collectors\ScreenShotCollector.cs" />
+    <Compile Include="Collectors\TagsCollector.cs" />
     <Compile Include="Collectors\VirtualMachineCollector.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\ClientConfiguration.cs" />

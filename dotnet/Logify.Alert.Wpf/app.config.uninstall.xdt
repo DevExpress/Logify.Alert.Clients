@@ -19,6 +19,9 @@
     <customData>
       <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" xdt:Transform="Remove" xdt:Locator="Match(key)" />
     </customData>
+    <tags>
+      <add key="MY_CUSTOM_TAG_KEY" value="My Tag Value" />
+    </tags>
   </logifyAlert>
   <logifyAlert>
     <customData xdt:Transform="Remove" xdt:Locator="Condition(count(*)=0)" />

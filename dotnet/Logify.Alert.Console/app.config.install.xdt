@@ -26,6 +26,11 @@
             <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" />
         </customData>
         -->
+        <!--
+        <tags>
+            <add key="MY_CUSTOM_TAG_KEY" value="My Tag Value" />
+        </tags>
+        -->
     </logifyAlert>
     <!-- Insert System.Diagnostics.Trace listener -->
     <system.diagnostics xdt:Transform="InsertIfMissing">

@@ -18,6 +18,7 @@ namespace DevExpress.Logify.Core.Internal {
 }
 #else
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace DevExpress.Logify {
@@ -34,8 +35,10 @@ namespace DevExpress.Logify {
         public ClientValueElement ConfirmSend { get { return (ClientValueElement)base["confirmSend"]; } }
         //[ConfigurationProperty("logId")]
         //public ValueElement LogId { get { return (ValueElement)base["logId"]; } }
-        [ConfigurationProperty("customData", IsDefaultCollection = true, IsRequired = false)]
+        [ConfigurationProperty("customData", IsDefaultCollection = false, IsRequired = false)]
         public KeyValueConfigurationCollection CustomData { get { return (KeyValueConfigurationCollection)base["customData"]; } }
+        [ConfigurationProperty("tags", IsDefaultCollection = false, IsRequired = false)]
+        public KeyValueConfigurationCollection Tags { get { return (KeyValueConfigurationCollection)base["tags"]; } }
 
         [ConfigurationProperty("offlineReportsEnabled", IsRequired = false)]
         public ClientValueElement OfflineReportsEnabled { get { return (ClientValueElement)base["offlineReportsEnabled"]; } }
@@ -143,11 +146,17 @@ namespace DevExpress.Logify.Core.Internal {
                     config.BreadcrumbsMaxCount = value;
             }
 
-            if (section.CustomData != null && section.CustomData.Count > 0) {
-                foreach (KeyValueConfigurationElement element in section.CustomData)
-                    config.CustomData[element.Key] = element.Value;
-            }
+            config.CustomData = CreateDictionary(section.CustomData);
+            config.Tags = CreateDictionary(section.Tags);
             return config;
+        }
+        static Dictionary<string, string> CreateDictionary(KeyValueConfigurationCollection src) {
+            if (src == null || src.Count <= 0)
+                return null;
+            Dictionary<string, string> result = new Dictionary<string, string>(src.Count);
+            foreach (KeyValueConfigurationElement element in src)
+                result[element.Key] = element.Value;
+            return result;
         }
     }
 }

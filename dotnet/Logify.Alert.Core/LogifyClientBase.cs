@@ -32,6 +32,7 @@ namespace DevExpress.Logify.Core {
 
         ILogifyClientConfiguration config;
         IDictionary<string, string> customData = new Dictionary<string, string>();
+        IDictionary<string, string> tags = new Dictionary<string, string>();
         IStackTraceHelper stackTraceHelper;
         BreadcrumbCollection breadcrumbs = new BreadcrumbCollection();
         AttachmentCollection attachments = new AttachmentCollection();
@@ -133,6 +134,7 @@ namespace DevExpress.Logify.Core {
         public string AppVersion { get; set; }
         public string UserId { get; set; }
         public IDictionary<string, string> CustomData { get { return customData; } }
+        public IDictionary<string, string> Tags { get { return tags; } }
         public AttachmentCollection Attachments { get { return attachments; } }
         public BreadcrumbCollection Breadcrumbs { get { return breadcrumbs; } }
         protected internal bool CollectBreadcrumbsCore {
@@ -293,6 +295,7 @@ namespace DevExpress.Logify.Core {
 
             collectors.Add(new ExceptionObjectInfoCollector(Config, callArgumentsMap));
             collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
+            collectors.Add(new TagsCollector(this.Tags));
             collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
             collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
 

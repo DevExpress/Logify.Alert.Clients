@@ -7,6 +7,7 @@ import windowSizeCollector from "./windowSizeCollector.js";
 import siteDataCollector from "./siteDataCollector.js";
 import logifyInfoCollector from "./logifyInfoCollector.js";
 import customDataCollector from "./customDataCollector.js";
+import tagsCollector from "./tagsCollector.js";
 import scriptsCollector from "./scriptsCollector.js";
 import domStateCollector from "./domStateCollector.js";
 import breadcrumbsCollector from "./breadcrumbsCollector.js";
@@ -30,6 +31,7 @@ export default class jsCollector extends compositeCollector {
         this.collectors.push(new siteDataCollector(this.owner));
         this.collectors.push(new logifyInfoCollector(this.owner));
         this.collectors.push(new customDataCollector(this.owner));
+        this.collectors.push(new tagsCollector(this.owner));
         this.collectors.push(new scriptsCollector(this.owner));
         this.collectors.push(new domStateCollector(this.owner));
         this.collectors.push(this.breadcrumbsCollector);

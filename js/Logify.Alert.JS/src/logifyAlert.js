@@ -13,6 +13,7 @@ class logifyAlert {
         this.applicationVersion = undefined;
         this.userId = undefined;
         this.customData = undefined;
+        this.tags = undefined;
         this.collectLocalStorage = false;
         this.collectSessionStorage = true;
         this.collectCookies = true;
