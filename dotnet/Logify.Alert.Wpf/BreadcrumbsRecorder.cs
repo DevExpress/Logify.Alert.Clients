@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -81,6 +82,7 @@ namespace DevExpress.Logify.Core.Internal {
             EventManager.RegisterClassHandler(type, UIElement.PreviewTextInputEvent, new TextCompositionEventHandler(TextInput), true);
             //EventManager.RegisterClassHandler(type, UIElement.PreviewMouseWheelEvent, new MouseWheelEventHandler(MouseWheel), true);
         }
+        [HandleProcessCorruptedStateExceptions]
         void FocusObserverOnFocusChanged(object sender, ValueChangedEventArgs<IInputElement> e) {
             try {
                 FrameworkElement oldFocus = e.OldValue as FrameworkElement;
@@ -97,6 +99,7 @@ namespace DevExpress.Logify.Core.Internal {
             catch {
             }
         }
+        [HandleProcessCorruptedStateExceptions]
         void KeyDown(object sender, KeyEventArgs e) {
             try {
                 FrameworkElement source = sender as FrameworkElement;
@@ -109,6 +112,7 @@ namespace DevExpress.Logify.Core.Internal {
             catch {
             }
         }
+        [HandleProcessCorruptedStateExceptions]
         void KeyUp(object sender, KeyEventArgs e) {
             try {
                 FrameworkElement source = sender as FrameworkElement;
@@ -121,6 +125,7 @@ namespace DevExpress.Logify.Core.Internal {
             catch {
             }
         }
+        [HandleProcessCorruptedStateExceptions]
         void MouseDown(object sender, MouseButtonEventArgs e) {
             try {
                 FrameworkElement source = sender as FrameworkElement;
@@ -133,6 +138,7 @@ namespace DevExpress.Logify.Core.Internal {
             catch {
             }
         }
+        [HandleProcessCorruptedStateExceptions]
         void MouseUp(object sender, MouseButtonEventArgs e) {
             try {
                 FrameworkElement source = sender as FrameworkElement;
@@ -145,6 +151,7 @@ namespace DevExpress.Logify.Core.Internal {
             catch {
             }
         }
+        [HandleProcessCorruptedStateExceptions]
         void MouseWheel(object sender, MouseWheelEventArgs e) {
             try {
                 FrameworkElement source = sender as FrameworkElement;
@@ -157,6 +164,7 @@ namespace DevExpress.Logify.Core.Internal {
             catch {
             }
         }
+        [HandleProcessCorruptedStateExceptions]
         void TextInput(object sender, TextCompositionEventArgs e) {
             try {
                 FrameworkElement source = sender as FrameworkElement;
@@ -236,17 +244,26 @@ namespace DevExpress.Logify.Core.Internal {
 
             AddBreadcrumb(item);
         }
+        [HandleProcessCorruptedStateExceptions]
         void CollectMousePosition(IDictionary<string, string> properties, FrameworkElement source, MouseButtonEventArgs e) {
-            IInputElement inputElement = GetRootInputElement(source);
-            if(inputElement != null) {
-                Point relativePosition = e.GetPosition(inputElement);
-                properties["x"] = relativePosition.X.ToString();
-                properties["y"] = relativePosition.Y.ToString();
-                if(inputElement is Visual) {
-                    Point screenPosition = (inputElement as Visual).PointToScreen(relativePosition);
-                    properties["sx"] = screenPosition.X.ToString();
-                    properties["sy"] = screenPosition.Y.ToString();
+            try {
+                IInputElement inputElement = GetRootInputElement(source);
+                if (inputElement != null) {
+                    Point relativePosition = e.GetPosition(inputElement);
+                    properties["x"] = relativePosition.X.ToString();
+                    properties["y"] = relativePosition.Y.ToString();
+                    if (inputElement is Visual) {
+                        try {
+                            Point screenPosition = (inputElement as Visual).PointToScreen(relativePosition);
+                            properties["sx"] = screenPosition.X.ToString();
+                            properties["sy"] = screenPosition.Y.ToString();
+                        }
+                        catch {
+                        }
+                    }
                 }
+            }
+            catch {
             }
         }
         IInputElement GetRootInputElement(FrameworkElement source) {
@@ -257,7 +274,8 @@ namespace DevExpress.Logify.Core.Internal {
                 lastInputElement = source as IInputElement;
 
             if(source != null) {
-                return GetRootInputElementCore(source.Parent as FrameworkElement, lastInputElement);
+                //return GetRootInputElementCore(source.Parent as FrameworkElement, lastInputElement);
+                return GetRootInputElementCore(VisualTreeHelper.GetParent(source) as FrameworkElement, lastInputElement);
             }
             return lastInputElement;
         }
