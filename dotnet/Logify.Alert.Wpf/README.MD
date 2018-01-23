@@ -171,6 +171,13 @@ Use the **CustomData** property to attach additional information to the generate
 client.CustomData["CustomerName"] = "Mary";
 ```
 
+#### Tags
+IDictionary<String, String>. Gets the collection of tags specifying additional fields from a raw report, which will be used in auto ignoring, filtering or detecting duplicates. A key is a tag name (a string that consists of a-z, A-Z, 0-9, and _ characters), and a value is a tag value that is saved to a report. A new tag is added with **Allow search** enabled.
+
+```csharp
+client.Tags["OS"] = "Win8";
+```
+
 #### Instance
 Singleton. Returns the single instance of the LogifyAlert class.
 ```csharp
@@ -209,13 +216,6 @@ client.ProxyCredentials = new NetworkCredential("MyProxyUserName", "MyProxyPassw
 Specifies a time interval, in minutes, in which client configuration set [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration) should be automatically loaded from the server. The minimum value is 2.
 ```csharp
 client.RemoteConfigurationFetchInterval = 5;
-```
-
-#### Tags
-IDictionary<String, String>. Gets the collection of tags specifying additional fields from a raw report, which will be used in auto ignoring, filtering or detecting duplicates. A key is a tag name (a string that consists of a-z, A-Z, 0-9, and _ characters), and a value is a path to the required field from a raw report. A new tag is added with **Allow search** enabled.
-
-```csharp
-client.Tags["OS"] = "OS.DisplayName";
 ```
 
 #### UserId
