@@ -109,10 +109,10 @@ client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
 
 #### tags
 
-A dictionary that contains tags specifying additional fields from a raw report, which will be used in auto ignoring, filtering or detecting duplicates. A key is a tag name (a string that consists of a-z, A-Z, 0-9, and _ characters), and a value is a path to the required field from a raw report. A new tag is added with **Allow search** enabled.
+A dictionary that contains tags specifying additional fields from a raw report, which will be used in auto ignoring, filtering or detecting duplicates. A key is a tag name (a string that consists of a-z, A-Z, 0-9, and _ characters), and a value is a tag value that is saved to a report. A new tag is added with **Allow search** enabled.
 
 ```javascript
-client.tags["OS"] = "OS.DisplayName";
+client.tags["OS"] = "Win8";
 ```
 
 #### userId
