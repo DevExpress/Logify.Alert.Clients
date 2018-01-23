@@ -27,6 +27,7 @@ namespace DevExpress.Logify.Core.Internal {
                 instance = new AspBreadcrumbsRecorder();
             }
         }
+        [IgnoreCallTracking]
         internal void AddBreadcrumb(HttpApplication httpApplication) {
             if(httpApplication == null)
                 return;
@@ -39,16 +40,19 @@ namespace DevExpress.Logify.Core.Internal {
             if(response == null)
                 return;
 
-            Breadcrumb breadcrumb = new Breadcrumb();
-            breadcrumb.Event = BreadcrumbEvent.Request;
-            breadcrumb.CustomData = new Dictionary<string, string>() {
-                { "method", request.HttpMethod },
-                { "url", request.Url.ToString() },
-                { "status", response.StatusDescription },
-                { "session", TryGetSessionId(request, response) }
-            };
+            try {
+                Breadcrumb breadcrumb = new Breadcrumb {
+                    Event = BreadcrumbEvent.Request,
+                    CustomData = new Dictionary<string, string>() {
+                        { "method", request.HttpMethod },
+                        { "url", request.Url.ToString() },
+                        { "status", response.StatusDescription },
+                        { "session", TryGetSessionId(request, response) }
+                    }
+                };
 
-            base.AddBreadcrumb(breadcrumb);
+                base.AddBreadcrumb(breadcrumb);
+            } catch { }
         }
         [IgnoreCallTracking]
         internal void UpdateBreadcrumb(HttpApplication httpApplication) {
@@ -63,17 +67,19 @@ namespace DevExpress.Logify.Core.Internal {
             if(response == null)
                 return;
 
-            Breadcrumb breadcrumb = LogifyAlert.Instance.Breadcrumbs.Where(b =>
-                b.GetIsAuto() &&
-                b.Event == BreadcrumbEvent.Request &&
-                b.CustomData != null &&
-                b.CustomData["method"] == request.HttpMethod &&
-                b.CustomData["url"] == request.Url.ToString() &&
-                b.CustomData["session"] == TryGetSessionId(request, response)
-            ).First();
+            try {
+                Breadcrumb breadcrumb = LogifyAlert.Instance.Breadcrumbs.Where(b =>
+                    b.GetIsAuto() &&
+                    b.Event == BreadcrumbEvent.Request &&
+                    b.CustomData != null &&
+                    b.CustomData["method"] == request.HttpMethod &&
+                    b.CustomData["url"] == request.Url.ToString() &&
+                    b.CustomData["session"] == TryGetSessionId(request, response)
+                ).First();
 
-            if(breadcrumb != null)
-                breadcrumb.CustomData["status"] = "Failed";
+                if(breadcrumb != null)
+                    breadcrumb.CustomData["status"] = "Failed";
+            } catch { }
         }
         protected override string GetCategory() {
             return "request";
@@ -92,8 +98,9 @@ namespace DevExpress.Logify.Core.Internal {
                         cookieValue = cookie.Value;
                 } else {
                     cookieValue = Guid.NewGuid().ToString();
-                    cookie = new HttpCookie(CookieName, cookieValue);
-                    cookie.HttpOnly = true;
+                    cookie = new HttpCookie(CookieName, cookieValue) {
+                        HttpOnly = true
+                    };
                     response.Cookies.Add(cookie);
                 }
             } catch { }

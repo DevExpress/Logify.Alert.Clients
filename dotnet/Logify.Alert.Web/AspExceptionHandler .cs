@@ -13,6 +13,7 @@ namespace DevExpress.Logify.Web {
             catch { }
         }
 
+        [IgnoreCallTracking]
         protected virtual void OnBeginRequest(object sender, EventArgs e) {
             AspBreadcrumbsRecorder.Instance.AddBreadcrumb(sender as HttpApplication);
         }
