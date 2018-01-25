@@ -363,9 +363,13 @@ namespace DevExpress.Logify.Core {
                 Config.IgnoreConfig.IgnoreRequestBody = configuration.IgnoreRequestBody;
             }
 
-            if (configuration.CustomData != null && configuration.CustomData.Count > 0) {
-                foreach (string key in configuration.CustomData.Keys)
-                    this.CustomData[key] = configuration.CustomData[key];
+            MergeDictionaries(this.CustomData, configuration.CustomData);
+            MergeDictionaries(this.Tags, configuration.Tags);
+        }
+        void MergeDictionaries(IDictionary<string, string> existing, IDictionary<string, string> toAppend) {
+            if (toAppend != null && toAppend.Count > 0) {
+                foreach (string key in toAppend.Keys)
+                    existing[key] = toAppend[key];
             }
         }
 
