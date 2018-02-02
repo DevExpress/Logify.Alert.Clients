@@ -68,17 +68,24 @@ export default class eventRecorderBase {
         // if (data.tag === "BODY")
         //     return;
         if (element.name)
-            data.name = element.name;
+            data.name = addStringifiedValue(element.name);
         if (element.href)
-            data.href = element.href;
+            data.href = addStringifiedValue(element.href);
         if (element.type)
-            data.type = element.type;
+            data.type = addStringifiedValue(element.type);
         if (element.value && !this.isSecureElement(element))
-            data.value = element.value;
+            data.value = addStringifiedValue(element.value);
         if (element.checked != undefined)
-            data.checked = element.checked;
+            data.checked = addStringifiedValue(element.checked);
         return data;
     }
+
+    addStringifiedValue(value) {
+        if (typeof value === "object")
+            return JSON.stringify(value);
+        return value;    
+    }
+
     isTextElement(element) {
         return element.nodeType === 3;
     }
