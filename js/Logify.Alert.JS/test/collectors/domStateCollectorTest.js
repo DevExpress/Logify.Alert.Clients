@@ -9,7 +9,7 @@ describe('domStateCollector tests', function() {
         owner.collectInputs = true;
 
         let collector = new domStateCollector(owner);
-        let win = getWin(true, true, true, true);
+        let win = getWin(true, true, true, true, true);
         collector.process(win, reportData);
 
         assert.equal("mocId", reportData.domState.activeElementId);
@@ -17,6 +17,7 @@ describe('domStateCollector tests', function() {
         assert.equal("mocElementScrollTop", reportData.domState.activeElementScrollTop);
         assert.equal("mocBodyScrollTop", reportData.domState.bodyScrollTop);
         assert.equal("mocLocation", reportData.domState.location);
+        assert.equal("mocReferrer", reportData.domState.referrer);
         assert.equal("mocReadyState", reportData.domState.readyState);
         assert.equal(true, reportData.domState.isInsideIFrame);
 
@@ -37,7 +38,7 @@ describe('domStateCollector tests', function() {
         owner.collectInputs = false;
 
         let collector = new domStateCollector(owner);
-        let win = getWin(true, false, false, false);
+        let win = getWin(true, false, false, false, false);
         collector.process(win, reportData);
 
         assert.equal("mocId", reportData.domState.activeElementId);
@@ -46,6 +47,7 @@ describe('domStateCollector tests', function() {
         assert.equal("mocElementScrollTop", reportData.domState.activeElementScrollTop);
         assert.equal(undefined, reportData.domState.bodyScrollTop);
         assert.equal(undefined, reportData.domState.location);
+        assert.equal(undefined, reportData.domState.referrer);
         assert.equal(false, reportData.domState.isInsideIFrame);
 
         assert.equal(undefined, reportData.domState.inputs);
@@ -55,7 +57,7 @@ describe('domStateCollector tests', function() {
         let reportData = new Object();
 
         let collector = new domStateCollector();
-        let win = getWin(false, true, false, false);
+        let win = getWin(false, true, false, false, false);
         collector.process(win, reportData);
 
         assert.equal(undefined, reportData.domState.activeElementId);
@@ -64,6 +66,7 @@ describe('domStateCollector tests', function() {
         assert.equal("mocBodyScrollTop", reportData.domState.bodyScrollTop);
         assert.equal("mocReadyState", reportData.domState.readyState);
         assert.equal(undefined, reportData.domState.location);
+        assert.equal(undefined, reportData.domState.referrer);
         assert.equal(false, reportData.domState.isInsideIFrame);
 
         assert.equal(undefined, reportData.domState.inputs);
@@ -75,7 +78,7 @@ describe('domStateCollector tests', function() {
         owner.collectInputs = false;
 
         let collector = new domStateCollector(owner);
-        let win = getWin(false, false, true, false);
+        let win = getWin(false, false, true, false, false);
         collector.process(win, reportData);
 
         assert.equal(undefined, reportData.domState.activeElementId);
@@ -84,12 +87,34 @@ describe('domStateCollector tests', function() {
         assert.equal("mocReadyState", reportData.domState.readyState);
         assert.equal(undefined, reportData.domState.bodyScrollTop);
         assert.equal("mocLocation", reportData.domState.location);
+        assert.equal(undefined, reportData.domState.referrer);
         assert.equal(false, reportData.domState.isInsideIFrame);
 
         assert.equal(undefined, reportData.domState.inputs);
     });
 
-    function getWin(isActiveElement, isBody, isLocation, isInFrame) {
+    it('only referrer test', function () {
+        let reportData = new Object();
+        let owner = new Object();
+        owner.collectInputs = false;
+
+        let collector = new domStateCollector(owner);
+        let win = getWin(false, false, false, true, false);
+        collector.process(win, reportData);
+
+        assert.equal(undefined, reportData.domState.activeElementId);
+        assert.equal(undefined, reportData.domState.activeElementTagName);
+        assert.equal(undefined, reportData.domState.activeElementScrollTop);
+        assert.equal("mocReadyState", reportData.domState.readyState);
+        assert.equal(undefined, reportData.domState.bodyScrollTop);
+        assert.equal(undefined, reportData.domState.location);
+        assert.equal("mocReferrer", reportData.domState.referrer);
+        assert.equal(false, reportData.domState.isInsideIFrame);
+
+        assert.equal(undefined, reportData.domState.inputs);
+    });
+
+    function getWin(isActiveElement, isBody, isLocation, isReferrer, isInFrame) {
         let win = new Object();
         win.document = new Object();
 
@@ -111,7 +136,11 @@ describe('domStateCollector tests', function() {
             win.document.location = new Object();
             win.document.location.href = "mocLocation";
         }
-        
+
+        if(isReferrer) {
+            win.document.referrer = "mocReferrer";
+        }
+
         if(isInFrame) {
             win.self = 1;
             win.top = 2;

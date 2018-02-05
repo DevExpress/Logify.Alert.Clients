@@ -27,7 +27,11 @@ export default class domStateCollector extends collectorBase {
         if(win.document.location) {
             report.domState.location = win.document.location.href;
         }
-        
+
+        if(win.document.referrer) {
+            report.domState.referrer = win.document.referrer;
+        }
+
         if(win.document.readyState) {
             report.domState.readyState = win.document.readyState;
         }
