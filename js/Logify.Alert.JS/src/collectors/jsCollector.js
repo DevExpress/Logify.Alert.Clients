@@ -11,6 +11,7 @@ import tagsCollector from "./tagsCollector.js";
 import scriptsCollector from "./scriptsCollector.js";
 import domStateCollector from "./domStateCollector.js";
 import breadcrumbsCollector from "./breadcrumbsCollector.js";
+import libsCollector from "./libsCollector";
 
 export default class jsCollector extends compositeCollector {
     constructor(_owner, isTest = false) {
@@ -29,6 +30,7 @@ export default class jsCollector extends compositeCollector {
         this.collectors.push(new screenSizeCollector(this.owner));
         this.collectors.push(new windowSizeCollector(this.owner));
         this.collectors.push(new siteDataCollector(this.owner));
+        this.collectors.push(new libsCollector(this.owner));
         this.collectors.push(new logifyInfoCollector(this.owner));
         this.collectors.push(new customDataCollector(this.owner));
         this.collectors.push(new tagsCollector(this.owner));
