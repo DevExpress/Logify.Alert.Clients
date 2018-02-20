@@ -7,6 +7,7 @@ using DevExpress.Logify.Core;
 using System.Threading;
 using System.ComponentModel;
 using DevExpress.Logify.Core.Internal;
+using System.Diagnostics;
 
 #if NETSTANDARD
 using System.Net.Http;
@@ -26,6 +27,7 @@ namespace DevExpress.Logify.Core {
 namespace DevExpress.Logify.Core.Internal {
     public class BackgroundSendModelAccessor {
         public static BackgroundSendModel SendReportInBackgroundThread(Func<bool> sendAction) {
+            FixWebRequestDeadlock();
             Thread thread = new Thread(BackgroundSend);
             BackgroundSendModel sendModel = new BackgroundSendModel();
             sendModel.SendAction = sendAction;
@@ -33,6 +35,11 @@ namespace DevExpress.Logify.Core.Internal {
             thread.Start(sendModel);
             return sendModel;
         }
+
+        internal static void FixWebRequestDeadlock() {
+            WebRequest.Create("http://logify.devexpress.com/"); //T605959: deadlock in System.Net.Logging read configuration
+        }
+
         static void BackgroundSend(object obj) {
             BackgroundSendModel model = obj as BackgroundSendModel;
             if (model == null)
@@ -73,7 +80,8 @@ namespace DevExpress.Logify.Core.Internal {
         }
 
         WebRequest CreateAndSetupHttpWebRequest(LogifyClientExceptionReport report) {
-            WebRequest request = WebRequest.Create(CreateEndPointUrl(ServiceUrl, "api/report/newreport"));
+            Uri serUri = new Uri(CreateEndPointUrl(ServiceUrl, "api/report/newreport"), UriKind.Absolute);    
+            WebRequest request = WebRequest.Create(serUri);
             SetupProxy(request);
 
             request.Method = "POST";

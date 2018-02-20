@@ -8,6 +8,7 @@ namespace DevExpress.Logify.Core.Internal {
             : base(innerSender) {
         }
         protected override bool SendExceptionReportInBackground(IExceptionReportSender innerSender, LogifyClientExceptionReport report) {
+            BackgroundSendModelAccessor.FixWebRequestDeadlock();
             Thread thread = new Thread(() => {
                 if (innerSender != null)
                     innerSender.SendExceptionReport(report);
@@ -20,6 +21,7 @@ namespace DevExpress.Logify.Core.Internal {
         }
 #if ALLOW_ASYNC
         protected override Task<bool> SendExceptionReportInBackgroundAsync(IExceptionReportSender innerSender, LogifyClientExceptionReport report) {
+            BackgroundSendModelAccessor.FixWebRequestDeadlock();
             Thread thread = new Thread(() => {
                 if (innerSender != null)
                     innerSender.SendExceptionReport(report);

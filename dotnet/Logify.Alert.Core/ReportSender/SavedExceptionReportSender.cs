@@ -20,7 +20,7 @@ namespace DevExpress.Logify.Core.Internal {
                 string[] files = GetSavedFiles();
                 if (files == null || files.Length <= 0)
                     return;
-
+                BackgroundSendModelAccessor.FixWebRequestDeadlock();
                 Thread thread = new Thread(TrySendSavedReportsWorker);
                 try {
                     thread.Priority = ThreadPriority.Lowest;
