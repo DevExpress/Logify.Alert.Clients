@@ -20,6 +20,7 @@ export default class jsCollector extends compositeCollector {
         this.applicationName = undefined;
         this.applicationVersion = undefined;
         this.userId = undefined;
+        this.securityUtil = undefined;
 
         this._reportData = new Object();
 

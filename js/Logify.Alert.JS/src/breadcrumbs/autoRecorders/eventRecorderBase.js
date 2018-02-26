@@ -59,7 +59,7 @@ export default class eventRecorderBase {
         Object.assign(breadcrumb.customData, breadcrumb.customData, elementData);
     }
     isSecureElement(element) {
-        return element.type && element.type.toLowerCase() === "password";
+        return this._owner.securityUtil.inputShouldBeMasked(element);
     }
     parseElementInfo(element) {
         let data = {};
@@ -68,15 +68,15 @@ export default class eventRecorderBase {
         // if (data.tag === "BODY")
         //     return;
         if (element.name)
-            data.name = addStringifiedValue(element.name);
+            data.name = this.addStringifiedValue(element.name);
         if (element.href)
-            data.href = addStringifiedValue(element.href);
+            data.href = this.addStringifiedValue(element.href);
         if (element.type)
-            data.type = addStringifiedValue(element.type);
-        if (element.value && !this.isSecureElement(element))
-            data.value = addStringifiedValue(element.value);
+            data.type = this.addStringifiedValue(element.type);
+        if (element.value) 
+            data.value = this._owner.securityUtil.maskedInputValue(element);
         if (element.checked != undefined)
-            data.checked = addStringifiedValue(element.checked);
+            data.checked = this.addStringifiedValue(element.checked);
         return data;
     }
 

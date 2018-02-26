@@ -2,6 +2,7 @@
 import jsCollector from "./collectors/jsCollector.js";
 import breadcrumbsAutoRecorders from "./breadcrumbs/breadcrumbsAutoRecorders.js";
 import jsReportSender from "./reportSender/jsReportSender.js";
+import securityUtil from "./utils/securityUtil.js";
 
 class logifyAlert {
     constructor(apiKey) {
@@ -21,9 +22,12 @@ class logifyAlert {
         this.breadcrumbsMaxCount = 100;
 
         this._collectBreadcrumbs = false;
+        this._sensitiveDataFilters = [];
 
         this.beforeReportException = undefined;
         this.afterReportException = undefined;
+
+        this.securityUtil = new securityUtil(this.sensitiveDataFilters);
     }
 
     get collectBreadcrumbs() {
@@ -37,6 +41,15 @@ class logifyAlert {
             this.stopBreadcrumbsAutoRecorders();
         }
         this._collectBreadcrumbs = value;
+    }
+
+    get sensitiveDataFilters() {
+        return this._sensitiveDataFilters;
+    }
+
+    set sensitiveDataFilters(value) {
+        this.securityUtil.updateFilters(value);
+        this._sensitiveDataFilters = value;
     }
 
     startBreadcrumbsAutoRecorders() {
@@ -61,11 +74,14 @@ class logifyAlert {
 
         this._handleReports = true;
 
+        const defaultOnErrorHandler = window.onerror;
         window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
             if (this._handleReports) {
                 this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, this);
             }
-
+            if (typeof defaultOnErrorHandler === 'function') { 
+                defaultOnErrorHandler.call(window, errorMsg, url, lineNumber, column, errorObj);
+            }
             return false;
         };
 
