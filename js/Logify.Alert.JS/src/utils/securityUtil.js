@@ -10,16 +10,6 @@ export default class securityUtil {
     updateFilters(newFilters) {
         this.sensitiveDataRules = !newFilters ? [] : newFilters;
         this.rulesCnt = this.sensitiveDataRules.length;
-
-        this.prepareRules();
-    }
-
-    prepareRules() {
-        for (let i = 0; i < this.rulesCnt; i++) {
-            if (typeof this.sensitiveDataRules[i] === 'string') {
-                this.sensitiveDataRules[i] = new RegExp("^" + this.sensitiveDataRules[i] + "$", "i");
-            }
-        }
     }
 
     maskedObject(dataObject) {
@@ -30,7 +20,7 @@ export default class securityUtil {
                     dataObject[keys[i]] = this.maskValue;
                 else {
                     dataObject[keys[i]] = this.maskedObject(dataObject[keys[i]]);
-                }    
+                }
             }
         }
         return dataObject;
@@ -41,7 +31,7 @@ export default class securityUtil {
             return null;
         if (this.inputShouldBeMasked(domInput))
             return this.maskValue;
-        return domInput.value;    
+        return domInput.value;
     }
 
     inputShouldBeMasked(domInput) {
@@ -51,18 +41,24 @@ export default class securityUtil {
             return true;
         return this._isSecure(domInput.id) || this._isSecure(domInput.name);
     }
-    
+
     _isSecure(key) {
         if (!key)
             return false;
         for (let i = 0; i < this.rulesCnt; i++) {
-            if (typeof this.sensitiveDataRules[i] === 'object' && typeof this.sensitiveDataRules[i].exec === 'function') {
-                if (this.sensitiveDataRules[i].exec(key) !== null) {
+            try {
+                if (typeof this.sensitiveDataRules[i] === 'object' && typeof this.sensitiveDataRules[i].exec === 'function') {
+                    if (this.sensitiveDataRules[i].exec(key) !== null) {
+                        return true;
+                    }
+                } else if (typeof this.sensitiveDataRules[i] === 'string' 
+                            && typeof key === 'string' 
+                            && this.sensitiveDataRules[i].toLowerCase() === key.toLowerCase()) {
+                    return true;
+                } else if (this.sensitiveDataRules[i] === key) {
                     return true;
                 }
-            } else if (this.sensitiveDataRules[i] === key) {
-                return true;
-            }
+            } catch (e) { }
         }
         return false;
     }
