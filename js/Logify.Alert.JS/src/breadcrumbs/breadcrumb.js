@@ -2,7 +2,7 @@
 
 export default class breadcrumb {
     constructor(message, eventType) {
-        this.dateTime = new Date().toUTCString();
+        this.dateTime = new Date().toISOString();
         this.message = message;
         this.event = eventType;
     }
