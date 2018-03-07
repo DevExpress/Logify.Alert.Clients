@@ -7,6 +7,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var minify = require('gulp-minify');
 var mocha = require('gulp-mocha');
 var browserify = require('gulp-browserify');
+var gzip = require('gulp-gzip');
 
 gulp.task('clean', function () {
     return del(['./lib']);
@@ -27,11 +28,13 @@ gulp.task('prepare-scripts', ['clean'], function () {
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest('./lib/src'));
 });
+
 gulp.task('browserify-scripts', ['prepare-scripts'], function() {
     return gulp.src('./lib/src/logifyAlert.js')
         .pipe(browserify())
         .pipe(gulp.dest('./lib'));
 });
+
 gulp.task('minify-scripts', ['browserify-scripts'], function() {
     return gulp.src('./lib/logifyAlert.js')
         .pipe(minify({
@@ -40,6 +43,12 @@ gulp.task('minify-scripts', ['browserify-scripts'], function() {
             }
         }))
         .pipe(gulp.dest('./lib'));
+});
+
+gulp.task('compress-scripts', ['minify-scripts'], function() {
+    gulp.src('./lib/*.js')
+    .pipe(gzip({ append: false }))
+    .pipe(gulp.dest('./lib/compressed'));
 });
 
 gulp.task('watch', function () {
