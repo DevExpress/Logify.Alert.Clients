@@ -48,7 +48,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
         app.UseExceptionHandler("/Home/Error");
     }
 
-    // You should put Logify Alert initialization after app.UseExceptionHandler call
+    // You need to place Logify Alert initialization code after the app.UseExceptionHandler call (for MVC) or the app.UseDeveloperExceptionPage call (for WebApi)
     app.UseLogifyAlert(Configuration.GetSection("LogifyAlert"));
 }
 ```
