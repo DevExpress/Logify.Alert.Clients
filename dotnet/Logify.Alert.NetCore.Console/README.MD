@@ -39,9 +39,12 @@ You can set up the Logify Alert client using configuration file as follows.
 ```
 
 ```csharp
+_Requires the Microsoft.Extensions.Configuration.FileExtensions and Microsoft.Extensions.Configuration.Json packages_
+
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("LogifyAlert.json", optional: false, reloadOnChange: false);
+    .AddJsonFile("application.json", optional: false, reloadOnChange: false) // Use a default app config file
+    .AddJsonFile("LogifyAlert.json", optional: false, reloadOnChange: false); // Or, use your own config file
 
 IConfigurationRoot configuration = builder.Build();
 LogifyAlert client = LogifyAlert.Instance;
@@ -210,7 +213,7 @@ Occurs after Logify Alert sends a new crash report to the service.
 LogifyAlert.Instance.AfterReportException += OnAfterReportException;
 
 void OnAfterReportException(object sender, EventArgs e) {
-  MessageBox.Show("A new crash report has been sent to Logify Alert", "Crash report", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    System.Console.WriteLine("A new crash report has been sent to Logify Alert");
 }
 ```
 

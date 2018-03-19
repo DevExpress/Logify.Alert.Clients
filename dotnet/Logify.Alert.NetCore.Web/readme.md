@@ -24,31 +24,30 @@ Add the Logify Alert settings to the application's **LogifyAlert.json** file. To
 ```
 
 #### Modify Application's Startup.cs file
-Add the following code to the **BuildWebHost()** method declared in the application's **Program.cs** file.
+Add the following code to the **BuildWebHost()** method declared in the app's **Program.cs** file to load the LogifyAlert configuration from your own config file. Otherwise, declare it within the built-in application.json app config file.
 ```csharp
-WebHost.CreateDefaultBuilder(args)  
-    .ConfigureAppConfiguration((context, builder) => { 
-        builder.AddJsonFile("LogifyAlert.json", optional: true, reloadOnChange: false); // <-- add this line
-    })  
-    .UseStartup<Startup>()
-    .Build();
+public static IWebHost BuildWebHost(string[] args) =>
+    WebHost.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration((context, builder) => {
+            builder.AddJsonFile("LogifyAlert.json", optional: true, reloadOnChange: false); // Use your own config file
+        })
+        .UseStartup<Startup>()
+        .Build();
+    }
+}
 ```
 
 Add the following code to the **Configure()** method declared in the application's **Startup.cs** file.
 ```csharp
 using DevExpress.Logify.Web;
 ...
-public static void Register(HttpConfiguration config) {
-    //...
-    if (env.IsDevelopment())
-    {
+public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+    if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();
-        app.UseBrowserLink();
-    }
-    else
-    {
+    } else {
         app.UseExceptionHandler("/Home/Error");
     }
+
     // You should put Logify Alert initialization after app.UseExceptionHandler call
     app.UseLogifyAlert(Configuration.GetSection("LogifyAlert"));
 }
@@ -320,7 +319,7 @@ Occurs after Logify Alert sends a new crash report to the service.
 LogifyAlert.Instance.AfterReportException += OnAfterReportException;
 
 void OnAfterReportException(object sender, EventArgs e) {
-  MessageBox.Show("A new crash report has been sent to Logify Alert", "Crash report", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    //For example, show your own notification
 }
 ```
 
