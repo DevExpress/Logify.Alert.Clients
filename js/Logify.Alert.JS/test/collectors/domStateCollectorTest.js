@@ -1,4 +1,5 @@
 import domStateCollector from "../../src/collectors/domStateCollector.js";
+import securityUtil from "../../src/utils/securityUtil.js";
 var assert = require('chai').assert;
 
 describe('domStateCollector tests', function() {
@@ -7,6 +8,7 @@ describe('domStateCollector tests', function() {
         let reportData = new Object();
         let owner = new Object();
         owner.collectInputs = true;
+        owner.securityUtil = new securityUtil();
 
         let collector = new domStateCollector(owner);
         let win = getWin(true, true, true, true, true);
@@ -21,21 +23,22 @@ describe('domStateCollector tests', function() {
         assert.equal("mocReadyState", reportData.domState.readyState);
         assert.equal(true, reportData.domState.isInsideIFrame);
 
-        assert.equal(2, reportData.domState.inputs.length);
+        assert.equal(3, reportData.domState.inputs.length);
         assert.equal("name1", reportData.domState.inputs[0].name);
         assert.equal("1", reportData.domState.inputs[0].id);
         assert.equal("text", reportData.domState.inputs[0].type);
         assert.equal("value1", reportData.domState.inputs[0].value);
-        assert.equal("name3", reportData.domState.inputs[1].name);
-        assert.equal("3", reportData.domState.inputs[1].id);
-        assert.equal("date", reportData.domState.inputs[1].type);
-        assert.equal("value3", reportData.domState.inputs[1].value);
+        assert.equal("name3", reportData.domState.inputs[2].name);
+        assert.equal("3", reportData.domState.inputs[2].id);
+        assert.equal("date", reportData.domState.inputs[2].type);
+        assert.equal("value3", reportData.domState.inputs[2].value);
     });
 
     it('only active element test', function () {
         let reportData = new Object();
         let owner = new Object();
         owner.collectInputs = false;
+        owner.securityUtil = new securityUtil();
 
         let collector = new domStateCollector(owner);
         let win = getWin(true, false, false, false, false);
@@ -55,7 +58,9 @@ describe('domStateCollector tests', function() {
 
     it('only body test', function () {
         let reportData = new Object();
-
+        let owner = new Object();
+        owner.securityUtil = new securityUtil();
+        
         let collector = new domStateCollector();
         let win = getWin(false, true, false, false, false);
         collector.process(win, reportData);
@@ -76,6 +81,7 @@ describe('domStateCollector tests', function() {
         let reportData = new Object();
         let owner = new Object();
         owner.collectInputs = false;
+        owner.securityUtil = new securityUtil();
 
         let collector = new domStateCollector(owner);
         let win = getWin(false, false, true, false, false);
@@ -97,6 +103,7 @@ describe('domStateCollector tests', function() {
         let reportData = new Object();
         let owner = new Object();
         owner.collectInputs = false;
+        owner.securityUtil = new securityUtil();
 
         let collector = new domStateCollector(owner);
         let win = getWin(false, false, false, true, false);

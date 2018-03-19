@@ -1,4 +1,5 @@
 import jsCollector from "../../src/collectors/jsCollector.js";
+import securityUtil from "../../src/utils/securityUtil.js";
 var assert = require('chai').assert;
 
 describe('jsCollector tests', function() {
@@ -133,6 +134,7 @@ describe('jsCollector tests', function() {
         owner.collectCookies = true;
         owner.customData = "mocCustomData";
         owner.tags = "mocTags";
+        owner.securityUtil = new securityUtil();
         return new jsCollector(owner, true);
     }
 

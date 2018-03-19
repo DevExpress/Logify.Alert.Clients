@@ -1,4 +1,5 @@
 import siteDataCollector from "../../src/collectors/siteDataCollector.js";
+import securityUtil from "../../src/utils/securityUtil.js";
 var assert = require('chai').assert;
 
 describe('siteDataCollector tests', function() {
@@ -9,6 +10,7 @@ describe('siteDataCollector tests', function() {
         owner.collectLocalStorage = true;
         owner.collectSessionStorage = true;
         owner.collectCookies = true;
+        owner.securityUtil = new securityUtil();
 
         let collector = new siteDataCollector(owner);
         let win = new Object();
