@@ -41,7 +41,7 @@ namespace DevExpress.Logify.Core.Internal {
                 catch {
                 }
                 Utils.SerializeInfo(request.Headers, "headers", this.ignoreHeaders, h => h == "Cookie", logger);
-                //Utils.SerializeInfo(request.ServerVariables, "serverVariables", this.ignoreServerVariables, null, logger);
+                //Utils.SerializeInfo(request.ServerVariables, "serverVariables", this.ignoreServerVariables, v => v.StartsWith("ALL_") || v.StartsWith("HTTP_"), logger);
                 Utils.SerializeInfo(request.Query, "queryString", null, null, logger);
                 //logger.WriteValue("applicationPath", request.ApplicationPath);
                 logger.WriteValue("httpMethod", request.Method);
