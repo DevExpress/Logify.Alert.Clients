@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using DevExpress.Logify.Core;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace DevExpress.Logify.Core.Internal {
     class RequestCollector : IInfoCollector {
@@ -34,20 +30,19 @@ namespace DevExpress.Logify.Core.Internal {
             try {
                 logger.BeginWriteObject(name);
                 //logger.WriteValue("acceptTypes", request.AcceptTypes);
-                //this.SerializeBrowserInfo();
                 this.SerializeContentInfo();
                 this.SerializeFileInfo();
                 Utils.SerializeCookieInfo(request.Cookies, this.ignoreCookies, logger);
                 Dictionary<string, string> ignoredFormFields = null;
                 try {
                     if (!ignoreRequestBody)
-                        ignoredFormFields = Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, logger);
+                        ignoredFormFields = Utils.SerializeInfo(request.Form, "form", this.ignoreFormFields, null, logger);
                 }
                 catch {
                 }
-                Utils.SerializeInfo(request.Headers, "headers", this.ignoreHeaders, logger);
-                //Utils.SerializeInfo(request.ServerVariables, "serverVariables", logger);
-                Utils.SerializeInfo(request.Query, "queryString", null, logger);
+                Utils.SerializeInfo(request.Headers, "headers", this.ignoreHeaders, h => h == "Cookie", logger);
+                //Utils.SerializeInfo(request.ServerVariables, "serverVariables", this.ignoreServerVariables, null, logger);
+                Utils.SerializeInfo(request.Query, "queryString", null, null, logger);
                 //logger.WriteValue("applicationPath", request.ApplicationPath);
                 logger.WriteValue("httpMethod", request.Method);
                 if (!ignoreRequestBody) {
@@ -70,39 +65,6 @@ namespace DevExpress.Logify.Core.Internal {
             }
         }
 
-        void SerializeBrowserInfo() {
-            /*
-            try {
-                logger.BeginWriteObject("browser");
-                HttpBrowserCapabilities browserInfo = request.Browser;
-                logger.WriteValue("activeXSupport", browserInfo.ActiveXControls);
-                logger.WriteValue("isBeta", browserInfo.Beta);
-                logger.WriteValue("userAgent", browserInfo.Browser);
-                logger.WriteValue("canVoiceCall", browserInfo.CanInitiateVoiceCall);
-                logger.WriteValue("canSendMail", browserInfo.CanSendMail);
-                logger.WriteValue("cookiesSupport", browserInfo.Cookies);
-                logger.WriteValue("isCrawler", browserInfo.Crawler);
-                logger.WriteValue("EcmaScriptVersion", browserInfo.EcmaScriptVersion.ToString());
-                logger.WriteValue("frameSupport", browserInfo.Frames);
-                logger.WriteValue("gatewayVersion", browserInfo.GatewayVersion.ToString());
-                logger.WriteValue("inputType", browserInfo.InputType);
-                logger.WriteValue("isMobileDevice", browserInfo.IsMobileDevice);
-                logger.WriteValue("javaAppletSupport", browserInfo.JavaApplets);
-                if (browserInfo.IsMobileDevice) {
-                    logger.WriteValue("mobileDeviceManufacturer", browserInfo.MobileDeviceManufacturer);
-                    logger.WriteValue("mobileDeviceModel", browserInfo.MobileDeviceModel);
-                }
-                logger.WriteValue("platform", browserInfo.Platform);
-                this.SerializeScreenInfo();
-                logger.WriteValue("type", browserInfo.Type);
-                logger.WriteValue("version", browserInfo.Version);
-                logger.WriteValue("isWin32", browserInfo.Win32);
-            }
-            finally {
-                logger.EndWriteObject("browser");
-            }
-            */
-        }
         /*
         void SerializeScreenInfo() {
             try {

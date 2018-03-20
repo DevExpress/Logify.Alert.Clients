@@ -46,7 +46,7 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.WriteValue("SuppressContent", response.SuppressContent);
                 SerializeStatusInfo(e);
                 Utils.SerializeCookieInfo(response.Cookies, this.ignoreCookies, logger);
-                Utils.SerializeInfo(response.Headers, "headers", this.ignoreHeaders, logger);
+                Utils.SerializeInfo(response.Headers, "headers", this.ignoreHeaders, null, logger);
             }
             finally {
                 logger.EndWriteObject("response");

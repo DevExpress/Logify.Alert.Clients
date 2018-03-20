@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Web;
-using DevExpress.Logify.Core;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Web;
 
 namespace DevExpress.Logify.Core.Internal {
     static class Utils {
@@ -21,7 +18,8 @@ namespace DevExpress.Logify.Core.Internal {
                         logger.WriteValue("domain", cookie.Domain);
                         logger.WriteValue("expires", cookie.Expires.ToString());
                         logger.WriteValue("name", cookie.Name);
-                        logger.WriteValue("secure", cookie.Secure);
+                        logger.WriteValue("secure", cookie.Secure);//always false at this stage
+                        //logger.WriteValue("httpOnly", cookie.HttpOnly);
 
                         if (ignoreInfo != null && ignoreInfo.ShouldIgnore(key))
                             logger.WriteValue("value", RequestBodyFilter.ValueStripped);
@@ -36,13 +34,15 @@ namespace DevExpress.Logify.Core.Internal {
             }
         }
 
-        public static Dictionary<string, string> SerializeInfo(NameValueCollection info, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
+        public static Dictionary<string, string> SerializeInfo(NameValueCollection info, string name, IgnorePropertiesInfo ignoreInfo, Predicate<string> customIgnorePredicate, ILogger logger) {
             Dictionary<string, string> result = null;
             if (info != null && info.Count != 0) {
                 try {
                     logger.BeginWriteObject(name);
                     foreach (string key in info.AllKeys) {
-                        if (ignoreInfo != null && ignoreInfo.ShouldIgnore(key)) {
+                        if (customIgnorePredicate != null && customIgnorePredicate(key)) {
+                            continue;
+                        } else if (ignoreInfo != null && ignoreInfo.ShouldIgnore(key)) {
                             if (result == null)
                                 result = new Dictionary<string, string>();
                             result[key] = info.Get(key);
