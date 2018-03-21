@@ -107,6 +107,14 @@ A dictionary that contains custom data sent with a generated report. The first k
 client.customData = {FIRST_KEY:  "FIRST DATA", SECOND_KEY: "SECOND DATA"};
 ```
 
+#### sensitiveDataFilters
+
+An array of keys specifying fields whose values should be excluded from crash reports sent to Logify Alert. These keys are applied to breadcrumbs, inputs passed to a web page, local and session storage data. Pass strings (case-insensitive) or RegEx objects as keys to the array.
+
+```javascript
+client.sensitiveDataFilters = ["password", /credit.*/];
+```
+
 #### tags
 
 A dictionary that contains tags specifying additional fields from a raw report, which will be used in auto ignoring, filtering or detecting duplicates. A key is a tag name (a string that consists of a-z, A-Z, 0-9, and _ characters), and a value is a tag value that is saved to a report. A new tag is added with **Allow search** enabled.
