@@ -383,7 +383,7 @@ Occurs after Logify Alert sends a new crash report to the service.
 ```csharp
 LogifyAlert.Instance.AfterReportException += OnAfterReportException;
 
-void OnAfterReportException(object sender, EventArgs e) {
+void OnAfterReportException(object sender, AfterReportExceptionEventArgs e) {
   MessageBox.Show("A new crash report has been sent to Logify Alert", "Crash report", MessageBoxButtons.OK, MessageBoxIcon.Information);
 }
 ```
