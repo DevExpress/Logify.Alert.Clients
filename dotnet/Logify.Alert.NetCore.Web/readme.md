@@ -1,4 +1,4 @@
-# Logify Alert for .NET Core web applications (Web, MVC, WebApi)
+# Logify Alert for .NET Core web applications (MVC, Razor Pages, WebApi)
 A .NET Core Web client to report exceptions to [Logify Alert](https://logify.devexpress.com).
 
 Starting with the package version v1.0.37, the .Net Standard v2.0 target framework is only supported.
