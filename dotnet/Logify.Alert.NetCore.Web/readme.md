@@ -10,7 +10,7 @@ $ Install-Package Logify.Alert.Web
 
 ## Quick Start
 ### Automatic error reporting
-#### Modify application's appsettings.json configuration file
+#### Modify the appsettings.json configuration file
 Add the Logify Alert settings to the application's **appsettings.json** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Alert/Documentation/CreateApp) generated for it.
 ```json
 {
@@ -20,7 +20,7 @@ Add the Logify Alert settings to the application's **appsettings.json** file. To
 }
 ```
 
-#### Modify application's Startup.cs file
+#### Modify the Startup.cs file
 Add the following code to the **Configure()** method declared in the application's **Startup.cs** file.
 ```csharp
 using DevExpress.Logify.Web;
