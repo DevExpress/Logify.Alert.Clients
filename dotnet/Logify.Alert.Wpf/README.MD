@@ -397,7 +397,7 @@ Handle the **BeforeReportException event** to add custom data to the sent report
 ```csharp
 LogifyAlert.Instance.BeforeReportException += OnBeforeReportException;
 
-void OnBeforeReportException(object sender, EventArgs e) {
+void OnBeforeReportException(object sender, BeforeReportExceptionEventArgs e) {
     LogifyAlert.Instance.CustomData["LoggedInUser"] = "Mary";
 }
 ```
