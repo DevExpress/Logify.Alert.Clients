@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using DevExpress.Logify.Core;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using System.Collections.Generic;
 
 namespace DevExpress.Logify.Core.Internal {
     static class Utils {
@@ -33,16 +29,16 @@ namespace DevExpress.Logify.Core.Internal {
                 }
             }
         }
-        public static Dictionary<string, string> SerializeInfo(IFormCollection info, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
-            return SerializeInfoCore(info, name, ignoreInfo, logger);
+        public static Dictionary<string, string> SerializeInfo(IFormCollection info, string name, IgnorePropertiesInfo ignoreInfo, Predicate<string> customIgnorePredicate, ILogger logger) {
+            return SerializeInfoCore(info, name, ignoreInfo, customIgnorePredicate, logger);
         }
-        public static void SerializeInfo(IHeaderDictionary headers, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
-            SerializeInfoCore(headers, name, ignoreInfo, logger);
+        public static void SerializeInfo(IHeaderDictionary headers, string name, IgnorePropertiesInfo ignoreInfo, Predicate<string> customIgnorePredicate, ILogger logger) {
+            SerializeInfoCore(headers, name, ignoreInfo, customIgnorePredicate, logger);
         }
-        public static void SerializeInfo(IQueryCollection query, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
-            SerializeInfoCore(query, name, ignoreInfo, logger);
+        public static void SerializeInfo(IQueryCollection query, string name, IgnorePropertiesInfo ignoreInfo, Predicate<string> customIgnorePredicate, ILogger logger) {
+            SerializeInfoCore(query, name, ignoreInfo, customIgnorePredicate, logger);
         }
-        static Dictionary<string, string> SerializeInfoCore(IEnumerable<KeyValuePair<string, StringValues>> info, string name, IgnorePropertiesInfo ignoreInfo, ILogger logger) {
+        static Dictionary<string, string> SerializeInfoCore(IEnumerable<KeyValuePair<string, StringValues>> info, string name, IgnorePropertiesInfo ignoreInfo, Predicate<string> customIgnorePredicate, ILogger logger) {
             if (info == null)
                 return null;
 
@@ -53,7 +49,9 @@ namespace DevExpress.Logify.Core.Internal {
                     if (written == 0)
                         logger.BeginWriteObject(name);
                     written++;
-                    if (ignoreInfo != null && ignoreInfo.ShouldIgnore(pair.Key)) {
+                    if (customIgnorePredicate != null && customIgnorePredicate(pair.Key)) {
+                        continue;
+                    } else if (ignoreInfo != null && ignoreInfo.ShouldIgnore(pair.Key)) {
                         if (result == null)
                             result = new Dictionary<string, string>();
                         result[pair.Key] = pair.Value.ToString();
