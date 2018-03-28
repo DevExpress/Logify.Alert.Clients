@@ -438,7 +438,7 @@ Occurs after Logify Alert sends a new crash report to the service.
 ```csharp
 LogifyAlert.Instance.AfterReportException += OnAfterReportException;
 
-void OnAfterReportException(object sender, EventArgs e) {
+void OnAfterReportException(object sender, AfterReportExceptionEventArgs e) {
   MessageBox.Show("A new crash report has been sent to Logify Alert", "Crash report", MessageBoxButtons.OK, MessageBoxIcon.Information);
 }
 ```
@@ -452,7 +452,7 @@ Handle the **BeforeReportException event** to add custom data to the sent report
 ```csharp
 LogifyAlert.Instance.BeforeReportException += OnBeforeReportException;
 
-void OnBeforeReportException(object sender, EventArgs e) {
+void OnBeforeReportException(object sender, BeforeReportExceptionEventArgs e) {
     LogifyAlert.Instance.CustomData["LoggedInUser"] = "Mary";
 }
 ```
