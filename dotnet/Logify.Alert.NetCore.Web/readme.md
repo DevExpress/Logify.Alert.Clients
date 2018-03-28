@@ -10,33 +10,17 @@ $ Install-Package Logify.Alert.Web
 
 ## Quick Start
 ### Automatic error reporting
-#### Add LogifyAlert.json configuration File
-Add the Logify Alert settings to the application's **LogifyAlert.json** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Alert/Documentation/CreateApp) generated for it.
+#### Modify application's appsettings.json configuration file
+Add the Logify Alert settings to the application's **appsettings.json** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Alert/Documentation/CreateApp) generated for it.
 ```json
 {
   "LogifyAlert": {
-    "apiKey": "SPECIFY_YOUR_API_KEY_HERE",
-    "customData": {
-      "MACHINE_NAME": "My Machine"
-    }
+    "apiKey": "SPECIFY_YOUR_API_KEY_HERE"
   }
 }
 ```
 
-#### Modify Application's Startup.cs file
-Add the following code to the **BuildWebHost()** method declared in the app's **Program.cs** file to load the LogifyAlert configuration from your own config file. Otherwise, declare it within the built-in application.json app config file.
-```csharp
-public static IWebHost BuildWebHost(string[] args) =>
-    WebHost.CreateDefaultBuilder(args)
-        .ConfigureAppConfiguration((context, builder) => {
-            builder.AddJsonFile("LogifyAlert.json", optional: true, reloadOnChange: false); // Use your own config file
-        })
-        .UseStartup<Startup>()
-        .Build();
-    }
-}
-```
-
+#### Modify application's Startup.cs file
 Add the following code to the **Configure()** method declared in the application's **Startup.cs** file.
 ```csharp
 using DevExpress.Logify.Web;
@@ -48,7 +32,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
         app.UseExceptionHandler("/Home/Error");
     }
 
-    // You need to place Logify Alert initialization code after the app.UseExceptionHandler call (for MVC) or the app.UseDeveloperExceptionPage call (for WebApi)
+    // Place the Logify Alert initialization code after the app.UseExceptionHandler (MVC, Razor Pages) or app.UseDeveloperExceptionPage (WebApi) method call depending on your project type.
     app.UseLogifyAlert(Configuration.GetSection("LogifyAlert"));
 }
 ```
@@ -69,8 +53,9 @@ catch (Exception e) {
 ```
 
 ## Configuration
-You can set up the Logify Alert client using the configuration file as follows.
-#### JSON configuration file:
+You can set up the Logify Alert client using your own config file in JSON, XML or INI format.
+#### JSON configuration file
+Add the Logify Alert configuration settings to your JSON file (for example, **LogifyAlert.json**):
 ```json
 {
   "LogifyAlert": {
@@ -84,6 +69,7 @@ You can set up the Logify Alert client using the configuration file as follows.
 }
 ```
 
+Add the following code to the **BuildWebHost()** method declared in the application's **Program.cs** file to load the Logify Alert settings form the specified configuration file:
 ```csharp
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -94,10 +80,11 @@ LogifyAlert client = LogifyAlert.Instance;
 client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
-#### XML configuration file:
+#### XML configuration file
 
-_Requires the Microsoft.Extensions.Configuration.Xml package_
+*The Microsoft.Extensions.Configuration.Xml package is required.*
 
+Add the Logify Alert configuration settings to your XML file (for example, **LogifyAlert.xml**):
 ```xml
 <configuration>
   <LogifyAlert>
@@ -110,7 +97,7 @@ _Requires the Microsoft.Extensions.Configuration.Xml package_
   </LogifyAlert>
 </configuration>
 ```
-
+Add the following code to the **BuildWebHost()** method declared in the application's **Program.cs** file to load the Logify Alert settings form the specified configuration file:
 ```csharp
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -121,17 +108,18 @@ LogifyAlert client = LogifyAlert.Instance;
 client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
-#### INI configuration file:
+#### INI configuration file
 
-_Requires the Microsoft.Extensions.Configuration.Ini package_
+*The Microsoft.Extensions.Configuration.Ini package is required.*
 
+Add the Logify Alert configuration settings to your XML file (for example, **LogifyAlert.ini**):
 ```ini
 [LogifyAlert]
 ApiKey = SPECIFY_YOUR_API_KEY_HERE
 AppName = Your application name
 ApiVersion = 1.0.2
 ```
-
+Add the following code to the **BuildWebHost()** method declared in the application's **Program.cs** file to load the Logify Alert settings form the specified configuration file:
 ```csharp
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
