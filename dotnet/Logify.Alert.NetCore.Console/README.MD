@@ -10,10 +10,21 @@ $ Install-Package Logify.Alert.Console
 
 ## Quick Start
 
+### Automatic error reporting
+```csharp
+using DevExpress.Logify.Console;
+// ...
+
+LogifyAlert client = LogifyAlert.Instance;
+client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
+client.StartExceptionsHandling();
+```
+
 ### Manual error reporting
 ```csharp
 using DevExpress.Logify.Console;
-...
+// ...
+
 try {
     LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
     RunYourCode();
@@ -24,80 +35,47 @@ catch (Exception e) {
 ```
 
 ## Configuration
-You can set up the Logify Alert client using configuration file as follows.
+You can set up the Logify Alert client using your own config file in JSON format.
 
-#### JSON configuration file:
+1. Create a new JSON file in your project (for example, *appsettings.json*).
+
+2. Add the Logify Alert configuration settings to this file:
+
 ```json
 {
   "LogifyAlert": {
     "apiKey": "SPECIFY_YOUR_API_KEY_HERE",
+    "appName": "Your application name",
+    "appVersion": "1.0.2",
     "customData": {
       "MACHINE_NAME": "My Server"
     }
   }
 }
 ```
+3. Set the configuration file's **Copy to Output Directory** property to **Copy Always**.
 
+4. Install the following NuGet packages:
+* Microsoft.Extensions.Configuration
+* Microsoft.Extensions.Configuration.FileExtensions
+* Microsoft.Extensions.Configuration.Json
+
+5. Add the following code at the beginning of the **Main()** method in the **Program.cs** file:
 ```csharp
-_Requires the Microsoft.Extensions.Configuration.FileExtensions and Microsoft.Extensions.Configuration.Json packages_
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using DevExpress.Logify.Console;
+// ...
 
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("application.json", optional: false, reloadOnChange: false) // Use a default app config file
-    .AddJsonFile("LogifyAlert.json", optional: false, reloadOnChange: false); // Or, use your own config file
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
 
 IConfigurationRoot configuration = builder.Build();
 LogifyAlert client = LogifyAlert.Instance;
 client.Configure(configuration.GetSection("LogifyAlert"));
 ```
 
-#### XML configuration file:
-
-_Requires the Microsoft.Extensions.Configuration.Xml package_
-
-```xml
-<configuration>
-  <LogifyAlert>
-    <ApiKey>SPECIFY_YOUR_API_KEY_HERE</ApiKey>
-    <AppName>Your application name</AppName>
-    <AppVersion>1.0.2</AppVersion>
-    <CustomData>
-      <MACHINENAME>My Server</MACHINENAME>
-    </CustomData>
-  </LogifyAlert>
-</configuration>
-```
-
-```csharp
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddXmlFile("LogifyAlert.xml", optional: false, reloadOnChange: false);
-
-IConfigurationRoot configuration = builder.Build();
-LogifyAlert client = LogifyAlert.Instance;
-client.Configure(configuration.GetSection("LogifyAlert"));
-```
-
-#### INI configuration file:
-
-_Requires the Microsoft.Extensions.Configuration.Ini package_
-
-```ini
-[LogifyAlert]
-ApiKey = SPECIFY_YOUR_API_KEY_HERE
-AppName = Your application name
-ApiVersion = 1.0.2
-```
-
-```csharp
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddIniFile("LogifyAlert.ini", optional: false, reloadOnChange: false);
-
-IConfigurationRoot configuration = builder.Build();
-LogifyAlert client = LogifyAlert.Instance;
-client.Configure(configuration.GetSection("LogifyAlert"));
-```
 
 ## API
 ### Properties
