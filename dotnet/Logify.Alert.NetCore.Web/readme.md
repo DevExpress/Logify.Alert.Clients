@@ -11,7 +11,7 @@ $ Install-Package Logify.Alert.Web
 ## Quick Start
 ### Automatic error reporting
 #### Modify the appsettings.json configuration file
-Add the Logify Alert settings to the application's **appsettings.json** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Alert/Documentation/CreateApp) generated for it.
+Add the LogifyAlert section to the root level of the application's **appsettings.json** file. To initialize your application, use the [API Key](https://logify.devexpress.com/Alert/Documentation/CreateApp) generated for it.
 ```json
 {
   "LogifyAlert": {
