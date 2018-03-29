@@ -11,6 +11,7 @@ $ Install-Package Logify.Alert.Console
 ## Quick Start
 
 ### Automatic error reporting
+Add the following code at the beginning of the **Main()** method in the **Program.cs** file:
 ```csharp
 using DevExpress.Logify.Console;
 // ...
@@ -19,6 +20,7 @@ LogifyAlert client = LogifyAlert.Instance;
 client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
 client.StartExceptionsHandling();
 ```
+That's it. Now, your application will report unhandled exceptions to the Logify Alert service. To manage and view generated reports, use the [Logify Alert](https://logify.devexpress.com) link.
 
 ### Manual error reporting
 ```csharp
