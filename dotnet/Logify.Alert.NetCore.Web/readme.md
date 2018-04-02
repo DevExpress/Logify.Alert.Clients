@@ -71,13 +71,13 @@ Add the Logify Alert configuration settings to your JSON file (for example, **Lo
 
 Add the following code to the **BuildWebHost()** method declared in the application's **Program.cs** file to load the Logify Alert settings form the specified configuration file:
 ```csharp
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("LogifyAlert.json", optional: false, reloadOnChange: false);
-
-IConfigurationRoot configuration = builder.Build();
-LogifyAlert client = LogifyAlert.Instance;
-client.Configure(configuration.GetSection("LogifyAlert"));
+public static IWebHost BuildWebHost(string[] args) =>
+  WebHost.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, builder) => {
+      builder.AddJsonFile("LogifyAlert.json", optional: false, reloadOnChange: false);
+    })
+.UseStartup<Startup>()
+.Build();
 ```
 
 #### XML configuration file
@@ -99,13 +99,13 @@ Add the Logify Alert configuration settings to your XML file (for example, **Log
 ```
 Add the following code to the **BuildWebHost()** method declared in the application's **Program.cs** file to load the Logify Alert settings form the specified configuration file:
 ```csharp
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddXmlFile("LogifyAlert.xml", optional: false, reloadOnChange: false);
-
-IConfigurationRoot configuration = builder.Build();
-LogifyAlert client = LogifyAlert.Instance;
-client.Configure(configuration.GetSection("LogifyAlert"));
+public static IWebHost BuildWebHost(string[] args) =>
+  WebHost.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, builder) => {
+      builder.AddXmlFile("LogifyAlert.xml", optional: false, reloadOnChange: false);
+    })
+.UseStartup<Startup>()
+.Build();
 ```
 
 #### INI configuration file
@@ -121,13 +121,13 @@ ApiVersion = 1.0.2
 ```
 Add the following code to the **BuildWebHost()** method declared in the application's **Program.cs** file to load the Logify Alert settings form the specified configuration file:
 ```csharp
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddIniFile("LogifyAlert.ini", optional: false, reloadOnChange: false);
-
-IConfigurationRoot configuration = builder.Build();
-LogifyAlert client = LogifyAlert.Instance;
-client.Configure(configuration.GetSection("LogifyAlert"));
+public static IWebHost BuildWebHost(string[] args) =>
+  WebHost.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, builder) => {
+      builder.AddIniFile("LogifyAlert.ini", optional: false, reloadOnChange: false);
+    })
+.UseStartup<Startup>()
+.Build();
 ```
 
 ## API
