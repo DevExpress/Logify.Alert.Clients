@@ -176,8 +176,7 @@ LogifyAlert.Instance.BreadcrumbsMaxCount = 2000;
 Boolean. Specifies whether automatic breadcrumbs collecting is enabled. The default value is **false**.
 The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by default. To change the maximum allowed size of attached breadcrumbs, use the *BreadcrumbsMaxCount* property.
 ```csharp
-LogifyAlert.Instance.CollectBreadcrumbs = true;  
-LogifyAlert.Instance.StartExceptionsHandling();
+LogifyAlert.Instance.CollectBreadcrumbs = true;
 ```
 
 #### CustomData
