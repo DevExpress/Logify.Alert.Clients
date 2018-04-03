@@ -214,14 +214,6 @@ Provide a comma separated list of names to ignore several headers. Set this prop
 LogifyAlert.Instance.IgnoreHeaders = "*";
 ```
 
-#### IgnoreServerVariables
-String. Specifies server variables that should be excluded from a crash report.  
-Provide a comma separated list of names to ignore several server variables. Set this property to the asterisk (\*) character to remove all server variables from a Logify Alert report.  Also, use the asterisk (\*) character as a wildcard to substitute any character(s) when specifying a server variable to be ignored. This property is case-insensitive.
-
-```csharp
-LogifyAlert.Instance.IgnoreServerVariables = "HTTP*";
-```
-
 #### IgnoreRequestBody
 Boolean. Specifies whether raw request body content should be ignored. 
 
