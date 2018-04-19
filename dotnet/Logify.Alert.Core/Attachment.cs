@@ -8,5 +8,12 @@ namespace DevExpress.Logify.Core {
     }
 
     public class AttachmentCollection : List<Attachment> {
+        public AttachmentCollection() {
+        }
+        AttachmentCollection(IEnumerable<Attachment> items) : base(items) {
+        }
+        internal AttachmentCollection Clone() {
+            return new AttachmentCollection(this);
+        }
     }
 }

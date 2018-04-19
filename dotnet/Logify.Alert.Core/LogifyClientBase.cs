@@ -30,6 +30,9 @@ namespace DevExpress.Logify.Core {
 
         public static LogifyClientBase Instance { get; protected set; }
 
+        readonly object reportExceptionLock = new object();
+        readonly object configureLock = new object();
+
         ILogifyClientConfiguration config;
         IDictionary<string, string> customData = new Dictionary<string, string>();
         IDictionary<string, string> tags = new Dictionary<string, string>();
@@ -231,7 +234,7 @@ namespace DevExpress.Logify.Core {
             Configure(LoadConfiguration());
         }
         protected internal void Configure(LogifyAlertConfiguration configuration) {
-            lock (this) {
+            lock (configureLock) {
                 if (configuration != null)
                     ApplyConfiguration(configuration);
                 InitAfterConfigure();
@@ -294,10 +297,10 @@ namespace DevExpress.Logify.Core {
             collectors.Insert(0, new LogifyProtocolVersionCollector());
 
             collectors.Add(new ExceptionObjectInfoCollector(Config, callArgumentsMap));
-            collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
-            collectors.Add(new TagsCollector(this.Tags));
-            collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
-            collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
+            collectors.Add(new CustomDataCollector(this.CustomData.Clone(), additionalCustomData));
+            collectors.Add(new TagsCollector(this.Tags.Clone()));
+            collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs.Clone()));
+            collectors.Add(new AttachmentsCollector(this.Attachments.Clone(), additionalAttachments));
 
             AddCollectors(result);
 
@@ -663,9 +666,13 @@ namespace DevExpress.Logify.Core {
                 if (ShouldIgnoreException(ex))
                     return false;
 
-                RaiseBeforeReportException(ex);
+                IInfoCollector collector;
+                lock (reportExceptionLock) {
+                    RaiseBeforeReportException(ex);
+                    collector = CreateDefaultCollector(additionalCustomData, additionalAttachments, callArgumentsMap);
+                }
 
-                bool success = ExceptionLogger.ReportException(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments, callArgumentsMap));
+                bool success = ExceptionLogger.ReportException(ex, collector);
                 RaiseAfterReportException(ex);
                 return success;
             } catch {
