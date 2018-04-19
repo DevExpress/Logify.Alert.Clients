@@ -14,8 +14,6 @@
     <offlineReportsDirectory value="offlineReports" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <offlineReportsCount value="10" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <collectMiniDump value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
-    <collectBreadcrumbs value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
-    <breadcrumbsMaxCount value="500" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <customData>
       <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" xdt:Transform="Remove" xdt:Locator="Match(key)" />
     </customData>
