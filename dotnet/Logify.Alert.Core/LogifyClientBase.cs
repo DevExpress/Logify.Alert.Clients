@@ -69,7 +69,10 @@ namespace DevExpress.Logify.Core {
                     sender.ApiKey = value;
             }
         }
-        public bool ConfirmSendReport {
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public abstract bool ConfirmSendReport { get; set; }
+        protected bool ConfirmSendReportCore {
             get { return confirmSendReport; }
             set {
                 confirmSendReport = value;
@@ -229,7 +232,7 @@ namespace DevExpress.Logify.Core {
             this.IsSecondaryInstance = DetectIfSecondaryInstance();
             this.stackTraceHelper = CreateStackTraceHelper();
             this.config = new DefaultClientConfiguration();
-            this.ConfirmSendReport = false; // do not confirm by default
+            this.ConfirmSendReportCore = false; // do not confirm by default
 
             Configure(LoadConfiguration());
         }
@@ -245,7 +248,7 @@ namespace DevExpress.Logify.Core {
 
             reportSender.ServiceUrl = this.ServiceUrl;
             reportSender.ApiKey = this.ApiKey;
-            reportSender.ConfirmSendReport = this.ConfirmSendReport;
+            reportSender.ConfirmSendReport = this.ConfirmSendReportCore;
             reportSender.ProxyCredentials = this.ProxyCredentials;
 #if NETSTANDARD
             reportSender.Proxy = this.Proxy;
@@ -264,7 +267,7 @@ namespace DevExpress.Logify.Core {
         }
         protected IExceptionReportSender CreateConfiguredPlatformExceptionReportSender() {
             IExceptionReportSender result = CreateEmptyPlatformExceptionReportSender();
-            result.ConfirmSendReport = ConfirmSendReport;
+            result.ConfirmSendReport = ConfirmSendReportCore;
             result.ProxyCredentials = ProxyCredentials;
 #if NETSTANDARD
             result.Proxy = this.Proxy;
@@ -334,7 +337,7 @@ namespace DevExpress.Logify.Core {
                 this.AppName = configuration.AppName;
             if (!String.IsNullOrEmpty(configuration.AppVersion))
                 this.AppVersion = configuration.AppVersion;
-            this.ConfirmSendReport = configuration.ConfirmSend;
+            this.ConfirmSendReportCore = configuration.ConfirmSend;
 
             this.AllowRemoteConfiguration = configuration.AllowRemoteConfiguration;
             this.RemoteConfigurationFetchInterval = configuration.RemoteConfigurationFetchInterval;
@@ -464,7 +467,7 @@ namespace DevExpress.Logify.Core {
             this.AppName = "DevExpress Demo or Design Time";
             this.AppVersion = DetectDevExpressVersion(asm);
             this.UserId = uniqueUserId;
-            this.ConfirmSendReport = false;
+            this.ConfirmSendReportCore = false;
             this.CollectBreadcrumbsCore = false;
             if (customData != null)
                 this.customData = customData;

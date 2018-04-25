@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
 using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
@@ -35,6 +36,9 @@ namespace DevExpress.Logify.Web {
             get { return Config.IgnoreConfig.IgnoreRequestBody; }
             set { Config.IgnoreConfig.IgnoreRequestBody = value; }
         }
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool ConfirmSendReport { get { return ConfirmSendReportCore; } set { ConfirmSendReportCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
