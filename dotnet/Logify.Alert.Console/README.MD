@@ -92,15 +92,11 @@ String. Specifies the application version.
 client.AppVersion = "1.0.2";
 ```
 
-
-#### ConfirmSendReport
-Boolean. Specifies whether or not a user must confirm sending reports to the Logify Alert service.
-By default, the **ConfirmSendReport** property is set to **false** and all uncaught exceptions are automatically processed and sent to the Logify Alert service.
+#### CollectMiniDump
+Boolean. Specifies whether automatic minidumps collecting is enabled. The default value is **false**.
 ```csharp
-client.ConfirmSendReport = true;
+client.CollectMiniDump = true;  
 ```
-To customize the confirmation dialog apperance, handle the **ConfirmationDialogShowing** event.
-
 
 #### CustomData
 IDictionary<String, String>. Gets the collection of custom data sent with generated reports.
