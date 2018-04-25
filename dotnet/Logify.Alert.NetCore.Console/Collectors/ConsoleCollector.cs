@@ -7,6 +7,8 @@ namespace DevExpress.Logify.Core.Internal {
         }
 
         protected override void RegisterCollectors(ILogifyClientConfiguration config) {
+            if (config.CollectMiniDump)
+                Collectors.Add(new MiniDumpCollector());
             Collectors.Add(new DevelopementPlatformCollector(Platform.NETCORE_CONSOLE)); // added in constuctor
             Collectors.Add(new NetCoreConsoleApplicationCollector());
 
@@ -24,6 +26,8 @@ namespace DevExpress.Logify.Core.Internal {
             Collectors.Add(new DebuggerCollector());
             //Collectors.Add(new MemoryCollector(config));
             //Collectors.Add(new FrameworkVersionsCollector());
+            if (config.CollectMiniDump)
+                Collectors.Add(new DeferredMiniDumpCollector());
         }
     }
 }

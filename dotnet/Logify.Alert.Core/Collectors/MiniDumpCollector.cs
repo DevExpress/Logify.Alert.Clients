@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 
@@ -126,7 +127,7 @@ namespace DevExpress.Logify.Core.Internal {
                     MiniDumpExceptionInformation exp;
                     exp.ThreadId = GetCurrentThreadId();
                     exp.ClientPointers = 0;
-                    exp.ExceptionPointers = System.Runtime.InteropServices.Marshal.GetExceptionPointers();
+                    exp.ExceptionPointers = GetExceptionPointers();
                     return MiniDumpWriteDump(
                       GetCurrentProcess(),
                       GetCurrentProcessId(),
@@ -141,5 +142,25 @@ namespace DevExpress.Logify.Core.Internal {
                 return false;
             }
         }
+#if NETSTANDARD
+        [HandleProcessCorruptedStateExceptions]
+        static IntPtr GetExceptionPointers() {
+            // https://github.com/dotnet/coreclr/pull/11125
+            try {
+                MethodInfo methodGetExceptionPointers = typeof(Marshal).GetMethod("GetExceptionPointers");
+                if (methodGetExceptionPointers != null)
+                    return (IntPtr)methodGetExceptionPointers.Invoke(null, null);
+                else
+                    return IntPtr.Zero;
+            }
+            catch {
+                return IntPtr.Zero;
+            }
+        }
+#else
+        static IntPtr GetExceptionPointers() {
+            return System.Runtime.InteropServices.Marshal.GetExceptionPointers();
+        }
+#endif
     }
 }
