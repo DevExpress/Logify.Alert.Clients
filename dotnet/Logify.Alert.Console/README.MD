@@ -293,7 +293,6 @@ void OnBeforeReportException(object sender, BeforeReportExceptionEventArgs e) {
 }
 ```
 
-
 #### CanReportException
 Occurs between generating a new crash report and raising the [BeforeReportException](#beforereportexception) event.
 
@@ -304,25 +303,6 @@ LogifyAlert.Instance.CanReportException += OnCanReportException;
 void OnCanReportException(object sender, CanReportExceptionEventArgs args) {
     if (args.Exception is MyCustomException)
         args.Cancel = true;
-}
-```
-
-#### ConfirmationDialogShowing
-
-If you set the **ConfirmSendReport** property to **true**, the ConfirmationDialogShowing event occurs before showing the confirmation dialog and allows you to customize the confirmation window's apperance.
-
-```csharp
-LogifyAlert.Instance.ConfirmationDialogShowing += Instance_ConfirmationDialogShowing;
-
-private void Instance_ConfirmationDialogShowing(object sender, ConfirmationDialogEventArgs e) {
-  ConfirmWindow w = new ConfirmWindow(e.Model);
-
-  // Commands Logify to not show the standard conformation dialog
-  e.Handled = true;
-  // Shows the custom confirmation window
-  w.ShowDialog();
-
-  Environment.Exit(1);
 }
 ```
 

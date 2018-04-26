@@ -11,7 +11,6 @@
     <apiKey value="YOUR_API_KEY" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <appName value="YOUR_APP_NAME" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <version value="YOUR_APP_VERSION" xdt:Transform="Remove" xdt:Locator="Match(value)" />
-    <confirmSend value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <offlineReportsEnabled value="false" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <offlineReportsDirectory value="offlineReports" xdt:Transform="Remove" xdt:Locator="Match(value)" />
     <offlineReportsCount value="10" xdt:Transform="Remove" xdt:Locator="Match(value)" />
