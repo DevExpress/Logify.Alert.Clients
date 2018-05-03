@@ -16,7 +16,7 @@ export default class siteDataCollector extends collectorBase {
             return;
             
         if(this.owner.collectCookies)
-            report.siteData.cookie = win.document.cookie;
+            report.siteData.cookie = this.owner.securityUtil.maskedCookies(win.document.cookie);
 
         if(this.owner.collectLocalStorage)
             report.siteData.localStorage = this.owner.securityUtil.maskedObject(win.localStorage);
