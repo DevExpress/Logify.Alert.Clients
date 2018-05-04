@@ -60,10 +60,10 @@ namespace DevExpress.Logify.WPF {
             WPFBreadcrumbsRecorder.Instance.EndCollect();
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore() {
-            return new WPFExceptionCollector(Config);
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new WPFExceptionCollector(context);
         }
-        protected override ILogifyAppInfo CreateAppInfo() {
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
             return new WpfApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
@@ -113,12 +113,19 @@ namespace DevExpress.Logify.WPF {
         [HandleProcessCorruptedStateExceptions]
         [IgnoreCallTracking]
         void OnCurrentDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
+
+            LogifyCollectorContext context = new LogifyCollectorContext() {
+                AdditionalCustomData = null,
+                AdditionalAttachments = null,
+                CallArgumentsMap = callArgumentsMap
+            };
+
             if (e != null && e.Exception != null) {
                 if (!Object.ReferenceEquals(e.Exception, lastReportedException)) {
                     lastReportedException = e.Exception;
-                    var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                    ResetTrackArguments();
-                    ReportException(e.Exception, null, null, callArgumentsMap);
+                    ReportException(e.Exception, context);
                 }
             }
         }
@@ -147,14 +154,19 @@ namespace DevExpress.Logify.WPF {
             if (e == null)
                 return;
 
-            Exception ex = e.ExceptionObject as Exception;
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
+            LogifyCollectorContext context = new LogifyCollectorContext() {
+                AdditionalCustomData = null,
+                AdditionalAttachments = null,
+                CallArgumentsMap = callArgumentsMap
+            };
 
+            Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
                 if (!Object.ReferenceEquals(ex, lastReportedException)) {
                     lastReportedException = ex;
-                    var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                    ResetTrackArguments();
-                    ReportException(ex, null, null, callArgumentsMap);
+                    ReportException(ex, context);
                 }
             }
         }

@@ -51,10 +51,10 @@ namespace DevExpress.Logify.Console {
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore() {
-            return new ConsoleExceptionCollector(Config);
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new ConsoleExceptionCollector(context);
         }
-        protected override ILogifyAppInfo CreateAppInfo() {
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
             return new ConsoleApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
@@ -100,21 +100,33 @@ namespace DevExpress.Logify.Console {
         void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
-            Exception ex = e.ExceptionObject as Exception;
 
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
+            Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
-                ReportException(ex, null, null, callArgumentsMap);
+                LogifyCollectorContext context = new LogifyCollectorContext() {
+                    AdditionalCustomData = null,
+                    AdditionalAttachments = null,
+                    CallArgumentsMap = callArgumentsMap
+                };
+
+                ReportException(ex, context);
             }
         }
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
         void OnApplicationThreadException(object sender, ThreadExceptionEventArgs e) {
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
+            LogifyCollectorContext context = new LogifyCollectorContext() {
+                AdditionalCustomData = null,
+                AdditionalAttachments = null,
+                CallArgumentsMap = callArgumentsMap
+            };
+
             if (e != null && e.Exception != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
-                ReportException(e.Exception, null, null, callArgumentsMap);
+                ReportException(e.Exception, context);
             }
         }
 

@@ -50,15 +50,7 @@ namespace DevExpress.Logify.Web {
         }
         [IgnoreCallTracking]
         void ReportException(Exception ex, HttpContext context) {
-            LogifyHttpContext.Current = context;
-            try {
-                if(LogifyAlert.Instance.CollectBreadcrumbs)
-                    NetCoreWebBreadcrumbsRecorder.Instance.UpdateBreadcrumb(context);
-                LogifyAlert.Instance.Send(ex);
-            }
-            catch {
-                LogifyHttpContext.Current = null;
-            }
+            LogifyAlert.Instance.Send(ex, context);
         }
     }
 

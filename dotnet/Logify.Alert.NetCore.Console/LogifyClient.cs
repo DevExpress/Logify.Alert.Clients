@@ -49,10 +49,10 @@ namespace DevExpress.Logify.Console {
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore() {
-            return new NetCoreConsoleExceptionCollector(Config);
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new NetCoreConsoleExceptionCollector(context);
         }
-        protected override ILogifyAppInfo CreateAppInfo() {
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
             return new NetCoreConsoleApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
@@ -101,12 +101,18 @@ namespace DevExpress.Logify.Console {
         void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
-            Exception ex = e.ExceptionObject as Exception;
 
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
+            LogifyCollectorContext context = new LogifyCollectorContext() {
+                AdditionalCustomData = null,
+                AdditionalAttachments = null,
+                CallArgumentsMap = callArgumentsMap
+            };
+
+            Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
-                ReportException(ex, null, null, callArgumentsMap);
+                ReportException(ex, context);
             }
         }
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {

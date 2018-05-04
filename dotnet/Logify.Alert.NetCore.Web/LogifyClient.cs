@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace DevExpress.Logify.Web {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
+        readonly object createReportCollectorLock = new object();
 
         internal LogifyAlert(bool b) {
         }
@@ -62,11 +65,12 @@ namespace DevExpress.Logify.Web {
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore() {
-            return new NetCoreWebExceptionCollector(Config, Platform.NETCORE_ASP);
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new NetCoreWebExceptionCollector(context, Platform.NETCORE_ASP);
         }
-        protected override ILogifyAppInfo CreateAppInfo() {
-            return new NetCoreWebApplicationCollector();
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
+            WebLogifyCollectorContext webContext = context as WebLogifyCollectorContext;
+            return new NetCoreWebApplicationCollector(webContext != null ? webContext.HttpContext : null);
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
             IExceptionReportSender defaultSender = CreateConfiguredPlatformExceptionReportSender();
@@ -103,5 +107,53 @@ namespace DevExpress.Logify.Web {
         protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
             return false;
         }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [IgnoreCallTracking]
+        [CLSCompliant(false)]
+        public void Send(Exception ex, HttpContext context) {
+            var callArgumentsMap = MethodArgumentsMap; // this call should be done before any inner calls
+            WebLogifyCollectorContext collectorContext = new WebLogifyCollectorContext() {
+                AdditionalCustomData = null,
+                AdditionalAttachments = null,
+                CallArgumentsMap = callArgumentsMap,
+                HttpContext = context
+            };
+
+            ResetTrackArguments();
+            AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
+            try {
+                if (this.CollectBreadcrumbs)
+                    NetCoreWebBreadcrumbsRecorder.Instance.UpdateBreadcrumb(context);
+
+                IInfoCollector collector = CreateReportCollector(ex, collectorContext);
+                if (collector == null)
+                    return;
+
+                ReportException(ex, collector);
+            }
+            finally {
+                RemoveOuterStack(ex);
+            }
+        }
+
+        //IInfoCollector CreateReportCollector(Exception ex, HttpContext context, MethodCallArgumentMap callArgumentsMap) {
+        //    lock (createReportCollectorLock) {
+        //       LogifyHttpContext.Current = context;
+        //        try {
+        //            return CreateReportCollector(ex, null, null, callArgumentsMap);
+        //        }
+        //        finally {
+        //            LogifyHttpContext.Current = null;
+        //        }
+        //    }
+        //}
+    }
+}
+
+namespace DevExpress.Logify.Core.Internal {
+    [CLSCompliant(false)]
+    public class WebLogifyCollectorContext : LogifyCollectorContext {
+        public HttpContext HttpContext { get; set; }
     }
 }

@@ -4,24 +4,25 @@ using Microsoft.AspNetCore.Http;
 
 namespace DevExpress.Logify.Core.Internal {
     public class NetCoreWebExceptionCollector : RootInfoCollector {
-        public NetCoreWebExceptionCollector(ILogifyClientConfiguration config, Platform platform) : base(config) {
+        public NetCoreWebExceptionCollector(LogifyCollectorContext context, Platform platform) : base(context) {
             Collectors.Add(new DevelopementPlatformCollector(platform));
         }
 
-        protected override void RegisterCollectors(ILogifyClientConfiguration config) {
-            IgnorePropertiesInfoConfig ignoreConfig = config.IgnoreConfig;
+        protected override void RegisterCollectors(LogifyCollectorContext context) {
+            IgnorePropertiesInfoConfig ignoreConfig = context.Config != null ? context.Config.IgnoreConfig : null;
             if (ignoreConfig == null)
                 ignoreConfig = new IgnorePropertiesInfoConfig();
 
-            //Collectors.Add(new DevelopementPlatformCollector(Platform.ASP)); // added in constuctor
-            Collectors.Add(new NetCoreWebApplicationCollector());
+            //Collectors.Add(new DevelopementPlatformCollector(Platform.ASP)); // added in constructor
 
-            HttpContext context = LogifyHttpContext.Current;
-            if (context != null) {
-                if (context.Request != null)
-                    Collectors.Add(new RequestCollector(context.Request, ignoreConfig));
-                if (context.Response != null)
-                    Collectors.Add(new ResponseCollector(context.Response, ignoreConfig));
+            WebLogifyCollectorContext webContext = context as WebLogifyCollectorContext;
+            HttpContext httpContext = webContext != null ? webContext.HttpContext : null;
+            Collectors.Add(new NetCoreWebApplicationCollector(httpContext));
+            if (httpContext != null) {
+                if (httpContext.Request != null)
+                    Collectors.Add(new RequestCollector(httpContext.Request, ignoreConfig));
+                if (httpContext.Response != null)
+                    Collectors.Add(new ResponseCollector(httpContext.Response, ignoreConfig));
                 //if (context.ApplicationInstance != null && context.ApplicationInstance.Modules != null)
                 //    Collectors.Add(new ModulesCollector(context.ApplicationInstance.Modules));
             }

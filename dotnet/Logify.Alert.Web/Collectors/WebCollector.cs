@@ -4,36 +4,37 @@ using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Core.Internal {
     public class WebExceptionCollector : RootInfoCollector {
-        public WebExceptionCollector(ILogifyClientConfiguration config, Platform platform) : base(config) {
+        public WebExceptionCollector(WebLogifyCollectorContext context, Platform platform) : base(context) {
             Collectors.Add(new DevelopementPlatformCollector(platform));
         }
 
-        protected override void RegisterCollectors(ILogifyClientConfiguration config) {
-            IgnorePropertiesInfoConfig ignoreConfig = config.IgnoreConfig;
+        protected override void RegisterCollectors(LogifyCollectorContext context) {
+            IgnorePropertiesInfoConfig ignoreConfig = context.Config != null ? context.Config.IgnoreConfig : null;
             if (ignoreConfig == null)
                 ignoreConfig = new IgnorePropertiesInfoConfig();
 
             //Collectors.Add(new DevelopementPlatformCollector(Platform.ASP)); // added in constuctor
-            Collectors.Add(new WebApplicationCollector());
 
             try {
-                HttpContext context = HttpContext.Current;
-                if (context != null) {
+                WebLogifyCollectorContext webContext = context as WebLogifyCollectorContext;
+                HttpContext httpContext = webContext != null ? webContext.HttpContext : null;
+                Collectors.Add(new WebApplicationCollector(httpContext));
+                if (httpContext != null) {
                     try {
-                        if (context.Request != null)
-                            Collectors.Add(new RequestCollector(context.Request, ignoreConfig));
+                        if (httpContext.Request != null)
+                            Collectors.Add(new RequestCollector(httpContext.Request, ignoreConfig));
                     }
                     catch {
                     }
                     try {
-                        if (context.Response != null)
-                            Collectors.Add(new ResponseCollector(context.Response, ignoreConfig));
+                        if (httpContext.Response != null)
+                            Collectors.Add(new ResponseCollector(httpContext.Response, ignoreConfig));
                     }
                     catch {
                     }
                     try {
-                        if (context.ApplicationInstance != null && context.ApplicationInstance.Modules != null)
-                            Collectors.Add(new ModulesCollector(context.ApplicationInstance.Modules));
+                        if (httpContext.ApplicationInstance != null && httpContext.ApplicationInstance.Modules != null)
+                            Collectors.Add(new ModulesCollector(httpContext.ApplicationInstance.Modules));
                     }
                     catch {
                     }
@@ -44,7 +45,7 @@ namespace DevExpress.Logify.Core.Internal {
             Collectors.Add(new OperatingSystemCollector());
             Collectors.Add(new VirtualMachineCollector());
             Collectors.Add(new DebuggerCollector());
-            Collectors.Add(new MemoryCollector(config));
+            Collectors.Add(new MemoryCollector(context));
             Collectors.Add(new FrameworkVersionsCollector());
             Collectors.Add(new EnvironmentCollector());
         }
