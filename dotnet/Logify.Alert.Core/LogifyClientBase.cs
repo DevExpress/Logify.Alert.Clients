@@ -285,8 +285,6 @@ namespace DevExpress.Logify.Core {
         protected abstract LogifyAlertConfiguration LoadConfiguration();
 
         protected IInfoCollector CreateDefaultCollector(LogifyCollectorContext context) {
-            context.Config = this.Config;
-
             RootInfoCollector result = CreateDefaultCollectorCore(context);
 
             IList<IInfoCollector> collectors = result.Collectors;
