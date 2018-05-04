@@ -581,16 +581,12 @@ namespace DevExpress.Logify.Core {
         [MethodImpl(MethodImplOptions.NoInlining)]
         [IgnoreCallTracking]
         public void Send(Exception ex) {
-            var callArgumentsMap = MethodArgumentsMap; // this call should be done before any inner calls
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = null,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap
-            };
-
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
+
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
             try {
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
                 ReportException(ex, context);
             }
             finally {
@@ -602,14 +598,9 @@ namespace DevExpress.Logify.Core {
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData) {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = additionalCustomData,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap
-            };
-
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap, additionalCustomData);
                 ReportException(ex, context);
             }
             finally {
@@ -620,14 +611,9 @@ namespace DevExpress.Logify.Core {
         public void Send(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = additionalCustomData,
-                AdditionalAttachments = additionalAttachments,
-                CallArgumentsMap = callArgumentsMap
-            };
-
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap, additionalCustomData, additionalAttachments);
                 ReportException(ex, context);
             }
             finally {
@@ -641,14 +627,9 @@ namespace DevExpress.Logify.Core {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
 
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = null,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap
-            };
-
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
                 return await ReportExceptionAsync(ex, context);
             }
             finally {
@@ -660,14 +641,9 @@ namespace DevExpress.Logify.Core {
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData) {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = additionalCustomData,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap
-            };
-
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap, additionalCustomData);
                 return await ReportExceptionAsync(ex, context);
             }
             finally {
@@ -679,14 +655,9 @@ namespace DevExpress.Logify.Core {
         public async Task<bool> SendAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments) {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = additionalCustomData,
-                AdditionalAttachments = additionalAttachments,
-                CallArgumentsMap = callArgumentsMap
-            };
-
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap, additionalCustomData, additionalAttachments);
                 return await ReportExceptionAsync(ex, context);
             }
             finally {
@@ -700,7 +671,18 @@ namespace DevExpress.Logify.Core {
                 return true;
             return false;
         }
-        protected IInfoCollector CreateReportCollector(Exception ex, LogifyCollectorContext context) {
+        protected virtual LogifyCollectorContext GrabCollectorContext(MethodCallArgumentMap callArgumentsMap,
+            IDictionary<string, string> additionalCustomData = null,
+            AttachmentCollection additionalAttachments = null) {
+
+            LogifyCollectorContext result = new LogifyCollectorContext();
+            result.CallArgumentsMap = callArgumentsMap;
+            result.AdditionalCustomData = additionalCustomData;
+            result.AdditionalAttachments = additionalAttachments;
+            result.Config = this.Config;
+            return result;
+        }
+        IInfoCollector CreateReportCollector(Exception ex, LogifyCollectorContext context) {
             if (!RaiseCanReportException(ex))
                 return null;
 

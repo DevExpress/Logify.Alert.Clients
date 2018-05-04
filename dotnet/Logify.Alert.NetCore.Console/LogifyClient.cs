@@ -104,14 +104,10 @@ namespace DevExpress.Logify.Console {
 
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = null,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap
-            };
-
+            
             Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
                 ReportException(ex, context);
             }
         }

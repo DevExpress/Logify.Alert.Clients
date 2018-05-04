@@ -4,7 +4,7 @@ using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Core.Internal {
     public class WebExceptionCollector : RootInfoCollector {
-        public WebExceptionCollector(WebLogifyCollectorContext context, Platform platform) : base(context) {
+        public WebExceptionCollector(LogifyCollectorContext context, Platform platform) : base(context) {
             Collectors.Add(new DevelopementPlatformCollector(platform));
         }
 

@@ -113,12 +113,7 @@ namespace DevExpress.Logify.Win {
 
             Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
-                LogifyCollectorContext context = new LogifyCollectorContext() {
-                    AdditionalCustomData = null,
-                    AdditionalAttachments = null,
-                    CallArgumentsMap = callArgumentsMap
-                };
-
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
                 ReportException(ex, context);
             }
         }
@@ -128,15 +123,10 @@ namespace DevExpress.Logify.Win {
         void OnApplicationThreadException(object sender, ThreadExceptionEventArgs e) {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = null,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap
-            };
-
             if (e != null && e.Exception != null) {
                 AppendOuterStack(e.Exception, 5);
                 try {
+                    LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
                     ReportException(e.Exception, context);
                 }
                 finally {

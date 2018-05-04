@@ -113,41 +113,28 @@ namespace DevExpress.Logify.Web {
         [CLSCompliant(false)]
         public void Send(Exception ex, HttpContext context) {
             var callArgumentsMap = MethodArgumentsMap; // this call should be done before any inner calls
-            WebLogifyCollectorContext collectorContext = new WebLogifyCollectorContext() {
-                AdditionalCustomData = null,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap,
-                HttpContext = context
-            };
-
             ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
             try {
                 if (this.CollectBreadcrumbs)
                     NetCoreWebBreadcrumbsRecorder.Instance.UpdateBreadcrumb(context);
 
-                IInfoCollector collector = CreateReportCollector(ex, collectorContext);
-                if (collector == null)
-                    return;
-
-                ReportException(ex, collector);
+                WebLogifyCollectorContext collectorContext = GrabCollectorContext(callArgumentsMap, context);
+                ReportException(ex, collectorContext);
             }
             finally {
                 RemoveOuterStack(ex);
             }
         }
 
-        //IInfoCollector CreateReportCollector(Exception ex, HttpContext context, MethodCallArgumentMap callArgumentsMap) {
-        //    lock (createReportCollectorLock) {
-        //       LogifyHttpContext.Current = context;
-        //        try {
-        //            return CreateReportCollector(ex, null, null, callArgumentsMap);
-        //        }
-        //        finally {
-        //            LogifyHttpContext.Current = null;
-        //        }
-        //    }
-        //}
+        WebLogifyCollectorContext GrabCollectorContext(MethodCallArgumentMap callArgumentsMap, HttpContext httpContext) {
+            LogifyCollectorContext context = base.GrabCollectorContext(callArgumentsMap);
+
+            WebLogifyCollectorContext webContext = new WebLogifyCollectorContext();
+            webContext.CopyFrom(context);
+            webContext.HttpContext = httpContext;
+            return webContext;
+        }
     }
 }
 

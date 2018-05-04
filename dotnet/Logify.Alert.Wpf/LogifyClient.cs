@@ -116,15 +116,10 @@ namespace DevExpress.Logify.WPF {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
 
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = null,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap
-            };
-
             if (e != null && e.Exception != null) {
                 if (!Object.ReferenceEquals(e.Exception, lastReportedException)) {
                     lastReportedException = e.Exception;
+                    LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
                     ReportException(e.Exception, context);
                 }
             }
@@ -156,16 +151,12 @@ namespace DevExpress.Logify.WPF {
 
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
-            LogifyCollectorContext context = new LogifyCollectorContext() {
-                AdditionalCustomData = null,
-                AdditionalAttachments = null,
-                CallArgumentsMap = callArgumentsMap
-            };
-
+            
             Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
                 if (!Object.ReferenceEquals(ex, lastReportedException)) {
                     lastReportedException = ex;
+                    LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
                     ReportException(ex, context);
                 }
             }

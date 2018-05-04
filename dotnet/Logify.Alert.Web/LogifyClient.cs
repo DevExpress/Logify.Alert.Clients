@@ -67,11 +67,16 @@ namespace DevExpress.Logify.Web {
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+        protected override LogifyCollectorContext GrabCollectorContext(MethodCallArgumentMap callArgumentsMap, IDictionary<string, string> additionalCustomData = null, AttachmentCollection additionalAttachments = null) {
+            LogifyCollectorContext context = base.GrabCollectorContext(callArgumentsMap, additionalCustomData, additionalAttachments);
+
             WebLogifyCollectorContext webContext = new WebLogifyCollectorContext();
             webContext.CopyFrom(context);
             webContext.HttpContext = HttpContext.Current;
-            return new WebExceptionCollector(webContext, Platform.ASP);
+            return webContext;
+        }
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new WebExceptionCollector(context, Platform.ASP);
         }
         protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
             WebLogifyCollectorContext webContext = context as WebLogifyCollectorContext;
