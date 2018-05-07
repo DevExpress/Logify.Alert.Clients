@@ -91,7 +91,8 @@ class logifyAlert {
             }
         });
     }
-    sendException(logifyErrorData) {
+    
+    sendExceptionData(logifyErrorData) {
         this.sendExceptionCore(logifyErrorData.errorMsg, logifyErrorData.url, logifyErrorData.lineNumber, logifyErrorData.column, logifyErrorData.errorObj, logifyErrorData.customData, this);
     }
 
