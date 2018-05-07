@@ -57,7 +57,7 @@ export default class jsCollector extends compositeCollector {
     
     collectErrorData(errorMsg, url, lineNumber, column, errorObj, customData) {
         this.fillErrorData(errorMsg, url, lineNumber,column, errorObj);
-        this.fillAppData(url ? url : this.getScriptUrl(this._document));
+        this.fillAppData(url ? url : this.getLocation(this._document));
         this.process(this._window, this._reportData, customData);
     }
 
@@ -71,6 +71,10 @@ export default class jsCollector extends compositeCollector {
 
     getUserId() {
         return (this.userId == undefined) ? "" : this.userId;
+    }
+
+    getLocation(doc) {
+        return doc.location ? doc.location.href : "";
     }
 
     getScriptUrl(doc) {
