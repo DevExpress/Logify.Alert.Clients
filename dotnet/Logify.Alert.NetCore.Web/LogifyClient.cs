@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 namespace DevExpress.Logify.Web {
     public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
-        readonly object createReportCollectorLock = new object();
 
         internal LogifyAlert(bool b) {
         }
