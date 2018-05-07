@@ -16,8 +16,8 @@ class logifyAlert {
         this.customData = undefined;
         this.tags = undefined;
         this.collectLocalStorage = false;
-        this.collectSessionStorage = true;
-        this.collectCookies = true;
+        this.collectSessionStorage = false;
+        this.collectCookies = false;
         this.collectInputs = false;
         this.breadcrumbsMaxCount = 100;
 
