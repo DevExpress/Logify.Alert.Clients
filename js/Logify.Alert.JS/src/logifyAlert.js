@@ -77,7 +77,7 @@ class logifyAlert {
         const defaultOnErrorHandler = window.onerror;
         window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
             if (this._handleReports) {
-                this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, this);
+                this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, null, this);
             }
             if (typeof defaultOnErrorHandler === 'function') { 
                 defaultOnErrorHandler.call(window, errorMsg, url, lineNumber, column, errorObj);
