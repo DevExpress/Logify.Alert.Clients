@@ -91,15 +91,18 @@ class logifyAlert {
             }
         });
     }
-
-    sendException(errorMsg, url, lineNumber, column, errorObj) {
-        this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, this);
+    sendException(logifyErrorData) {
+        this.sendExceptionCore(logifyErrorData.errorMsg, logifyErrorData.url, logifyErrorData.lineNumber, logifyErrorData.column, logifyErrorData.errorObj, logifyErrorData.customData, this);
     }
 
-    sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, owner) {
+    sendException(errorMsg, url, lineNumber, column, errorObj, customData) {
+        this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, customData, this);
+    }
+
+    sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, additionalCustomData, owner) {
         this.callBeforeReportExceptionCallback();
         let collector = this.createCollector(owner);
-        collector.collectErrorData(errorMsg, url, lineNumber, column, errorObj);
+        collector.collectErrorData(errorMsg, url, lineNumber, column, errorObj, additionalCustomData);
         this.sendReportCore(collector.reportData);
     }
 
