@@ -267,7 +267,7 @@ client.ProxyCredentials = new NetworkCredential("MyProxyUserName", "MyProxyPassw
 ```
 
 #### RemoteConfigurationFetchInterval
-Specifies a time interval, in minutes, in which client configuration set [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration) should be automatically loaded from the server. The minimum value is 2.
+Specifies a time interval, in minutes, in which client configuration set [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration) should be automatically loaded from the server. The minimum value is 1.
 ```csharp
 client.RemoteConfigurationFetchInterval = 5;
 ```
