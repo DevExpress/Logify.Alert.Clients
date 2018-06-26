@@ -100,10 +100,12 @@ namespace DevExpress.Logify.Core.Internal {
             if (this.ProxyCredentials != null || WebRequest.DefaultWebProxy != null) {
                 WebProxy proxy = GetProxy();
                 if (proxy != null) {
-                    if (this.ProxyCredentials != null) { 
+                    if (this.ProxyCredentials != null) {
                         proxy.Credentials = ProxyCredentials;
+                    } else {
+                        proxy.UseDefaultCredentials = true;
                     }
-                    proxy.UseDefaultCredentials = request.UseDefaultCredentials = this.ProxyCredentials != null ? false : true;
+                    request.UseDefaultCredentials = proxy.UseDefaultCredentials;
                     request.Proxy = proxy;
                 }
             }
