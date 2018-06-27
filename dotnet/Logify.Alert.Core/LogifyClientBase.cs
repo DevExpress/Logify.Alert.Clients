@@ -24,9 +24,7 @@ namespace DevExpress.Logify.Core {
         int offlineReportsCount = 100;
         bool offlineReportsEnabled;
         ICredentials proxyCredentials;
-#if NETSTANDARD
         IWebProxy proxy;
-#endif
 
         public static LogifyClientBase Instance { get; protected set; }
 
@@ -81,8 +79,7 @@ namespace DevExpress.Logify.Core {
                     sender.ConfirmSendReport = value;
             }
         }
-#if NETSTANDARD
-        /*public*/ IWebProxy Proxy {
+        public IWebProxy Proxy {
             get { return proxy; }
             set {
                 proxy = value;
@@ -91,7 +88,7 @@ namespace DevExpress.Logify.Core {
                     sender.Proxy = value;
             }
         }
-#endif
+
         public ICredentials ProxyCredentials {
             get { return proxyCredentials; }
             set {

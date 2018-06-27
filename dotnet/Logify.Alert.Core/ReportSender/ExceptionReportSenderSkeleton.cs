@@ -12,9 +12,7 @@ namespace DevExpress.Logify.Core.Internal {
         public virtual int ReportTimeoutMilliseconds { get; set; }
 
         public virtual ICredentials ProxyCredentials { get; set; }
-#if NETSTANDARD
         public virtual IWebProxy Proxy { get; set; }
-#endif
         //public virtual string MiniDumpServiceUrl { get; set; }
 
         protected ExceptionReportSenderSkeleton() {
