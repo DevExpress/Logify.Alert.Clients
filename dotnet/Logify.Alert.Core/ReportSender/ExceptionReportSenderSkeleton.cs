@@ -64,10 +64,8 @@ namespace DevExpress.Logify.Core.Internal {
             this.ServiceUrl = instance.ServiceUrl;
             this.ApiKey = instance.ApiKey;
             this.ConfirmSendReport = instance.ConfirmSendReport;
-            this.ProxyCredentials = instance.ProxyCredentials;
-#if NETSTANDARD
             this.Proxy = instance.Proxy;
-#endif
+            this.ProxyCredentials = instance.ProxyCredentials;
             //this.MiniDumpServiceUrl = instance.MiniDumpServiceUrl;
             //this.LogId = instance.LogId;
         }

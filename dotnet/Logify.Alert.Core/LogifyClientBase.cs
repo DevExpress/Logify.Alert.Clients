@@ -246,10 +246,9 @@ namespace DevExpress.Logify.Core {
             reportSender.ServiceUrl = this.ServiceUrl;
             reportSender.ApiKey = this.ApiKey;
             reportSender.ConfirmSendReport = this.ConfirmSendReportCore;
-            reportSender.ProxyCredentials = this.ProxyCredentials;
-#if NETSTANDARD
             reportSender.Proxy = this.Proxy;
-#endif
+            reportSender.ProxyCredentials = this.ProxyCredentials;
+
             //reportSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.IsEnabled = this.OfflineReportsEnabled; });
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.DirectoryName = this.OfflineReportsDirectory; });
@@ -265,10 +264,8 @@ namespace DevExpress.Logify.Core {
         protected IExceptionReportSender CreateConfiguredPlatformExceptionReportSender() {
             IExceptionReportSender result = CreateEmptyPlatformExceptionReportSender();
             result.ConfirmSendReport = ConfirmSendReportCore;
+            result.Proxy = Proxy;
             result.ProxyCredentials = ProxyCredentials;
-#if NETSTANDARD
-            result.Proxy = this.Proxy;
-#endif
             result.ApiKey = this.ApiKey;
             result.ServiceUrl = this.ServiceUrl;
             return result;

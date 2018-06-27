@@ -100,7 +100,7 @@ namespace DevExpress.Logify.Core.Internal {
             IWebProxy proxy = null;
             if (this.Proxy != null)
                 proxy = this.Proxy;
-            if (this.ProxyCredentials != null)
+            else if (this.ProxyCredentials != null)
                 proxy = SetupProxyByCredentials();
             if (proxy != null) { 
                 request.Proxy = proxy;
