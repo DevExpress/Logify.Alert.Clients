@@ -36,10 +36,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -168,4 +164,14 @@
     </PreBuildEvent>
     <PostBuildEvent>rem "$(TargetDir)dxgac.exe" /i "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
+  <Choose>
+    <When Condition=" '$(Configuration)'=='Debug40' Or '$(Configuration)'=='Debug45' ">
+      <ItemGroup>
+        <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+          <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
 </Project>
