@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
@@ -15,13 +12,18 @@ namespace DevExpress.Logify.Win {
         }
         public ConfirmReportSendForm(ReportConfirmationModel model) {
             InitializeComponent();
-
-            this.Model = model;
-
-            Initialize();
+            Model = model;
+            this.InitializeContent();
         }
 
-        void Initialize() {
+        void btnSend_Click(object sender, EventArgs e) {
+            this.Send();
+        }
+        void btnDontSend_Click(object sender, EventArgs e) {
+            this.Cancel();
+        }
+
+        protected virtual void InitializeContent() {
             if (Model == null)
                 return;
 
@@ -31,8 +33,7 @@ namespace DevExpress.Logify.Win {
                 this.txtProblemDetails.Text = Model.Details;
             this.Text += " \"" + Application.ProductName + "\"";
         }
-
-        void btnSend_Click(object sender, EventArgs e) {
+        protected virtual void Send() {
             try {
                 if (Model == null)
                     return;
@@ -47,12 +48,9 @@ namespace DevExpress.Logify.Win {
                     this.DialogResult = DialogResult.OK;
                 else if (result == DialogResult.Retry)
                     MessageBox.Show(this, "Unable to send, please try again", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch {
-            }
+            } catch { }
         }
-
-        void btnDontSend_Click(object sender, EventArgs e) {
+        protected virtual void Cancel() {
             this.DialogResult = DialogResult.Cancel;
         }
     }

@@ -22,7 +22,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
+        protected void InitializeComponent() {
             this.btnSend = new System.Windows.Forms.Button();
             this.btnDontSend = new System.Windows.Forms.Button();
             this.txtComments = new System.Windows.Forms.TextBox();
@@ -161,13 +161,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnSend;
-        private System.Windows.Forms.Button btnDontSend;
-        private System.Windows.Forms.TextBox txtComments;
-        private System.Windows.Forms.TextBox txtProblemDetails;
-        private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage pageComments;
-        private System.Windows.Forms.TabPage pageDetails;
-        private System.Windows.Forms.Label lblInfo;
+        protected System.Windows.Forms.Button btnSend;
+        protected System.Windows.Forms.Button btnDontSend;
+        protected System.Windows.Forms.TextBox txtComments;
+        protected System.Windows.Forms.TextBox txtProblemDetails;
+        protected System.Windows.Forms.TabControl tabControl;
+        protected System.Windows.Forms.TabPage pageComments;
+        protected System.Windows.Forms.TabPage pageDetails;
+        protected System.Windows.Forms.Label lblInfo;
     }
 }
