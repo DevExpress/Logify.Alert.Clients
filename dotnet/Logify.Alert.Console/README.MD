@@ -92,15 +92,11 @@ String. Specifies the application version.
 client.AppVersion = "1.0.2";
 ```
 
-
-#### ConfirmSendReport
-Boolean. Specifies whether or not a user must confirm sending reports to the Logify Alert service.
-By default, the **ConfirmSendReport** property is set to **false** and all uncaught exceptions are automatically processed and sent to the Logify Alert service.
+#### CollectMiniDump
+Boolean. Specifies whether automatic minidumps collecting is enabled. The default value is **false**.
 ```csharp
-client.ConfirmSendReport = true;
+client.CollectMiniDump = true;  
 ```
-To customize the confirmation dialog apperance, handle the **ConfirmationDialogShowing** event.
-
 
 #### CustomData
 IDictionary<String, String>. Gets the collection of custom data sent with generated reports.
@@ -297,7 +293,6 @@ void OnBeforeReportException(object sender, BeforeReportExceptionEventArgs e) {
 }
 ```
 
-
 #### CanReportException
 Occurs between generating a new crash report and raising the [BeforeReportException](#beforereportexception) event.
 
@@ -308,25 +303,6 @@ LogifyAlert.Instance.CanReportException += OnCanReportException;
 void OnCanReportException(object sender, CanReportExceptionEventArgs args) {
     if (args.Exception is MyCustomException)
         args.Cancel = true;
-}
-```
-
-#### ConfirmationDialogShowing
-
-If you set the **ConfirmSendReport** property to **true**, the ConfirmationDialogShowing event occurs before showing the confirmation dialog and allows you to customize the confirmation window's apperance.
-
-```csharp
-LogifyAlert.Instance.ConfirmationDialogShowing += Instance_ConfirmationDialogShowing;
-
-private void Instance_ConfirmationDialogShowing(object sender, ConfirmationDialogEventArgs e) {
-  ConfirmWindow w = new ConfirmWindow(e.Model);
-
-  // Commands Logify to not show the standard conformation dialog
-  e.Handled = true;
-  // Shows the custom confirmation window
-  w.ShowDialog();
-
-  Environment.Exit(1);
 }
 ```
 

@@ -97,14 +97,27 @@ namespace DevExpress.Logify.Core.Internal {
             return request;
         }
         void SetupProxy(WebRequest request) {
-            if (this.ProxyCredentials != null && WebRequest.DefaultWebProxy != null) {
+            IWebProxy proxy = null;
+            if (this.Proxy != null)
+                proxy = this.Proxy;
+            else if (this.ProxyCredentials != null)
+                proxy = SetupProxyByCredentials();
+            if (proxy != null) { 
+                request.Proxy = proxy;
+            }
+        }
+        IWebProxy SetupProxyByCredentials() {
+            if (WebRequest.DefaultWebProxy != null) {
                 WebProxy proxy = GetProxy();
                 if (proxy != null) {
-                    proxy.Credentials = ProxyCredentials;
-                    request.Proxy = proxy;
-                    request.UseDefaultCredentials = false;
+                    proxy.UseDefaultCredentials = false;
+                    if (this.ProxyCredentials != null) {
+                        proxy.Credentials = ProxyCredentials;
+                    }
+                    return proxy;
                 }
             }
+            return null;
         }
         WebProxy GetProxy() {
 #if NETSTANDARD

@@ -33,7 +33,6 @@ namespace DevExpress.Logify.Core.Internal {
                     sender.ProxyCredentials = value;
             }
         }
-#if NETSTANDARD
         public override IWebProxy Proxy {
             get { return base.Proxy; }
             set {
@@ -42,7 +41,6 @@ namespace DevExpress.Logify.Core.Internal {
                     sender.Proxy = value;
             }
         }
-#endif
         public override bool ConfirmSendReport {
             get { return base.ConfirmSendReport; }
             set {

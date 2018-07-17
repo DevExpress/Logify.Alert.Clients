@@ -4,8 +4,8 @@ using DevExpress.Logify.Core;
 namespace DevExpress.Logify.Core.Internal {
     public class WPFEnvironmentCollector : DesktopEnvironmentCollector
     {
-        public WPFEnvironmentCollector(ILogifyClientConfiguration config)
-            : base(config) {
+        public WPFEnvironmentCollector(LogifyCollectorContext context)
+            : base(context) {
         }
         //protected override void RegisterCollectors() {
         //    base.RegisterCollectors();

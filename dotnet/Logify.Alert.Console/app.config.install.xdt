@@ -12,15 +12,13 @@
         <!--
             The Logify Alert service uses unique identifiers - API keys - to register and monitor individual applications.
             To learn how to get your ApiKey, please follow the link:
-            https://logify.devexpress.com/Alert/Documentation/BasicSetup/WinAndConsole
+            https://logify.devexpress.com/Alert/Documentation/BasicSetup/Console
         -->
         <apiKey value="YOUR_API_KEY" />
         <!-- <offlineReportsEnabled value="false" /> -->
         <!-- <offlineReportsDirectory value="offlineReports" /> -->
         <!-- <offlineReportsCount value="10" /> -->
         <!-- <collectMiniDump value="false" /> -->
-        <!-- <collectBreadcrumbs value="false" /> -->
-        <!-- <breadcrumbsMaxCount value="500" /> -->
         <!--
         <customData>
             <add key="MY_CUSTOM_DATA_KEY" value="My Custom data Value" />

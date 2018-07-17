@@ -19,11 +19,20 @@ describe('customDataCollector tests', function() {
     it('process without data test', function () {
         let mocOwner = new Object();
         let collector = new customDataCollector(mocOwner);
-
         let reportData = new Object();
-
         collector.process(null, reportData);
+        assert.equal(0, Object.keys(reportData.customData).length);
+    });
 
-        assert.equal(undefined, reportData.customData);
+    it('process with merged custom data test', function () {
+        let mocOwner = new Object();
+        let collector = new customDataCollector(mocOwner);
+        let reportData = new Object();
+        collector.process(null, reportData, "test");
+        assert.notEqual({ additionalData: 'test' }, reportData.customData);
+        collector.process(null, reportData, { myData: 'asd' });
+        assert.notEqual({ myData: 'asd' }, reportData.customData);
+        collector.process(null, reportData);
+        assert.equal(0, Object.keys(reportData.customData).length);
     });
 });

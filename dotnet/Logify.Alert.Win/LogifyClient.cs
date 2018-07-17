@@ -31,6 +31,7 @@ namespace DevExpress.Logify.Win {
         public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
         public bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
         public int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
+        public override bool ConfirmSendReport { get { return ConfirmSendReportCore; } set { ConfirmSendReportCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
@@ -56,10 +57,10 @@ namespace DevExpress.Logify.Win {
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore() {
-            return new WinFormsExceptionCollector(Config);
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new WinFormsExceptionCollector(context);
         }
-        protected override ILogifyAppInfo CreateAppInfo() {
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
             return new WinFormsApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
@@ -106,24 +107,27 @@ namespace DevExpress.Logify.Win {
         void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
-            Exception ex = e.ExceptionObject as Exception;
 
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
+
+            Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
-                ReportException(ex, null, null, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
+                ReportException(ex, context);
             }
         }
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
         [IgnoreCallTracking]
         void OnApplicationThreadException(object sender, ThreadExceptionEventArgs e) {
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
             if (e != null && e.Exception != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
                 AppendOuterStack(e.Exception, 5);
                 try {
-                    ReportException(e.Exception, null, null, callArgumentsMap);
+                    LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
+                    ReportException(e.Exception, context);
                 }
                 finally {
                     RemoveOuterStack(e.Exception);

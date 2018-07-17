@@ -3,10 +3,12 @@ using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Core.Internal {
     public class NetCoreConsoleExceptionCollector : RootInfoCollector {
-        public NetCoreConsoleExceptionCollector(ILogifyClientConfiguration config) : base(config) {
+        public NetCoreConsoleExceptionCollector(LogifyCollectorContext context) : base(context) {
         }
 
-        protected override void RegisterCollectors(ILogifyClientConfiguration config) {
+        protected override void RegisterCollectors(LogifyCollectorContext context) {
+            if (context.Config != null && context.Config.CollectMiniDump)
+                Collectors.Add(new MiniDumpCollector());
             Collectors.Add(new DevelopementPlatformCollector(Platform.NETCORE_CONSOLE)); // added in constuctor
             Collectors.Add(new NetCoreConsoleApplicationCollector());
 
@@ -24,6 +26,8 @@ namespace DevExpress.Logify.Core.Internal {
             Collectors.Add(new DebuggerCollector());
             //Collectors.Add(new MemoryCollector(config));
             //Collectors.Add(new FrameworkVersionsCollector());
+            if (context.Config != null && context.Config.CollectMiniDump)
+                Collectors.Add(new DeferredMiniDumpCollector());
         }
     }
 }

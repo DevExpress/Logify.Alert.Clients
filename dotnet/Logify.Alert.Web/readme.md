@@ -93,7 +93,6 @@ You can set up the Logify Alert client using the **Web.config** file as follows.
     <apiKey value="My Api Key" />
     <appName value="My Site" />
     <version value="1.0.5" />
-    <confirmSend value="false" />
     <offlineReportsEnabled value="true" />
     <offlineReportsCount value="20" />
     <collectBreadcrumbs value="true" />
@@ -268,7 +267,7 @@ client.ProxyCredentials = new NetworkCredential("MyProxyUserName", "MyProxyPassw
 ```
 
 #### RemoteConfigurationFetchInterval
-Specifies a time interval, in minutes, in which client configuration set [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration) should be automatically loaded from the server. The minimum value is 2.
+Specifies a time interval, in minutes, in which client configuration set [remotely](https://logify.devexpress.com/Alert/Documentation/Send/RemoteClientConfiguration) should be automatically loaded from the server. The minimum value is 1.
 ```csharp
 client.RemoteConfigurationFetchInterval = 5;
 ```

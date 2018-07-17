@@ -58,7 +58,7 @@ logify.breadcrumbsMaxCount = 2000;
 
 #### collectBreadcrumbs
 
-Boolean. Specifies whether automatic breadcrumbs collecting is enabled. The default value is **false**.
+Boolean. Specifies whether automatic breadcrumbs collecting is enabled. The default value is **false**.  
 The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by defaul. To change the maximum allowed size of attached breadcrumbs, use the *breadcrumbsMaxCount* property. 
 
 ```javascript
@@ -69,15 +69,15 @@ logify.startHandling();
 
 #### collectCookies
 
-Specifies whether or not the Logify Alert client will collect cookies. The default value is **true**.
+Boolean. Specifies whether the Logify Alert client collects cookies. The default value is **false**.
 
 ```javascript
-client.collectCookies = false;
+client.collectCookies = true;
 ```
 
 #### collectInputs
 
-Boolean. The default value is **false**. Assign **true** to the *collectInputs* property to collect all inputs passed to a web page (except for the passwords). The collected information stores an input's type, identifier, tag name and value.
+Boolean. Specifies whether the Logify Alert client collects all inputs passed to a web page (except for passwords). The collected information stores an input's type, identifier, tag name and value. The default value is **false**.
 
 ```javascript
 client.collectInputs = true;
@@ -85,7 +85,7 @@ client.collectInputs = true;
 
 #### collectLocalStorage
 
-Specifies whether or not Logify Alert client will collect local storage data. Default value is **false**.
+Boolean. Specifies whether the Logify Alert client collects local storage data. The default value is **false**.
 
 ```javascript
 client.collectLocalStorage = true;
@@ -93,10 +93,10 @@ client.collectLocalStorage = true;
 
 #### collectSessionStorage
 
-Specifies if Logify Alert client will correct session storage data. The default value is **true**.
+Boolean. Specifies whether the Logify Alert client collects session storage data. The default value is **false**.
 
 ```javascript
-client.collectSessionStorage = false;
+client.collectSessionStorage = true;
 ```
 
 #### customData

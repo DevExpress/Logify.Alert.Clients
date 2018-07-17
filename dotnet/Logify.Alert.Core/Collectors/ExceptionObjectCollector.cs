@@ -6,12 +6,13 @@ using System.Threading;
 using DevExpress.Logify.Core.Internal;
 using System.Collections.Generic;
 using System.Reflection;
+using System.IO;
 
 namespace DevExpress.Logify.Core.Internal {
     public class ExceptionObjectInfoCollector : CompositeInfoCollector {
-        public ExceptionObjectInfoCollector(ILogifyClientConfiguration config, MethodCallArgumentMap callArgumentsMap)
-            : base(config) {
-            Collectors.Add(new ExceptionMethodCallArgumentsCollector(callArgumentsMap));
+        public ExceptionObjectInfoCollector(LogifyCollectorContext context)
+            : base(context) {
+            Collectors.Add(new ExceptionMethodCallArgumentsCollector(context.CallArgumentsMap));
         }
 
         public override void Process(Exception ex, ILogger logger) {
@@ -36,7 +37,7 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.EndWriteArray("exception");
             }
         }
-        protected override void RegisterCollectors(ILogifyClientConfiguration config) {
+        protected override void RegisterCollectors(LogifyCollectorContext context) {
             Collectors.Add(new ExceptionTypeCollector());
             Collectors.Add(new ExceptionMessageCollector());
             Collectors.Add(new ExceptionStackCollector());
@@ -100,8 +101,12 @@ namespace DevExpress.Logify.Core.Internal {
                     object value = data[key];
                     logger.BeginWriteObject(String.Empty);
                     try {
-                        logger.WriteValue("key", key != null ? key.ToString() : "null");
-                        logger.WriteValue("value", value != null ? value.ToString() : "null");
+                        string keyName = key != null ? key.ToString() : "null";
+                        logger.WriteValue("key", keyName);
+                        if (String.Compare(keyName, "SmartStackFrames", StringComparison.InvariantCultureIgnoreCase) == 0)
+                            logger.WriteValue("value", SerializeSmartStackFramesValue(value));
+                        else
+                            logger.WriteValue("value", value != null ? value.ToString() : "null");
                     }
                     finally {
                         logger.EndWriteObject(String.Empty);
@@ -111,6 +116,57 @@ namespace DevExpress.Logify.Core.Internal {
             }
             finally {
                 logger.EndWriteArray("data");
+            }
+        }
+        string SerializeSmartStackFramesValue(object value) {
+            if (value == null)
+                return null;
+
+            ICollection collection = value as ICollection;
+            if (collection == null)
+                return value.ToString();
+
+            return SerializeSmartStackFramesCollection(collection);
+        }
+        string SerializeSmartStackFramesCollection(ICollection collection) {
+            if (collection == null || collection.Count <= 0)
+                return String.Empty;
+
+            StringBuilder content = new StringBuilder();
+            StringWriter writer = new StringWriter(content);
+            TextWriterLogger logger = new TextWriterLogger(writer);
+
+            logger.BeginWriteObject(String.Empty);
+            try {
+                SerializeSmartStackFramesCollection(collection, logger);
+            }
+            finally {
+                logger.EndWriteObject(String.Empty);
+            }
+
+            return content.ToString();
+        }
+        void SerializeSmartStackFramesCollection(ICollection collection, ILogger logger) {
+            logger.BeginWriteArray("frames");
+            try {
+                foreach (object item in collection) {
+                    logger.BeginWriteObject(String.Empty);
+                    try {
+                        dynamic obj = item;
+                        //int ilOffset = obj.ILOffset;
+                        //object[] objects = obj.Objects;
+                        logger.WriteValue("exceptionStackDepth", obj.ExceptionStackDepth);
+                        logger.WriteValue("methodId", obj.MethodID);
+                    }
+                    finally {
+                        logger.EndWriteObject(String.Empty);
+                    }
+                }
+            }
+            catch {
+            }
+            finally {
+                logger.EndWriteArray("frames");
             }
         }
     }

@@ -16,8 +16,8 @@ class logifyAlert {
         this.customData = undefined;
         this.tags = undefined;
         this.collectLocalStorage = false;
-        this.collectSessionStorage = true;
-        this.collectCookies = true;
+        this.collectSessionStorage = false;
+        this.collectCookies = false;
         this.collectInputs = false;
         this.breadcrumbsMaxCount = 100;
 
@@ -77,7 +77,7 @@ class logifyAlert {
         const defaultOnErrorHandler = window.onerror;
         window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
             if (this._handleReports) {
-                this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, this);
+                this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, null, this);
             }
             if (typeof defaultOnErrorHandler === 'function') { 
                 defaultOnErrorHandler.call(window, errorMsg, url, lineNumber, column, errorObj);
@@ -91,15 +91,19 @@ class logifyAlert {
             }
         });
     }
-
-    sendException(errorMsg, url, lineNumber, column, errorObj) {
-        this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, this);
+    
+    sendExceptionData(logifyErrorData) {
+        this.sendExceptionCore(logifyErrorData.errorMsg, logifyErrorData.url, logifyErrorData.lineNumber, logifyErrorData.column, logifyErrorData.errorObj, logifyErrorData.customData, this);
     }
 
-    sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, owner) {
+    sendException(errorMsg, url, lineNumber, column, errorObj, customData) {
+        this.sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, customData, this);
+    }
+
+    sendExceptionCore(errorMsg, url, lineNumber, column, errorObj, additionalCustomData, owner) {
         this.callBeforeReportExceptionCallback();
         let collector = this.createCollector(owner);
-        collector.collectErrorData(errorMsg, url, lineNumber, column, errorObj);
+        collector.collectErrorData(errorMsg, url, lineNumber, column, errorObj, additionalCustomData);
         this.sendReportCore(collector.reportData);
     }
 

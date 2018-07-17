@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace DevExpress.Logify.Core {
     public class BreadcrumbCollection : IEnumerable<Breadcrumb> {
-        readonly Breadcrumb[] items;
+        Breadcrumb[] items;
         int maxSize;
         int spaceLeft;
         int nextIndex = 0;
@@ -90,6 +90,18 @@ namespace DevExpress.Logify.Core {
             AddCore(item);
         }
 #endif
+
+        internal BreadcrumbCollection Clone() {
+            BreadcrumbCollection result = new BreadcrumbCollection();
+            result.maxSize = this.maxSize;
+            result.spaceLeft = this.spaceLeft;
+            result.nextIndex = this.nextIndex;
+            if (this.items != null && this.items.Length > 0) {
+                result.items = new Breadcrumb[this.items.Length];
+                Array.Copy(this.items, result.items, this.items.Length);
+            }
+            return result;
+        }
     }
     public enum BreadcrumbLevel {
         None = 0,

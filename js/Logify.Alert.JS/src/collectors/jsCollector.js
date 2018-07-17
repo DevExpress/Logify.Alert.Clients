@@ -25,7 +25,7 @@ export default class jsCollector extends compositeCollector {
         this._reportData = new Object();
 
         this.breadcrumbsCollector = new breadcrumbsCollector(this.owner);
-
+        
         this.collectors.push(new browserVersionCollector(this.owner));
         this.collectors.push(new osVersionCollector(this.owner));
         this.collectors.push(new screenSizeCollector(this.owner));
@@ -45,8 +45,8 @@ export default class jsCollector extends compositeCollector {
         }
     }
 
-    process(win, report) {
-        super.process(win, report);
+    process(win, report, customData) {
+        super.process(win, report, customData);
     }
 
     collectRejectionData(reason, promise) {
@@ -55,10 +55,10 @@ export default class jsCollector extends compositeCollector {
         this.process(this._window, this._reportData);
     }
     
-    collectErrorData(errorMsg, url, lineNumber, column, errorObj) {
+    collectErrorData(errorMsg, url, lineNumber, column, errorObj, customData) {
         this.fillErrorData(errorMsg, url, lineNumber,column, errorObj);
-        this.fillAppData(url);
-        this.process(this._window, this._reportData);
+        this.fillAppData(url ? url : this.getLocation(this._document));
+        this.process(this._window, this._reportData, customData);
     }
 
     getApplicationName(url) {
@@ -71,6 +71,10 @@ export default class jsCollector extends compositeCollector {
 
     getUserId() {
         return (this.userId == undefined) ? "" : this.userId;
+    }
+
+    getLocation(doc) {
+        return doc.location ? doc.location.href : "";
     }
 
     getScriptUrl(doc) {

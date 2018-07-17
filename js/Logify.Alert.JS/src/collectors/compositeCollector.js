@@ -8,12 +8,12 @@ export default class compositeCollector extends collectorBase {
         this.collectors = [];
     }
 
-    process(win, report) {
+    process(win, report, customData) {
         super.process(win, report);
 
         let collectorsCount = this.collectors.length;
         for(let i = 0; i < collectorsCount; i++) {
-            this.collectors[i].process(win, report);
+            this.collectors[i].process(win, report, customData);
         }
     }
 }

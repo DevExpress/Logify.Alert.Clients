@@ -36,4 +36,12 @@ namespace DevExpress.Logify.Core.Internal {
             logger.EndWriteObject("customData");
         }
     }
+
+    public static partial class CloneExtensions {
+        public static IDictionary<string, string> Clone(this IDictionary<string, string> value) {
+            if (value == null)
+                return null;
+            return new Dictionary<string, string>(value);
+        }
+    }
 }

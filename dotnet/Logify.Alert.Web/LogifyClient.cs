@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Reflection;
+using System.Web;
 using DevExpress.Logify.Core;
 using DevExpress.Logify.Core.Internal;
 
@@ -40,6 +41,9 @@ namespace DevExpress.Logify.Web {
             get { return Config.IgnoreConfig.IgnoreRequestBody; }
             set { Config.IgnoreConfig.IgnoreRequestBody = value; }
         }
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool ConfirmSendReport { get { return ConfirmSendReportCore; } set { ConfirmSendReportCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
@@ -63,11 +67,20 @@ namespace DevExpress.Logify.Web {
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore() {
-            return new WebExceptionCollector(Config, Platform.ASP);
+        protected override LogifyCollectorContext GrabCollectorContext(MethodCallArgumentMap callArgumentsMap, IDictionary<string, string> additionalCustomData = null, AttachmentCollection additionalAttachments = null) {
+            LogifyCollectorContext context = base.GrabCollectorContext(callArgumentsMap, additionalCustomData, additionalAttachments);
+
+            WebLogifyCollectorContext webContext = new WebLogifyCollectorContext();
+            webContext.CopyFrom(context);
+            webContext.HttpContext = HttpContext.Current;
+            return webContext;
         }
-        protected override ILogifyAppInfo CreateAppInfo() {
-            return new WebApplicationCollector();
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new WebExceptionCollector(context, Platform.ASP);
+        }
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
+            WebLogifyCollectorContext webContext = context as WebLogifyCollectorContext;
+            return new WebApplicationCollector(webContext != null ? webContext.HttpContext : null);
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
             IExceptionReportSender defaultSender = CreateConfiguredPlatformExceptionReportSender();
@@ -118,5 +131,11 @@ namespace DevExpress.Logify.Web {
         protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
             return false;
         }
+    }
+}
+
+namespace DevExpress.Logify.Core.Internal {
+    public class WebLogifyCollectorContext : LogifyCollectorContext {
+        public HttpContext HttpContext { get; set; }
     }
 }

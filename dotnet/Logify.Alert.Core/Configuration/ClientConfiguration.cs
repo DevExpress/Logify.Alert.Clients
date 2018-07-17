@@ -33,6 +33,7 @@ namespace DevExpress.Logify.Core.Internal {
         public LogifyAlertConfiguration() {
             this.BreadcrumbsMaxCount = 1000;
             this.OfflineReportsCount = 100;
+            this.RemoteConfigurationFetchInterval = 10; // 10 min
         }
         public string ServiceUrl { get; set; }
         //public string MiniDumpServiceUrl { get; set; }

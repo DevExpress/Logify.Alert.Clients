@@ -19,9 +19,12 @@ namespace DevExpress.Logify.Console {
         protected LogifyAlert(string apiKey) : base(apiKey) {
         }
 
-        internal bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
+        public bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
         internal bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
         internal int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool ConfirmSendReport { get { return ConfirmSendReportCore; } set { ConfirmSendReportCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
@@ -46,10 +49,10 @@ namespace DevExpress.Logify.Console {
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore() {
-            return new NetCoreConsoleExceptionCollector(Config);
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new NetCoreConsoleExceptionCollector(context);
         }
-        protected override ILogifyAppInfo CreateAppInfo() {
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
             return new NetCoreConsoleApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
@@ -98,12 +101,14 @@ namespace DevExpress.Logify.Console {
         void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
-            Exception ex = e.ExceptionObject as Exception;
 
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
+            
+            Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
-                ReportException(ex, null, null, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
+                ReportException(ex, context);
             }
         }
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {

@@ -24,11 +24,12 @@ namespace DevExpress.Logify.Core {
         int offlineReportsCount = 100;
         bool offlineReportsEnabled;
         ICredentials proxyCredentials;
-#if NETSTANDARD
         IWebProxy proxy;
-#endif
 
         public static LogifyClientBase Instance { get; protected set; }
+
+        readonly object reportExceptionLock = new object();
+        readonly object configureLock = new object();
 
         ILogifyClientConfiguration config;
         IDictionary<string, string> customData = new Dictionary<string, string>();
@@ -66,7 +67,10 @@ namespace DevExpress.Logify.Core {
                     sender.ApiKey = value;
             }
         }
-        public bool ConfirmSendReport {
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public abstract bool ConfirmSendReport { get; set; }
+        protected bool ConfirmSendReportCore {
             get { return confirmSendReport; }
             set {
                 confirmSendReport = value;
@@ -75,8 +79,7 @@ namespace DevExpress.Logify.Core {
                     sender.ConfirmSendReport = value;
             }
         }
-#if NETSTANDARD
-        /*public*/ IWebProxy Proxy {
+        public IWebProxy Proxy {
             get { return proxy; }
             set {
                 proxy = value;
@@ -85,7 +88,7 @@ namespace DevExpress.Logify.Core {
                     sender.Proxy = value;
             }
         }
-#endif
+
         public ICredentials ProxyCredentials {
             get { return proxyCredentials; }
             set {
@@ -226,12 +229,12 @@ namespace DevExpress.Logify.Core {
             this.IsSecondaryInstance = DetectIfSecondaryInstance();
             this.stackTraceHelper = CreateStackTraceHelper();
             this.config = new DefaultClientConfiguration();
-            this.ConfirmSendReport = false; // do not confirm by default
+            this.ConfirmSendReportCore = false; // do not confirm by default
 
             Configure(LoadConfiguration());
         }
         protected internal void Configure(LogifyAlertConfiguration configuration) {
-            lock (this) {
+            lock (configureLock) {
                 if (configuration != null)
                     ApplyConfiguration(configuration);
                 InitAfterConfigure();
@@ -242,11 +245,10 @@ namespace DevExpress.Logify.Core {
 
             reportSender.ServiceUrl = this.ServiceUrl;
             reportSender.ApiKey = this.ApiKey;
-            reportSender.ConfirmSendReport = this.ConfirmSendReport;
-            reportSender.ProxyCredentials = this.ProxyCredentials;
-#if NETSTANDARD
+            reportSender.ConfirmSendReport = this.ConfirmSendReportCore;
             reportSender.Proxy = this.Proxy;
-#endif
+            reportSender.ProxyCredentials = this.ProxyCredentials;
+
             //reportSender.MiniDumpServiceUrl = this.MiniDumpServiceUrl;
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.IsEnabled = this.OfflineReportsEnabled; });
             ApplyRecursively<IOfflineDirectoryExceptionReportSender>(reportSender, (s) => { s.DirectoryName = this.OfflineReportsDirectory; });
@@ -261,28 +263,26 @@ namespace DevExpress.Logify.Core {
         }
         protected IExceptionReportSender CreateConfiguredPlatformExceptionReportSender() {
             IExceptionReportSender result = CreateEmptyPlatformExceptionReportSender();
-            result.ConfirmSendReport = ConfirmSendReport;
+            result.ConfirmSendReport = ConfirmSendReportCore;
+            result.Proxy = Proxy;
             result.ProxyCredentials = ProxyCredentials;
-#if NETSTANDARD
-            result.Proxy = this.Proxy;
-#endif
             result.ApiKey = this.ApiKey;
             result.ServiceUrl = this.ServiceUrl;
             return result;
         }
 
         protected abstract IExceptionReportSender CreateExceptionReportSender();
-        protected abstract RootInfoCollector CreateDefaultCollectorCore();
-        protected abstract ILogifyAppInfo CreateAppInfo();
+        protected abstract RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context);
+        protected abstract ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context);
         protected abstract IExceptionReportSender CreateEmptyPlatformExceptionReportSender();
         protected internal abstract ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction);
         protected abstract LogifyAlertConfiguration LoadConfiguration();
 
-        protected IInfoCollector CreateDefaultCollector(IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments, MethodCallArgumentMap callArgumentsMap) {
-            RootInfoCollector result = CreateDefaultCollectorCore();
+        protected IInfoCollector CreateDefaultCollector(LogifyCollectorContext context) {
+            RootInfoCollector result = CreateDefaultCollectorCore(context);
 
             IList<IInfoCollector> collectors = result.Collectors;
-            LogifyAppInfoCollector logifyAppInfoCollector = new LogifyAppInfoCollector(CreateAppInfo());
+            LogifyAppInfoCollector logifyAppInfoCollector = new LogifyAppInfoCollector(CreateAppInfo(context));
             logifyAppInfoCollector.AppName = this.AppName;
             logifyAppInfoCollector.AppVersion = this.AppVersion;
             logifyAppInfoCollector.UserId = this.UserId;
@@ -293,11 +293,11 @@ namespace DevExpress.Logify.Core {
                 collectors.Insert(0, new LogifyHardwareIdCollector());
             collectors.Insert(0, new LogifyProtocolVersionCollector());
 
-            collectors.Add(new ExceptionObjectInfoCollector(Config, callArgumentsMap));
-            collectors.Add(new CustomDataCollector(this.CustomData, additionalCustomData));
-            collectors.Add(new TagsCollector(this.Tags));
-            collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs));
-            collectors.Add(new AttachmentsCollector(this.Attachments, additionalAttachments));
+            collectors.Add(new ExceptionObjectInfoCollector(context));
+            collectors.Add(new CustomDataCollector(this.CustomData.Clone(), context.AdditionalCustomData));
+            collectors.Add(new TagsCollector(this.Tags.Clone()));
+            collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs.Clone()));
+            collectors.Add(new AttachmentsCollector(this.Attachments.Clone(), context.AdditionalAttachments));
 
             AddCollectors(result);
 
@@ -331,7 +331,7 @@ namespace DevExpress.Logify.Core {
                 this.AppName = configuration.AppName;
             if (!String.IsNullOrEmpty(configuration.AppVersion))
                 this.AppVersion = configuration.AppVersion;
-            this.ConfirmSendReport = configuration.ConfirmSend;
+            this.ConfirmSendReportCore = configuration.ConfirmSend;
 
             this.AllowRemoteConfiguration = configuration.AllowRemoteConfiguration;
             this.RemoteConfigurationFetchInterval = configuration.RemoteConfigurationFetchInterval;
@@ -461,7 +461,7 @@ namespace DevExpress.Logify.Core {
             this.AppName = "DevExpress Demo or Design Time";
             this.AppVersion = DetectDevExpressVersion(asm);
             this.UserId = uniqueUserId;
-            this.ConfirmSendReport = false;
+            this.ConfirmSendReportCore = false;
             this.CollectBreadcrumbsCore = false;
             if (customData != null)
                 this.customData = customData;
@@ -569,15 +569,17 @@ namespace DevExpress.Logify.Core {
             }
         }
 
-        const int skipFramesForAppendOuterStackRootMethod = 2; // remove from stacktrace Send call and calling method
+        protected const int skipFramesForAppendOuterStackRootMethod = 2; // remove from stacktrace Send call and calling method
         [MethodImpl(MethodImplOptions.NoInlining)]
         [IgnoreCallTracking]
         public void Send(Exception ex) {
-            var callArgumentsMap = MethodArgumentsMap; // this call should be done before any inner calls
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
+
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod);
             try {
-                ReportException(ex, null, null, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
+                ReportException(ex, context);
             }
             finally {
                 RemoveOuterStack(ex);
@@ -590,7 +592,8 @@ namespace DevExpress.Logify.Core {
             ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                ReportException(ex, additionalCustomData, null, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap, additionalCustomData);
+                ReportException(ex, context);
             }
             finally {
                 RemoveOuterStack(ex);
@@ -602,7 +605,8 @@ namespace DevExpress.Logify.Core {
             ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                ReportException(ex, additionalCustomData, additionalAttachments, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap, additionalCustomData, additionalAttachments);
+                ReportException(ex, context);
             }
             finally {
                 RemoveOuterStack(ex);
@@ -614,9 +618,11 @@ namespace DevExpress.Logify.Core {
         public async Task<bool> SendAsync(Exception ex) {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
+
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                return await ReportExceptionAsync(ex, null, null, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
+                return await ReportExceptionAsync(ex, context);
             }
             finally {
                 RemoveOuterStack(ex);
@@ -629,7 +635,8 @@ namespace DevExpress.Logify.Core {
             ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                return await ReportExceptionAsync(ex, additionalCustomData, null, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap, additionalCustomData);
+                return await ReportExceptionAsync(ex, context);
             }
             finally {
                 RemoveOuterStack(ex);
@@ -642,7 +649,8 @@ namespace DevExpress.Logify.Core {
             ResetTrackArguments();
             AppendOuterStack(ex, skipFramesForAppendOuterStackRootMethod); // remove from stacktrace Send call and calling method
             try {
-                return await ReportExceptionAsync(ex, additionalCustomData, additionalAttachments, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap, additionalCustomData, additionalAttachments);
+                return await ReportExceptionAsync(ex, context);
             }
             finally {
                 RemoveOuterStack(ex);
@@ -655,35 +663,56 @@ namespace DevExpress.Logify.Core {
                 return true;
             return false;
         }
-        protected bool ReportException(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments, MethodCallArgumentMap callArgumentsMap) {
-            try {
-                if (!RaiseCanReportException(ex))
-                    return false;
+        protected virtual LogifyCollectorContext GrabCollectorContext(MethodCallArgumentMap callArgumentsMap,
+            IDictionary<string, string> additionalCustomData = null,
+            AttachmentCollection additionalAttachments = null) {
 
-                if (ShouldIgnoreException(ex))
-                    return false;
+            LogifyCollectorContext result = new LogifyCollectorContext();
+            result.CallArgumentsMap = callArgumentsMap;
+            result.AdditionalCustomData = additionalCustomData;
+            result.AdditionalAttachments = additionalAttachments;
+            result.Config = this.Config;
+            return result;
+        }
+        IInfoCollector CreateReportCollector(Exception ex, LogifyCollectorContext context) {
+            if (!RaiseCanReportException(ex))
+                return null;
 
+            if (ShouldIgnoreException(ex))
+                return null;
+
+            lock (reportExceptionLock) {
                 RaiseBeforeReportException(ex);
+                return CreateDefaultCollector(context);
+            }
+        }
+        protected bool ReportException(Exception ex, LogifyCollectorContext context) {
+            IInfoCollector collector = CreateReportCollector(ex, context);
+            if (collector == null)
+                return false;
+            return ReportException(ex, collector);
+        }
+        protected bool ReportException(Exception ex, IInfoCollector collector) {
+            try {
+                if (collector == null)
+                    return false;
 
-                bool success = ExceptionLogger.ReportException(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments, callArgumentsMap));
+                bool success = ExceptionLogger.ReportException(ex, collector);
                 RaiseAfterReportException(ex);
                 return success;
-            } catch {
+            }
+            catch {
                 return false;
             }
         }
 #if ALLOW_ASYNC
-        protected async Task<bool> ReportExceptionAsync(Exception ex, IDictionary<string, string> additionalCustomData, AttachmentCollection additionalAttachments, MethodCallArgumentMap callArgumentsMap) {
+        protected async Task<bool> ReportExceptionAsync(Exception ex, LogifyCollectorContext context) {
             try {
-                if (!RaiseCanReportException(ex))
+                IInfoCollector collector = CreateReportCollector(ex, context);
+                if (collector == null)
                     return false;
 
-                if (ShouldIgnoreException(ex))
-                    return false;
-
-                RaiseBeforeReportException(ex);
-
-                bool success = await ExceptionLogger.ReportExceptionAsync(ex, CreateDefaultCollector(additionalCustomData, additionalAttachments, callArgumentsMap));
+                bool success = await ExceptionLogger.ReportExceptionAsync(ex, collector);
                 RaiseAfterReportException(ex);
                 return success;
             } catch {
@@ -807,7 +836,10 @@ namespace DevExpress.Logify.Core {
         #region Call Argument Tracking methods
         [ThreadStatic]
         static MethodCallArgumentMap methodArgumentsMap;
-        protected MethodCallArgumentMap MethodArgumentsMap { get { return methodArgumentsMap; } }
+        protected MethodCallArgumentMap MethodArgumentsMap {
+            [IgnoreCallTracking]
+            get { return methodArgumentsMap; }
+        }
 
         [IgnoreCallTracking]
         public void ResetTrackArguments() {
@@ -953,5 +985,22 @@ namespace DevExpress.Logify.Core.Internal {
     public static class OuterStackKeys {
         public const string Stack = "#logify_outer_stack";
         public const string StackNormalized = "#logify_outer_stack_normalized";
+    }
+
+    public class LogifyCollectorContext {
+        public IDictionary<string, string> AdditionalCustomData { get; set; }
+        public AttachmentCollection AdditionalAttachments { get; set; }
+        public MethodCallArgumentMap CallArgumentsMap { get; set; }
+        public ILogifyClientConfiguration Config { get; set; }
+
+        public void CopyFrom(LogifyCollectorContext context) {
+            if (context == null)
+                return;
+            
+            this.AdditionalCustomData = context.AdditionalCustomData;
+            this.AdditionalAttachments = context.AdditionalAttachments;
+            this.CallArgumentsMap = context.CallArgumentsMap;
+            this.Config = context.Config;
+        }
     }
 }

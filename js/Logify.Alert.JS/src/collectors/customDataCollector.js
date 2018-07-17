@@ -6,13 +6,22 @@ export default class customDataCollector extends collectorBase {
         super(_owner);
     }
 
-    process(win, report) {
+    process(win, report, additionalCustomData) {
         super.process(win, report);
 
         if((this.owner == null) || (this.owner == undefined))
             return;
 
-        if(this.owner.customData != undefined)
-            report.customData = this.owner.customData;
+        report.customData = this.mergeCustomData(this.owner.customData, additionalCustomData);   
+    }
+    mergeCustomData(reportCustomData, additionalCustomData) {
+        if (!reportCustomData)
+            reportCustomData = {};
+        if (typeof additionalCustomData === "object") {
+            return Object.assign({}, reportCustomData, additionalCustomData);    
+        } else if (typeof additionalCustomData === "string" || typeof additionalCustomData === "number") {
+            return Object.assign({}, reportCustomData, { additionalData: additionalCustomData });    
+        }
+        return reportCustomData;
     }
 }

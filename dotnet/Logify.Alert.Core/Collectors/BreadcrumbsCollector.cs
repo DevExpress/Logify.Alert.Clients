@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -24,9 +25,13 @@ namespace DevExpress.Logify.Core.Internal {
             //for (int i = breadcrumbs.Count - 1; i >= 0; i--) { // write breadcrumbs from end to beginning, keeping latest items
             foreach (Breadcrumb item in breadcrumbs) { // time backward order
                 //Breadcrumb item = breadcrumbs[i];
-                BreadcrumbCollector collector = new BreadcrumbCollector(item, totalBreadcrumbsize, maxTotalBreadcrumbsize, String.Empty);
-                int writtenContentSize = collector.PerformProcess(ex, logger);
-                totalBreadcrumbsize += writtenContentSize;
+                if (item != null) {
+                    BreadcrumbCollector collector = new BreadcrumbCollector(item, totalBreadcrumbsize, maxTotalBreadcrumbsize, String.Empty);
+                    int writtenContentSize = collector.PerformProcess(ex, logger);
+                    if (writtenContentSize <= 0)
+                        break;
+                    totalBreadcrumbsize += writtenContentSize;
+                }
             }
             logger.EndWriteArray("breadcrumbs");
         }
@@ -127,8 +132,10 @@ namespace DevExpress.Logify.Core.Internal {
                     return 0;
 
                 writtenContentSize = CalculateApproxItemSize();
-                if (totalBreadcrumbsize + writtenContentSize > maxTotalBreadcrumbsize)
+                if (totalBreadcrumbsize + writtenContentSize > maxTotalBreadcrumbsize) {
+                    Debug.WriteLine(String.Format("Logify breadcrumbs exceeded the allowed size limit ({0}Mb)", (maxTotalBreadcrumbsize >> 20)));
                     return 0; // do not store breadcrumbs exceeding size limit
+                }
 
                 logger.BeginWriteObject(nodeName);
                 try {

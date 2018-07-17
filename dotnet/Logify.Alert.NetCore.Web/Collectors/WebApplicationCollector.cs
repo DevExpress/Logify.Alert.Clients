@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Http;
 namespace DevExpress.Logify.Core.Internal
 {
     class NetCoreWebApplicationCollector : ApplicationCollector {
+        readonly HttpContext context;
+        public NetCoreWebApplicationCollector(HttpContext context) : base() {
+            this.context = context;
+        }
         public override string AppName {
             get {
-                HttpContext current = LogifyHttpContext.Current;
-                //if (current != null && current.Request != null && current.Request.Url != null)
-                //    return current.Request.Url.AbsolutePath;
-                if (current != null && current.Request != null && current.Request.Path != null)
-                    return current.Request.Path.Value;
+                if (context != null && context.Request != null && context.Request.Path != null)
+                    return context.Request.Path.Value;
                 return String.Empty;
             }
         }
@@ -24,9 +25,6 @@ namespace DevExpress.Logify.Core.Internal
         }
         public override string UserId { get { return String.Empty; } }
         
-
-        public NetCoreWebApplicationCollector() : base() {}
-
         string GetVersion() {
             string version = this.TryGetVersionFromConfig();
             if (String.IsNullOrEmpty(version)) {

@@ -123,8 +123,12 @@ namespace DevExpress.Logify.Core.Internal {
 
             if (section.AllowRemoteConfiguration != null)
                 config.AllowRemoteConfiguration = section.AllowRemoteConfiguration.ValueAsBool;
-            if (section.RemoteConfigurationFetchInterval != null)
-                config.RemoteConfigurationFetchInterval = section.RemoteConfigurationFetchInterval.ValueAsInt;
+            if (section.RemoteConfigurationFetchInterval != null) {
+                int interval = section.RemoteConfigurationFetchInterval.ValueAsInt;
+                if (interval <= 0)
+                    interval = 10;
+                config.RemoteConfigurationFetchInterval = interval;
+            }
 
             //if (section.MiniDumpServiceUrl != null)
             //    client.MiniDumpServiceUrl = section.MiniDumpServiceUrl.Value;

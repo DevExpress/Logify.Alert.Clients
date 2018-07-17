@@ -5,12 +5,16 @@ using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Core.Internal {
     class WebApplicationCollector : ApplicationCollector {
+        readonly HttpContext context;
+        public WebApplicationCollector(HttpContext context) : base() {
+            this.context = context;
+        }
+
         public override string AppName {
             get {
                 try {
-                    HttpContext current = HttpContext.Current;
-                    if (current != null && current.Request != null && current.Request.Url != null)
-                        return current.Request.Url.AbsolutePath;
+                    if (context != null && context.Request != null && context.Request.Url != null)
+                        return context.Request.Url.AbsolutePath;
                 }
                 catch {
                 }
@@ -26,7 +30,7 @@ namespace DevExpress.Logify.Core.Internal {
         public override string UserId { get { return String.Empty; } }
         
 
-        public WebApplicationCollector() : base() {}
+        
 
         string GetVersion() {
             string version = this.TryGetVersionFromConfig();
@@ -50,11 +54,10 @@ namespace DevExpress.Logify.Core.Internal {
 
         string TryDetectVersion() {
             try {
-                HttpContext current = HttpContext.Current;
-                if (current == null)
+                if (context == null)
                     return String.Empty;
 
-                object app = current.ApplicationInstance;
+                object app = context.ApplicationInstance;
                 if (app == null)
                     return String.Empty;
 

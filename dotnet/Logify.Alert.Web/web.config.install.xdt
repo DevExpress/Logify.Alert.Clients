@@ -19,7 +19,6 @@
         <apiKey value="YOUR_API_KEY" />
         <!-- <appName value="YOUR_APP_NAME" /> -->
         <!-- <version value="YOUR_APP_VERSION" /> -->
-        <!-- <confirmSend value="false" /> -->
         <!-- <offlineReportsEnabled value="false" /> -->
         <!-- <offlineReportsDirectory value="offlineReports" /> -->
         <!-- <offlineReportsCount value="10" /> -->

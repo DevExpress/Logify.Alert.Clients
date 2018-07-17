@@ -1,4 +1,5 @@
-﻿//using Newtonsoft.Json;
+﻿#if DEBUG
+//using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using JsonSerializationException = DevExpress.Logify.Core.Internal.JsonLiteDeserializationException;
@@ -400,3 +401,4 @@ namespace DevExpress.Logify.Core.Internal.Tests {
         }
     }
 }
+#endif

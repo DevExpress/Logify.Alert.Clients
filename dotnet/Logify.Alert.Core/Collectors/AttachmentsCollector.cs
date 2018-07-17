@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 
@@ -77,8 +78,10 @@ namespace DevExpress.Logify.Core.Internal {
                     return 0;
 
                 writtenContentSize = encodedContent.Length; // assume base64 content
-                if (totalAttachmentSize + writtenContentSize > maxTotalAttachmentSize)
+                if (totalAttachmentSize + writtenContentSize > maxTotalAttachmentSize) {
+                    Debug.WriteLine(String.Format("Attachment is '{1}' skipped. Logify attachments exceeded the allowed size limit ({0}Mb)", (maxTotalAttachmentSize >> 20), attach.Name));
                     return 0; // do not store attach exceeding size limit
+                }
 
                 logger.BeginWriteObject(nodeName);
                 try {

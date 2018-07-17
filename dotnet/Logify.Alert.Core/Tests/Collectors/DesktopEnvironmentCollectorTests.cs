@@ -25,7 +25,7 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             this.uiCulture = CultureInfo.CurrentUICulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US", false);
-            this.collector = new DesktopEnvironmentCollector(new DefaultTestClientConfiguration());
+            this.collector = new DesktopEnvironmentCollector(new LogifyCollectorContext() { Config = new DefaultTestClientConfiguration() });
             Assert.AreEqual(10, this.collector.Collectors.Count);
             Assert.AreEqual(typeof(FrameworkVersionsCollector), this.collector.Collectors[8].GetType());
             this.collector.Collectors.RemoveAt(8);

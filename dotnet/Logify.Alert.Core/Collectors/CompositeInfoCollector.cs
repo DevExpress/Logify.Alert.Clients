@@ -8,8 +8,8 @@ namespace DevExpress.Logify.Core.Internal {
 
         public IList<IInfoCollector> Collectors { get { return collectors; } }
 
-        protected CompositeInfoCollector(ILogifyClientConfiguration config) {
-            RegisterCollectors(config);
+        protected CompositeInfoCollector(LogifyCollectorContext context) {
+            RegisterCollectors(context);
         }
 
         [HandleProcessCorruptedStateExceptions]
@@ -24,11 +24,11 @@ namespace DevExpress.Logify.Core.Internal {
             }
         }
 
-        protected abstract void RegisterCollectors(ILogifyClientConfiguration config);
+        protected abstract void RegisterCollectors(LogifyCollectorContext context);
     }
 
     public abstract class RootInfoCollector : CompositeInfoCollector {
-        protected RootInfoCollector(ILogifyClientConfiguration config) : base(config) {
+        protected RootInfoCollector(LogifyCollectorContext context) : base(context) {
         }
     }
 }

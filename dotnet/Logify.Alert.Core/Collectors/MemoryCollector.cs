@@ -8,11 +8,11 @@ using System.Threading;
 
 namespace DevExpress.Logify.Core.Internal {
     public class MemoryCollector : CompositeInfoCollector {
-        public MemoryCollector(ILogifyClientConfiguration config)
-            : base(config) {
+        public MemoryCollector(LogifyCollectorContext context)
+            : base(context) {
         }
 
-        protected override void RegisterCollectors(ILogifyClientConfiguration config) {
+        protected override void RegisterCollectors(LogifyCollectorContext context) {
             Collectors.Add(new MemoryWorkingSetCollector());
             Collectors.Add(new MemoryPhysicalRamCollector());
 #if !ASP_CLIENT

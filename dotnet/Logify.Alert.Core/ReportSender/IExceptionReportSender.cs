@@ -9,9 +9,7 @@ namespace DevExpress.Logify.Core.Internal {
         //string LogId { get; set; }
         bool ConfirmSendReport { get; set; }
         ICredentials ProxyCredentials { get; set; }
-#if NETSTANDARD
         IWebProxy Proxy { get; set; }
-#endif
         //string MiniDumpServiceUrl { get; set; }
 
         bool CanSendExceptionReport();

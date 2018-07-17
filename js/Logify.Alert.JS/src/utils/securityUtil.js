@@ -26,6 +26,22 @@ export default class securityUtil {
         return dataObject;
     }
 
+    maskedCookies(cookies) {
+        if (this.rulesCnt <= 0 || cookies.length <= 0)
+            return cookies;
+        const cookiesDelimiter = "; ";
+        let keyValuePairsString = cookies.split(cookiesDelimiter);
+        if (keyValuePairsString.length <= 0)
+            return cookies;
+        let resultCookies = "", keyValuePairs;      
+        for (let i = 0; i < keyValuePairsString.length; i++) {
+            keyValuePairs = keyValuePairsString[i].split("=");            
+            resultCookies += (keyValuePairs.length === 2 && this._isSecure(keyValuePairs[0])) ?  (keyValuePairs[0] + "=" + this.maskValue) : keyValuePairsString[i];
+            resultCookies += cookiesDelimiter;
+        }
+        return resultCookies;    
+    } 
+
     maskedInputValue(domInput) {
         if (!domInput)
             return null;
