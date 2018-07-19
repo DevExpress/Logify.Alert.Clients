@@ -109,6 +109,7 @@
     <Compile Include="Configuration\ClientConfiguration.cs" />
     <Compile Include="IgnoreCallTrackingAttribute.cs" />
     <Compile Include="MethodCallArgumentsStorage.cs" />
+    <Compile Include="Tests\Collectors\ExceptionObjectCollectorTests.cs" />
     <Compile Include="Utils\crc32.cs" />
     <Compile Include="ExceptionLogger.cs" />
     <Compile Include="ExceptionLoggerFactory.cs" />

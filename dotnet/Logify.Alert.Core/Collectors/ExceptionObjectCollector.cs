@@ -16,37 +16,82 @@ namespace DevExpress.Logify.Core.Internal {
         }
 
         public override void Process(Exception ex, ILogger logger) {
+            ExceptionProcessors processor = new ExceptionProcessors(ex);
             logger.BeginWriteArray("exception");
             try {
-                for (;;) {
+                for (; ; ) {
                     logger.BeginWriteObject(String.Empty);
                     try {
+                        ex = processor.PreProcess(ex);
                         base.Process(ex, logger);
-                    }
-                    catch {
-                    }
-                    finally {
+                    } finally {
                         logger.EndWriteObject(String.Empty);
                     }
-                    ex = ex.InnerException;
+                    ex = processor.GetNextException(ex);
                     if (ex == null)
                         return;
                 }
-            }
-            finally {
+            } finally {
                 logger.EndWriteArray("exception");
             }
         }
+
         protected override void RegisterCollectors(LogifyCollectorContext context) {
             Collectors.Add(new ExceptionTypeCollector());
             Collectors.Add(new ExceptionMessageCollector());
             Collectors.Add(new ExceptionStackCollector());
             Collectors.Add(new ExceptionNormalizedStackCollector());
+            Collectors.Add(new InnerExceptionIdCollector());
             Collectors.Add(new ExceptionDataCollector());
             //etc
         }
     }
+    internal interface ISpecificExceptionProcessor {
+        Exception PreProcess(Exception ex);
+        Exception GetNextException(Exception ex);
+    }
+    internal class ExceptionProcessors : ISpecificExceptionProcessor {
+        ISpecificExceptionProcessor instance;
+        public ExceptionProcessors(Exception ex) {
+            if (ex is AggregateException)
+                instance = new AggregateExceptionProcessor();
+            else
+                instance = new DefaultExceptionProcessor();
+        }
+        public Exception GetNextException(Exception ex) {
+            return instance.GetNextException(ex);
+        }
 
+        public Exception PreProcess(Exception ex) {
+            return instance.PreProcess(ex);
+        }
+    }
+    internal class DefaultExceptionProcessor : ISpecificExceptionProcessor {
+        public virtual Exception GetNextException(Exception ex) {
+            return ex.InnerException;
+        }
+
+        public virtual Exception PreProcess(Exception ex) { return ex; }
+    }
+    internal class AggregateExceptionProcessor : DefaultExceptionProcessor {
+        IEnumerator<Exception> innerExceptionsEnumerator;
+
+        public override Exception PreProcess(Exception ex) {
+            if (ex is AggregateException) {
+                ex = ((AggregateException)ex).Flatten();
+                innerExceptionsEnumerator = ((AggregateException)ex).InnerExceptions.GetEnumerator();
+            }
+            return base.PreProcess(ex);
+        }
+        public override Exception GetNextException(Exception ex) {
+            if ((ex is AggregateException && innerExceptionsEnumerator != null)
+                || (ex.InnerException == null && innerExceptionsEnumerator != null))  {
+                    if (innerExceptionsEnumerator.MoveNext())
+                        return innerExceptionsEnumerator.Current;
+            }
+            return base.GetNextException(ex);
+        }
+    }
     //TODO: move to platform specific assembly
     public class ExceptionTypeCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
@@ -74,6 +119,12 @@ namespace DevExpress.Logify.Core.Internal {
                     fullStackTrace += outerStack;
             }
             return fullStackTrace;
+        }
+    }
+    public class InnerExceptionIdCollector : IInfoCollector {
+        public virtual void Process(Exception ex, ILogger logger) {
+            if (ex is AggregateException)
+                logger.WriteValue("threadId", ((AggregateException)ex).Data["threadId"]?.ToString());
         }
     }
     //TODO: move to platform specific assembly
@@ -107,14 +158,12 @@ namespace DevExpress.Logify.Core.Internal {
                             logger.WriteValue("value", SerializeSmartStackFramesValue(value));
                         else
                             logger.WriteValue("value", value != null ? value.ToString() : "null");
-                    }
-                    finally {
+                    } finally {
                         logger.EndWriteObject(String.Empty);
                     }
 
                 }
-            }
-            finally {
+            } finally {
                 logger.EndWriteArray("data");
             }
         }
@@ -139,8 +188,7 @@ namespace DevExpress.Logify.Core.Internal {
             logger.BeginWriteObject(String.Empty);
             try {
                 SerializeSmartStackFramesCollection(collection, logger);
-            }
-            finally {
+            } finally {
                 logger.EndWriteObject(String.Empty);
             }
 
@@ -157,15 +205,12 @@ namespace DevExpress.Logify.Core.Internal {
                         //object[] objects = obj.Objects;
                         logger.WriteValue("exceptionStackDepth", obj.ExceptionStackDepth);
                         logger.WriteValue("methodId", obj.MethodID);
-                    }
-                    finally {
+                    } finally {
                         logger.EndWriteObject(String.Empty);
                     }
                 }
-            }
-            catch {
-            }
-            finally {
+            } catch {
+            } finally {
                 logger.EndWriteArray("frames");
             }
         }
@@ -180,8 +225,7 @@ namespace DevExpress.Logify.Core.Internal {
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
                 string normalizedStackTrace = ExceptionStackCollector.GetFullStackTrace(ex, NormalizeStackTrace(ex.StackTrace), OuterStackKeys.StackNormalized);
                 logger.WriteValue("normalizedStackTrace", normalizedStackTrace);
-            }
-            finally {
+            } finally {
                 Thread.CurrentThread.CurrentCulture = prevCulture;
                 Thread.CurrentThread.CurrentUICulture = prevUICulture;
             }
@@ -222,8 +266,7 @@ namespace DevExpress.Logify.Core.Internal {
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
                 WriteCallParameters(ex, logger);
-            }
-            finally {
+            } finally {
                 Thread.CurrentThread.CurrentCulture = prevCulture;
                 Thread.CurrentThread.CurrentUICulture = prevUICulture;
             }
@@ -247,15 +290,12 @@ namespace DevExpress.Logify.Core.Internal {
                     try {
                         logger.WriteValue("index", frame);
                         WriteMethodCallParameters(methodCallInfo, logger);
-                    }
-                    catch {
-                    }
-                    finally {
+                    } catch {
+                    } finally {
                         logger.EndWriteObject(String.Empty);
                     }
                 }
-            }
-            finally {
+            } finally {
                 logger.EndWriteArray("callParams");
             }
         }
@@ -269,10 +309,8 @@ namespace DevExpress.Logify.Core.Internal {
                 int count = Math.Min(parameters.Length, info.Arguments.Count);
                 for (int i = 0; i < count; i++)
                     WriteCallParameterValue(parameters[i], info.Arguments[i], logger);
-            }
-            catch {
-            }
-            finally {
+            } catch {
+            } finally {
                 logger.EndWriteObject("params");
             }
         }
@@ -286,10 +324,8 @@ namespace DevExpress.Logify.Core.Internal {
                 string type = argument != null ? argument.GetType().FullName : parameter.ParameterType.FullName;
                 logger.WriteValue("value", value);
                 logger.WriteValue("type", type);
-            }
-            catch {
-            }
-            finally {
+            } catch {
+            } finally {
                 logger.EndWriteObject(parameter.Name);
             }
         }
