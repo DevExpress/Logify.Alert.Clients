@@ -113,6 +113,7 @@
     <Compile Include="Utils\crc32.cs" />
     <Compile Include="ExceptionLogger.cs" />
     <Compile Include="ExceptionLoggerFactory.cs" />
+    <Compile Include="Utils\ExceptionObjectProcessors.cs" />
     <Compile Include="Utils\FastCharacterMultiReplacement.cs" />
     <Compile Include="IgnoreProperties.cs" />
     <Compile Include="Utils\HardwareId.cs" />

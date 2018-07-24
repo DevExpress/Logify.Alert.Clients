@@ -45,53 +45,7 @@ namespace DevExpress.Logify.Core.Internal {
             Collectors.Add(new ExceptionDataCollector());
             //etc
         }
-    }
-    internal interface ISpecificExceptionProcessor {
-        Exception PreProcess(Exception ex);
-        Exception GetNextException(Exception ex);
-    }
-    internal class ExceptionProcessors : ISpecificExceptionProcessor {
-        ISpecificExceptionProcessor instance;
-        public ExceptionProcessors(Exception ex) {
-            if (ex is AggregateException)
-                instance = new AggregateExceptionProcessor();
-            else
-                instance = new DefaultExceptionProcessor();
-        }
-        public Exception GetNextException(Exception ex) {
-            return instance.GetNextException(ex);
-        }
-
-        public Exception PreProcess(Exception ex) {
-            return instance.PreProcess(ex);
-        }
-    }
-    internal class DefaultExceptionProcessor : ISpecificExceptionProcessor {
-        public virtual Exception GetNextException(Exception ex) {
-            return ex.InnerException;
-        }
-
-        public virtual Exception PreProcess(Exception ex) { return ex; }
-    }
-    internal class AggregateExceptionProcessor : DefaultExceptionProcessor {
-        IEnumerator<Exception> innerExceptionsEnumerator;
-
-        public override Exception PreProcess(Exception ex) {
-            if (ex is AggregateException) {
-                ex = ((AggregateException)ex).Flatten();
-                innerExceptionsEnumerator = ((AggregateException)ex).InnerExceptions.GetEnumerator();
-            }
-            return base.PreProcess(ex);
-        }
-        public override Exception GetNextException(Exception ex) {
-            if ((ex is AggregateException && innerExceptionsEnumerator != null)
-                || (ex.InnerException == null && innerExceptionsEnumerator != null))  {
-                    if (innerExceptionsEnumerator.MoveNext())
-                        return innerExceptionsEnumerator.Current;
-            }
-            return base.GetNextException(ex);
-        }
-    }
+    }    
     //TODO: move to platform specific assembly
     public class ExceptionTypeCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
@@ -123,8 +77,10 @@ namespace DevExpress.Logify.Core.Internal {
     }
     public class InnerExceptionIdCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
-            if (ex is AggregateException)
-                logger.WriteValue("threadId", ((AggregateException)ex).Data["threadId"]?.ToString());
+            if (ex.Data != null && ex.Data.Contains(ExceptionObjectKeys.InnerExceptionNumber) && ex.Data[ExceptionObjectKeys.InnerExceptionNumber] != null) { 
+                logger.WriteValue("threadId", ex.Data[ExceptionObjectKeys.InnerExceptionNumber].ToString());
+                ex.Data.Remove(ExceptionObjectKeys.InnerExceptionNumber);
+            }
         }
     }
     //TODO: move to platform specific assembly

@@ -42,6 +42,11 @@ namespace DevExpress.Logify.Core.Tests.Collectors {
                 normalizedStack == null ? String.Empty : normalizedStack,
                 additionalData == null ? String.Empty : additionalData);
         }
+        string ExceptionIdString(string value) {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+            return String.Format(@"""threadId"":""{0}""," + "\r\n", value);
+        }
 
         [Test]
         public void BeginWriteObject_SimpleException() {
@@ -77,9 +82,9 @@ namespace DevExpress.Logify.Core.Tests.Collectors {
             var ex = new AggregateException(message, firstEx, secondEx);
             collector.Process(ex, Logger);
             string expected = excpetionsPrefix;
-            expected += GetExceptionJson(ex.GetType().FullName, message, additionalData: @"""threadId"":""""," + "\r\n" );
-            expected += GetExceptionJson(firstEx.GetType().FullName, firstEx.Message);
-            expected += GetExceptionJson(secondEx.GetType().FullName, secondEx.Message);
+            expected += GetExceptionJson(ex.GetType().FullName, message, additionalData: ExceptionIdString("0"));
+            expected += GetExceptionJson(firstEx.GetType().FullName, firstEx.Message, additionalData: ExceptionIdString("0"));
+            expected += GetExceptionJson(secondEx.GetType().FullName, secondEx.Message, additionalData: ExceptionIdString("1"));
             expected += excpetionsSuffix;
 
             Assert.AreEqual(expected, Content);
@@ -94,12 +99,12 @@ namespace DevExpress.Logify.Core.Tests.Collectors {
             var ex = new AggregateException(message, firstEx, secondEx);
             collector.Process(ex, Logger);
             string expected = excpetionsPrefix;
-            expected += GetExceptionJson(ex.GetType().FullName, message, additionalData: @"""threadId"":""""," + "\r\n");
+            expected += GetExceptionJson(ex.GetType().FullName, message, additionalData: ExceptionIdString("0"));
 
-            expected += GetExceptionJson(firstEx.GetType().FullName, firstEx.Message);
-            expected += GetExceptionJson(firstExInner.GetType().FullName, firstExInner.Message);
+            expected += GetExceptionJson(firstEx.GetType().FullName, firstEx.Message, additionalData: ExceptionIdString("0"));
+            expected += GetExceptionJson(firstExInner.GetType().FullName, firstExInner.Message, additionalData: ExceptionIdString("0"));
 
-            expected += GetExceptionJson(secondEx.GetType().FullName, secondEx.Message);
+            expected += GetExceptionJson(secondEx.GetType().FullName, secondEx.Message, additionalData: ExceptionIdString("1"));
             expected += excpetionsSuffix;
 
             Assert.AreEqual(expected, Content);
@@ -118,14 +123,14 @@ namespace DevExpress.Logify.Core.Tests.Collectors {
             var ex = new AggregateException(message, firstEx, secondEx);
             collector.Process(ex, Logger);
             string expected = excpetionsPrefix;
-            expected += GetExceptionJson(ex.GetType().FullName, message, additionalData: @"""threadId"":""""," + "\r\n");
+            expected += GetExceptionJson(ex.GetType().FullName, message, additionalData: ExceptionIdString("0"));
 
-            expected += GetExceptionJson(firstEx.GetType().FullName, firstEx.Message);
-            expected += GetExceptionJson(firstExInner.GetType().FullName, firstExInner.Message);
+            expected += GetExceptionJson(firstEx.GetType().FullName, firstEx.Message, additionalData: ExceptionIdString("0"));
+            expected += GetExceptionJson(firstExInner.GetType().FullName, firstExInner.Message, additionalData: ExceptionIdString("0"));
 
             //expected += GetExceptionJson(secondEx.GetType().FullName, secondEx.Message, additionalData: @"""threadId"":""""," + "\r\n");
-            expected += GetExceptionJson(secondExInner1.GetType().FullName, secondExInner1.Message);
-            expected += GetExceptionJson(secondExInner2.GetType().FullName, secondExInner2.Message);
+            expected += GetExceptionJson(secondExInner1.GetType().FullName, secondExInner1.Message, additionalData: ExceptionIdString("1"));
+            expected += GetExceptionJson(secondExInner2.GetType().FullName, secondExInner2.Message, additionalData: ExceptionIdString("2"));
 
             expected += excpetionsSuffix;
 
