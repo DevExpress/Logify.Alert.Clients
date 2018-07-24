@@ -78,7 +78,7 @@ namespace DevExpress.Logify.Core.Internal {
     public class InnerExceptionIdCollector : IInfoCollector {
         public virtual void Process(Exception ex, ILogger logger) {
             if (ex.Data != null && ex.Data.Contains(ExceptionObjectKeys.InnerExceptionNumber) && ex.Data[ExceptionObjectKeys.InnerExceptionNumber] != null) { 
-                logger.WriteValue("threadId", ex.Data[ExceptionObjectKeys.InnerExceptionNumber].ToString());
+                logger.WriteValue("groupId", ex.Data[ExceptionObjectKeys.InnerExceptionNumber].ToString());
                 ex.Data.Remove(ExceptionObjectKeys.InnerExceptionNumber);
             }
         }

@@ -45,7 +45,7 @@ namespace DevExpress.Logify.Core.Tests.Collectors {
         string ExceptionIdString(string value) {
             if (String.IsNullOrEmpty(value))
                 return String.Empty;
-            return String.Format(@"""threadId"":""{0}""," + "\r\n", value);
+            return String.Format(@"""groupId"":""{0}""," + "\r\n", value);
         }
 
         [Test]
