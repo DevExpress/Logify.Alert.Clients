@@ -6,6 +6,7 @@ export default class eventRecorderBase {
     constructor() {
         this._events = [];
         this.category = "";
+        this.maxStringSize = 256;
     }
 
     startListening(win, owner, eventCallback) {
@@ -71,6 +72,10 @@ export default class eventRecorderBase {
             data.name = this.addStringifiedValue(element.name);
         if (element.href)
             data.href = this.addStringifiedValue(element.href);
+        if (element.alt)
+            data.href = this.addStringifiedValue(element.alt);
+        if (element.className)
+            data.href = this.addStringifiedValue(element.className);
         if (element.type)
             data.type = this.addStringifiedValue(element.type);
         if (element.value) 
@@ -83,7 +88,13 @@ export default class eventRecorderBase {
     addStringifiedValue(value) {
         if (typeof value === "object")
             return JSON.stringify(value);
-        return value;    
+        return cutLongValues(value);    
+    }
+
+    cutLongValues(value) {
+        if (value.length > this.maxStringSize)
+            return value.substring(0, this.maxStringSize);
+        return value;
     }
 
     isTextElement(element) {
