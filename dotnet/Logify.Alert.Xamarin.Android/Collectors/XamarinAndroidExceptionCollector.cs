@@ -2,12 +2,12 @@ using System;
 using DevExpress.Logify.Core;
 
 namespace DevExpress.Logify.Core.Internal {
-    public class NetCoreConsoleExceptionCollector : RootInfoCollector {
-        public NetCoreConsoleExceptionCollector(ILogifyClientConfiguration config) : base(config) {
+    public class XamarinAndroidExceptionCollector : RootInfoCollector {
+        public XamarinAndroidExceptionCollector(LogifyCollectorContext context) : base(context) {
         }
 
-        protected override void RegisterCollectors(ILogifyClientConfiguration config) {
-            Collectors.Add(new DevelopementPlatformCollector(Platform.NETCORE_CONSOLE)); // added in constuctor
+        protected override void RegisterCollectors(LogifyCollectorContext context) {
+            Collectors.Add(new DevelopementPlatformCollector(Platform.XAMARIN_ANDROID)); // added in constuctor
             Collectors.Add(new XamarinApplicationCollector());
             Collectors.Add(new XamarinDisplayCollector());
             Collectors.Add(new XamarinMemoryCollector());

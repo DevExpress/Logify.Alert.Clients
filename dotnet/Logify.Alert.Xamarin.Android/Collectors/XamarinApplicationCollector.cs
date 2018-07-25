@@ -29,8 +29,8 @@ namespace DevExpress.Logify.Core.Internal {
                     return appVersion;
                 }
                 catch {
+                    return String.Empty;
                 }
-                return String.Empty;
             }
         }
 

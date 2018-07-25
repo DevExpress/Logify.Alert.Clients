@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
 using System.Security;
-using System.Threading;
 using DevExpress.Logify.Core;
-using System.Diagnostics;
-using System.Reflection;
 using System.ComponentModel;
-using Microsoft.Extensions.Configuration;
 using DevExpress.Logify.Core.Internal;
 using System.Threading.Tasks;
 using Android.Runtime;
@@ -24,6 +20,9 @@ namespace DevExpress.Logify.Xamarin {
         internal bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
         internal bool CollectBreadcrumbs { get { return CollectBreadcrumbsCore; } set { CollectBreadcrumbsCore = value; } }
         internal int BreadcrumbsMaxCount { get { return BreadcrumbsMaxCountCore; } set { BreadcrumbsMaxCountCore = value; } }
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool ConfirmSendReport { get { return ConfirmSendReportCore; } set { ConfirmSendReportCore = value; } }
 
         public static new LogifyAlert Instance {
             get {
@@ -48,10 +47,10 @@ namespace DevExpress.Logify.Xamarin {
         protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore() {
-            return new NetCoreConsoleExceptionCollector(Config);
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
+            return new XamarinAndroidExceptionCollector(context);
         }
-        protected override ILogifyAppInfo CreateAppInfo() {
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
             return new XamarinApplicationCollector();
         }
         protected override IExceptionReportSender CreateExceptionReportSender() {
@@ -73,10 +72,6 @@ namespace DevExpress.Logify.Xamarin {
         protected override LogifyAlertConfiguration LoadConfiguration() {
             return new LogifyAlertConfiguration();
         }
-        //[CLSCompliant(false)]
-        //public void Configure(IConfigurationSection section) {
-        //    Configure(ClientConfigurationLoader.LoadConfiguration(section));
-        //}
 
         public override void Run() {
             if (!IsSecondaryInstance) {
@@ -98,13 +93,7 @@ namespace DevExpress.Logify.Xamarin {
         void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
-            Exception ex = e.ExceptionObject as Exception;
-
-            if (ex != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
-                ReportException(ex, null, null, callArgumentsMap);
-            }
+            HandleExceptionCore(e.ExceptionObject as Exception);
         }
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
@@ -112,13 +101,7 @@ namespace DevExpress.Logify.Xamarin {
         private void AndroidEnvironmentOnUnhandledException(object sender, RaiseThrowableEventArgs e) {
             if (e == null)
                 return;
-            Exception ex = e.Exception as Exception;
-
-            if (ex != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
-                ReportException(ex, null, null, callArgumentsMap);
-            }
+            HandleExceptionCore(e.Exception);
         }
 
         [SecurityCritical]
@@ -127,12 +110,15 @@ namespace DevExpress.Logify.Xamarin {
         private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) {
             if (e == null)
                 return;
-            Exception ex = e.Exception as Exception;
+            HandleExceptionCore(e.Exception);
+        }
 
+        private void HandleExceptionCore(Exception ex) {
+            var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
+            ResetTrackArguments();
             if (ex != null) {
-                var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
-                ResetTrackArguments();
-                ReportException(ex, null, null, callArgumentsMap);
+                LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
+                ReportException(ex, context);
             }
         }
         protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
