@@ -10,6 +10,7 @@ namespace DevExpress.Logify.Core.Internal {
         ASP,
         NETCORE_ASP,
         NETCORE_CONSOLE,
+        XAMARIN_ANDROID,
         NONE
     }
 }
