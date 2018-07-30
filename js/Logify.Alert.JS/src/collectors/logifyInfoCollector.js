@@ -9,7 +9,7 @@ export default class logifyInfoCollector extends collectorBase {
     process(win, report) {
         super.process(win, report);
 
-        report.clientVersion = "15.2.11";
+        report.clientVersion = "1.0.2";
         report.devPlatform = "js";
         report.logifyProtocolVersion = "1.0";
     }
