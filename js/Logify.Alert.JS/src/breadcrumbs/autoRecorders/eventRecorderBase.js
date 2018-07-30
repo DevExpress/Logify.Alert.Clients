@@ -73,9 +73,9 @@ export default class eventRecorderBase {
         if (element.href)
             data.href = this.addStringifiedValue(element.href);
         if (element.alt)
-            data.href = this.addStringifiedValue(element.alt);
+            data.alt = this.addStringifiedValue(element.alt);
         if (element.className)
-            data.href = this.addStringifiedValue(element.className);
+            data.className = this.addStringifiedValue(element.className);
         if (element.type)
             data.type = this.addStringifiedValue(element.type);
         if (element.value) 
@@ -88,7 +88,7 @@ export default class eventRecorderBase {
     addStringifiedValue(value) {
         if (typeof value === "object")
             return JSON.stringify(value);
-        return cutLongValues(value);    
+        return this.cutLongValues(value);
     }
 
     cutLongValues(value) {
