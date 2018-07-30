@@ -10,7 +10,7 @@ describe('logifyInfoCollector tests', function() {
 
         collector.process(null, reportData);
 
-        assert.equal("15.2.11", reportData.clientVersion);
+        assert.equal("1.0.2", reportData.clientVersion);
         assert.equal("js", reportData.devPlatform);
         assert.equal("1.0", reportData.logifyProtocolVersion);
     });

@@ -186,7 +186,7 @@ describe('jsCollector tests', function() {
         assert.equal("mocHeight", collector.reportData.window.height);
         assert.equal("mocWidth", collector.reportData.window.width);
 
-        assert.equal("15.2.11", collector.reportData.clientVersion);
+        assert.equal("1.0.2", collector.reportData.clientVersion);
         assert.equal("js", collector.reportData.devPlatform);
         assert.equal("1.0", collector.reportData.logifyProtocolVersion);
 
