@@ -6,7 +6,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://logify.devexpress.com/Terms</licenseUrl>
+    <licenseUrl>https://github.com/DevExpress/Logify.Alert.Clients/blob/develop/dotnet/Logify.Alert.Serilog/LICENSE</licenseUrl>
     <projectUrl>https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Serilog</projectUrl>
     <iconUrl>https://secure.gravatar.com/avatar/abb60c275d6f175df3393a6369988c3a?s=128&amp;r=g</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
