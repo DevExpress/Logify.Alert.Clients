@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logify.Alert.NetCore.Core", "Logify.Alert.Core\Logify.Alert.NetCore.Core.csproj", "{870A9A50-1778-4980-9771-93E2B7FA9E86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.NetCore.Core", "Logify.Alert.Core\Logify.Alert.NetCore.Core.csproj", "{870A9A50-1778-4980-9771-93E2B7FA9E86}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logify.Alert.NetCore.Web", "Logify.Alert.NetCore.Web\Logify.Alert.NetCore.Web.csproj", "{719CC5ED-B800-494E-AE2D-F95DC7293E8B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.NetCore.Web", "Logify.Alert.NetCore.Web\Logify.Alert.NetCore.Web.csproj", "{719CC5ED-B800-494E-AE2D-F95DC7293E8B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logify.Alert.NetCore.Console", "Logify.Alert.NetCore.Console\Logify.Alert.NetCore.Console.csproj", "{80185041-6B5D-4BDA-8B5D-1E1873DA83C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.NetCore.Console", "Logify.Alert.NetCore.Console\Logify.Alert.NetCore.Console.csproj", "{80185041-6B5D-4BDA-8B5D-1E1873DA83C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Xamarin.Android", "Logify.Alert.Xamarin.Android\Logify.Alert.Xamarin.Android.csproj", "{D628501A-1C11-4ABF-9EB4-43C402D7D8BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Xamarin.iOS.Unified", "Logify.Alert.Xamarin.iOS.Unified\Logify.Alert.Xamarin.iOS.Unified.csproj", "{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,18 @@ Global
 		{D628501A-1C11-4ABF-9EB4-43C402D7D8BF}.Release|x64.Build.0 = Release|Any CPU
 		{D628501A-1C11-4ABF-9EB4-43C402D7D8BF}.Release|x86.ActiveCfg = Release|Any CPU
 		{D628501A-1C11-4ABF-9EB4-43C402D7D8BF}.Release|x86.Build.0 = Release|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Debug|x64.Build.0 = Debug|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Debug|x86.Build.0 = Debug|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Release|x64.ActiveCfg = Release|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Release|x64.Build.0 = Release|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Release|x86.ActiveCfg = Release|Any CPU
+		{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
