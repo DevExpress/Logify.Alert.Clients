@@ -16,46 +16,20 @@ copy %clientPath%\net45\*.* .\tmp\latestclients\net45
 nuget restore
 
 call :buildclient Logify.Alert.Core
-
 call :buildclient Logify.Alert.Console
-
 call :buildclient Logify.Alert.Win
-
 call :buildclient Logify.Alert.Web
-
 call :buildclient Logify.Alert.Wpf
-
 call :buildclient Logify.Alert.Log4Net
-
 call :buildclient Logify.Alert.NLog
-
-
 call :buildclient Logify.Alert.Serilog
-
 call :buildclient Logify.Alert.Xamarin.Android
-
-
-
 
 rd tmp /Q /S
 
-
-
 call :mergenupkgbymask . ..\bin\ Logify.Alert.Core.*.nupkg .
-
-
-
-
 call :mergenupkgbymask . ..\bin\ Logify.Alert.Console.*.nupkg .
-
-
-
-
 call :mergenupkgbymask . ..\bin\ Logify.Alert.Web.*.nupkg .
-
-
-
-
 
 rem for %%i in (..\bin\Logify.Alert.Console.*.nupkg) do set nupkgName=%%i
 rem for %%i in (.\Logify.Alert.Win.*.nupkg) do set winnupkgname=%%i
@@ -90,15 +64,7 @@ rd unpacked /Q /S
 popd
 del %nupkgName%
 rename temp.zip %nupkgName%
-
 exit /b
-
-
-
-
-
-
-
 
 
 :mergenupkgbymask
@@ -108,16 +74,6 @@ for %%i in (%1\%3) do set target=%4\%%~nxi
 
 call :merge_nupkg %first% %second% %target%
 exit /b
-
-
-
-
-
-
-
-
-
-
 
 :merge_nupkg
 call :unpackpackage %1 .\first
@@ -154,26 +110,11 @@ set targetFileName=%2
 call :unpackpackage %1 .\first
 for %%i in (.\first\*.nuspec) do set nuspecname=%%i
 for %%i in (.\first\lib\netstandard2.0\*.dll) do set asmname=%%i
-for %%i in (.\first\lib\netstandard1.6\*.dll) do set asmname=%%i
-for %%i in (.\first\lib\netstandard1.5\*.dll) do set asmname=%%i
-for %%i in (.\first\lib\netstandard1.4\*.dll) do set asmname=%%i
+for %%i in (.\first\lib\Xamarin.Android\*.dll) do set asmname=%%i
+for %%i in (.\first\lib\Xamarin.iOS.Unified\*.dll) do set asmname=%%i
 dotnet PatchNuspecByAssemblyAttributes.dll %nuspecname% %asmname%
 call :makepackage .\first %targetFileName%
 rd .\first /Q /S
 exit /b
 
-
-
-
-
-
-
-
-
-
-
 :finish
-
-
-
-
