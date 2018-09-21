@@ -24,6 +24,7 @@ call :buildclient Logify.Alert.Log4Net
 call :buildclient Logify.Alert.NLog
 call :buildclient Logify.Alert.Serilog
 call :buildclient Logify.Alert.Xamarin.Android
+call :buildclient Logify.Alert.Xamarin.iOS.Unified
 
 rd tmp /Q /S
 
