@@ -13,8 +13,6 @@ set clientPath=%1
 copy %clientPath%\net40\*.* .\tmp\latestclients\net40
 copy %clientPath%\net45\*.* .\tmp\latestclients\net45
 
-nuget restore
-
 call :buildclient Logify.Alert.Core
 call :buildclient Logify.Alert.Console
 call :buildclient Logify.Alert.Win
