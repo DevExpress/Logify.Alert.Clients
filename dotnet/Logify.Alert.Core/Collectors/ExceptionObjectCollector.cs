@@ -7,6 +7,7 @@ using DevExpress.Logify.Core.Internal;
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace DevExpress.Logify.Core.Internal {
     public class ExceptionObjectInfoCollector : CompositeInfoCollector {
@@ -179,7 +180,7 @@ namespace DevExpress.Logify.Core.Internal {
             try {
                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-                string normalizedStackTrace = ExceptionStackCollector.GetFullStackTrace(ex, NormalizeStackTrace(ex.StackTrace), OuterStackKeys.StackNormalized);
+                string normalizedStackTrace = ExceptionStackCollector.GetFullStackTrace(ex, NormalizeStackTraceSmokers(ex.StackTrace), OuterStackKeys.StackNormalized);
                 logger.WriteValue("normalizedStackTrace", normalizedStackTrace);
             } finally {
                 Thread.CurrentThread.CurrentCulture = prevCulture;
@@ -206,6 +207,13 @@ namespace DevExpress.Logify.Core.Internal {
             if (suffixIndex >= 0)
                 frame = frame.Substring(0, suffixIndex + 1);
             return frame;
+        }
+        static Regex normalizator = new Regex(@"^(\s*(?:at)\s*)?(.+[\)|-])\s*((\[.+\])?\s+in\s+.*)?$", RegexOptions.Multiline);
+        static string NormalizeStackTraceSmokers(string stackTrace) {
+            if (String.IsNullOrEmpty(stackTrace))
+                return String.Empty;
+            const string replacement = "$2";
+            return normalizator.Replace(stackTrace, replacement);
         }
     }
 
