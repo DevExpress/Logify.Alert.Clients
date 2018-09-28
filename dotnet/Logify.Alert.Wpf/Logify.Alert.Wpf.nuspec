@@ -6,13 +6,13 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://github.com/DevExpress/Logify.Alert.Clients/blob/develop/dotnet/Logify.Alert.Win/LICENSE</licenseUrl>
+    <licenseUrl>https://logify.devexpress.com/Terms</licenseUrl>
     <projectUrl>https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Wpf</projectUrl>
     <iconUrl>https://secure.gravatar.com/avatar/abb60c275d6f175df3393a6369988c3a?s=128&amp;r=g</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
-    <copyright>Copyright (c) 2000-2017 Developer Express Inc.</copyright>
+    <copyright>Copyright (c) 2000-2018 Developer Express Inc.</copyright>
     <tags>Logify Alert CrashReport Crash Exception Handler Wpf</tags>
     <dependencies>
       <dependency id="Logify.Alert.Core" version="$version$" />

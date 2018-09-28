@@ -2,7 +2,7 @@
 
 namespace DevExpress.Logify.Core.Internal {
     public static class AssemblyInfo {
-        public const string AssemblyCopyright = "Copyright (c) 2000-2017 Developer Express Inc.";
+        public const string AssemblyCopyright = "Copyright (c) 2000-2018 Developer Express Inc.";
         public const string AssemblyCompany = "Developer Express Inc.";
         public const string AssemblyProduct = "DevExpress Logify Alert";
         public const string AssemblyTrademark = "DevExpress Logify Alert";
