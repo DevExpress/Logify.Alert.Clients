@@ -11,11 +11,12 @@ using System.Text.RegularExpressions;
 
 namespace DevExpress.Logify.Core.Internal {
     public class ExceptionObjectInfoCollector : CompositeInfoCollector {
-        IInfoCollector normalizedStackCollector;
         public ExceptionObjectInfoCollector(LogifyCollectorContext context, IInfoCollector normalizedStackCollector)
             : base(context) {
-            this.normalizedStackCollector = normalizedStackCollector;
             Collectors.Add(new ExceptionMethodCallArgumentsCollector(context.CallArgumentsMap));
+            if (normalizedStackCollector != null) {
+                Collectors.Add(normalizedStackCollector);
+            }
         }
 
         public override void Process(Exception ex, ILogger logger) {
@@ -43,9 +44,6 @@ namespace DevExpress.Logify.Core.Internal {
             Collectors.Add(new ExceptionTypeCollector());
             Collectors.Add(new ExceptionMessageCollector());
             Collectors.Add(new ExceptionStackCollector());
-            if (normalizedStackCollector != null) {
-                Collectors.Add(normalizedStackCollector);
-            }
             Collectors.Add(new InnerExceptionIdCollector());
             Collectors.Add(new ExceptionDataCollector());
             //etc
