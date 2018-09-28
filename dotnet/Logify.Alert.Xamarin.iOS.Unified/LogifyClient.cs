@@ -7,17 +7,13 @@ using System.ComponentModel;
 using DevExpress.Logify.Core.Internal;
 using System.Threading.Tasks;
 
-namespace DevExpress.Logify.Xamarin
-{
-    public class LogifyAlert : LogifyClientBase
-    {
+namespace DevExpress.Logify.Xamarin {
+    public class LogifyAlert : LogifyClientBase {
         static volatile LogifyAlert instance;
 
-        internal LogifyAlert(bool b)
-        {
+        internal LogifyAlert(bool b) {
         }
-        protected LogifyAlert(string apiKey) : base(apiKey)
-        {
+        protected LogifyAlert(string apiKey) : base(apiKey) {
         }
 
         internal bool CollectMiniDump { get { return Config.CollectMiniDump; } set { Config.CollectMiniDump = value; } }
@@ -27,10 +23,8 @@ namespace DevExpress.Logify.Xamarin
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool ConfirmSendReport { get { return ConfirmSendReportCore; } set { ConfirmSendReportCore = value; } }
 
-        public static new LogifyAlert Instance
-        {
-            get
-            {
+        public static new LogifyAlert Instance {
+            get {
                 if (instance != null)
                     return instance;
 
@@ -39,10 +33,8 @@ namespace DevExpress.Logify.Xamarin
             }
         }
 
-        internal static void InitializeInstance()
-        {
-            lock (typeof(LogifyAlert))
-            {
+        internal static void InitializeInstance() {
+            lock (typeof(LogifyAlert)) {
                 if (instance != null)
                     return;
 
@@ -51,20 +43,16 @@ namespace DevExpress.Logify.Xamarin
             }
         }
 
-        protected internal LogifyAlert(Dictionary<string, string> config) : base(config)
-        {
+        protected internal LogifyAlert(Dictionary<string, string> config) : base(config) {
         }
 
-        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context)
-        {
+        protected override RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context) {
             return new XamarinIOSExceptionCollector(context);
         }
-        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context)
-        {
+        protected override ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context) {
             return new XamarinApplicationCollector();
         }
-        protected override IExceptionReportSender CreateExceptionReportSender()
-        {
+        protected override IExceptionReportSender CreateExceptionReportSender() {
             IExceptionReportSender defaultSender = CreateConfiguredPlatformExceptionReportSender();
             if (ConfirmSendReport)
                 return defaultSender;
@@ -76,28 +64,22 @@ namespace DevExpress.Logify.Xamarin
             sender.Senders.Add(new OfflineDirectoryExceptionReportSender());
             return sender;
         }
-        protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender()
-        {
+        protected override IExceptionReportSender CreateEmptyPlatformExceptionReportSender() {
             return new XamarinExceptionReportSender();
         }
 
-        protected override LogifyAlertConfiguration LoadConfiguration()
-        {
+        protected override LogifyAlertConfiguration LoadConfiguration() {
             return new LogifyAlertConfiguration();
         }
 
-        public override void Run()
-        {
-            if (!IsSecondaryInstance)
-            {
+        public override void Run() {
+            if (!IsSecondaryInstance) {
                 AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
                 TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
             }
         }
-        public override void Stop()
-        {
-            if (!IsSecondaryInstance)
-            {
+        public override void Stop() {
+            if (!IsSecondaryInstance) {
                 AppDomain.CurrentDomain.UnhandledException -= OnCurrentDomainUnhandledException;
                 TaskScheduler.UnobservedTaskException -= TaskSchedulerOnUnobservedTaskException;
             }
@@ -105,8 +87,7 @@ namespace DevExpress.Logify.Xamarin
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
         [IgnoreCallTracking]
-        void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
+        void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e) {
             if (e == null)
                 return;
             HandleExceptionCore(e.ExceptionObject as Exception);
@@ -115,30 +96,31 @@ namespace DevExpress.Logify.Xamarin
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
         [IgnoreCallTracking]
-        private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
-        {
+        private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) {
             if (e == null)
                 return;
             HandleExceptionCore(e.Exception);
         }
 
-        private void HandleExceptionCore(Exception ex)
-        {
+        private void HandleExceptionCore(Exception ex) {
             var callArgumentsMap = this.MethodArgumentsMap; // this call should be done before any inner calls
             ResetTrackArguments();
-            if (ex != null)
-            {
+            if (ex != null) {
                 LogifyCollectorContext context = GrabCollectorContext(callArgumentsMap);
                 ReportException(ex, context);
             }
         }
-        protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction)
-        {
+        protected override ReportConfirmationModel CreateConfirmationModel(LogifyClientExceptionReport report, Func<LogifyClientExceptionReport, bool> sendAction) {
             return null;
         }
-        protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model)
-        {
+        protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
             return false;
+        }
+        protected override IInfoCollector CreateNormalizedStackCollector() {
+            return new RegexpExceptionNormalizedStackCollector();
+        }
+        protected override IStackTraceNormalizer CreateStackNormalizer() {
+            return new RegexpExceptionNormalizedStackCollector();
         }
     }
 }

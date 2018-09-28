@@ -16,7 +16,7 @@ namespace DevExpress.Logify.Core.Tests.Collectors {
         public void Setup() {
             SetupCore();
             context = new LogifyCollectorContext() { CallArgumentsMap = null };
-            this.collector = new ExceptionObjectInfoCollector(context);
+            this.collector = new ExceptionObjectInfoCollector(context, new LegacyExceptionNormalizedStackCollector());
         }
         [TearDown]
         public void TearDown() {

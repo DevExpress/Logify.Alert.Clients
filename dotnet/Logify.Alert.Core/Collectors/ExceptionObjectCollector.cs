@@ -11,8 +11,10 @@ using System.Text.RegularExpressions;
 
 namespace DevExpress.Logify.Core.Internal {
     public class ExceptionObjectInfoCollector : CompositeInfoCollector {
-        public ExceptionObjectInfoCollector(LogifyCollectorContext context)
+        IInfoCollector normalizedStackCollector;
+        public ExceptionObjectInfoCollector(LogifyCollectorContext context, IInfoCollector normalizedStackCollector)
             : base(context) {
+            this.normalizedStackCollector = normalizedStackCollector;
             Collectors.Add(new ExceptionMethodCallArgumentsCollector(context.CallArgumentsMap));
         }
 
@@ -41,7 +43,9 @@ namespace DevExpress.Logify.Core.Internal {
             Collectors.Add(new ExceptionTypeCollector());
             Collectors.Add(new ExceptionMessageCollector());
             Collectors.Add(new ExceptionStackCollector());
-            Collectors.Add(new ExceptionNormalizedStackCollector());
+            if (normalizedStackCollector != null) {
+                Collectors.Add(normalizedStackCollector);
+            }
             Collectors.Add(new InnerExceptionIdCollector());
             Collectors.Add(new ExceptionDataCollector());
             //etc
@@ -170,50 +174,6 @@ namespace DevExpress.Logify.Core.Internal {
             } finally {
                 logger.EndWriteArray("frames");
             }
-        }
-    }
-    //TODO: move to platform specific assembly
-    public class ExceptionNormalizedStackCollector : IInfoCollector {
-        public virtual void Process(Exception ex, ILogger logger) {
-            CultureInfo prevCulture = Thread.CurrentThread.CurrentCulture;
-            CultureInfo prevUICulture = Thread.CurrentThread.CurrentUICulture;
-            try {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-                string normalizedStackTrace = ExceptionStackCollector.GetFullStackTrace(ex, NormalizeStackTraceSmokers(ex.StackTrace), OuterStackKeys.StackNormalized);
-                logger.WriteValue("normalizedStackTrace", normalizedStackTrace);
-            } finally {
-                Thread.CurrentThread.CurrentCulture = prevCulture;
-                Thread.CurrentThread.CurrentUICulture = prevUICulture;
-            }
-        }
-
-        public static string NormalizeStackTrace(string stackTrace) {
-            if (String.IsNullOrEmpty(stackTrace))
-                return String.Empty;
-            string[] frames = stackTrace.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < frames.Length; i++)
-                result.AppendLine(NormalizeStackFrame(frames[i]));
-            return result.ToString();
-        }
-
-        static string NormalizeStackFrame(string frame) {
-            const string prefix = "   at ";
-            const string suffix = ") in ";
-            if (frame.StartsWith(prefix))
-                frame = frame.Substring(prefix.Length);
-            int suffixIndex = frame.LastIndexOf(suffix);
-            if (suffixIndex >= 0)
-                frame = frame.Substring(0, suffixIndex + 1);
-            return frame;
-        }
-        static Regex normalizator = new Regex(@"^(\s*(?:at)\s*)?(.+[\)|-])\s*((\[.+\])?\s+in\s+.*)?$", RegexOptions.Multiline);
-        static string NormalizeStackTraceSmokers(string stackTrace) {
-            if (String.IsNullOrEmpty(stackTrace))
-                return String.Empty;
-            const string replacement = "$2";
-            return normalizator.Replace(stackTrace, replacement);
         }
     }
 

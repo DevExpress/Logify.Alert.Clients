@@ -106,6 +106,7 @@
     <Compile Include="Collectors\LogifyReportGenerationDateTimeCollector.cs" />
     <Compile Include="Collectors\MemoryCollector.cs" />
     <Compile Include="Collectors\MiniDumpCollector.cs" />
+    <Compile Include="Collectors\NormalizedStackCollector.cs" />
     <Compile Include="Collectors\OperatingSystemCollector.cs" />
     <Compile Include="Collectors\ScreenShotCollector.cs" />
     <Compile Include="Collectors\TagsCollector.cs" />

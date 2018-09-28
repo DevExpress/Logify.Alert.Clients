@@ -270,7 +270,12 @@ namespace DevExpress.Logify.Core {
             result.ServiceUrl = this.ServiceUrl;
             return result;
         }
-
+        protected virtual IInfoCollector CreateNormalizedStackCollector() {
+            return new LegacyExceptionNormalizedStackCollector();
+        }
+        protected virtual IStackTraceNormalizer CreateStackNormalizer() {
+            return new LegacyExceptionNormalizedStackCollector();
+        }
         protected abstract IExceptionReportSender CreateExceptionReportSender();
         protected abstract RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context);
         protected abstract ILogifyAppInfo CreateAppInfo(LogifyCollectorContext context);
@@ -293,7 +298,7 @@ namespace DevExpress.Logify.Core {
                 collectors.Insert(0, new LogifyHardwareIdCollector());
             collectors.Insert(0, new LogifyProtocolVersionCollector());
 
-            collectors.Add(new ExceptionObjectInfoCollector(context));
+            collectors.Add(new ExceptionObjectInfoCollector(context, CreateNormalizedStackCollector()));
             collectors.Add(new CustomDataCollector(this.CustomData.Clone(), context.AdditionalCustomData));
             collectors.Add(new TagsCollector(this.Tags.Clone()));
             collectors.Add(new BreadcrumbsCollector(this.Breadcrumbs.Clone()));
@@ -316,7 +321,7 @@ namespace DevExpress.Logify.Core {
             return new EmptyBackgroundExceptionReportSender(reportSender);
         }
         protected virtual IStackTraceHelper CreateStackTraceHelper() {
-            return new StackTraceHelper();
+            return new StackTraceHelper(CreateStackNormalizer());
         }
         protected virtual ISavedReportSender CreateSavedReportsSender() {
             return new SavedExceptionReportSender();

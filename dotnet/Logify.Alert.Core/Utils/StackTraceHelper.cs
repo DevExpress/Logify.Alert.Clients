@@ -6,6 +6,10 @@ using System.Threading;
 
 namespace DevExpress.Logify.Core.Internal {
     public class StackTraceHelper : IStackTraceHelper {
+        IStackTraceNormalizer normalizer;
+        public StackTraceHelper(IStackTraceNormalizer normalizer) {
+            this.normalizer = normalizer;
+        }
         [MethodImpl(MethodImplOptions.NoInlining)]
         public string GetOuterStackTrace(int skipFrames) {
             try {
@@ -25,7 +29,7 @@ namespace DevExpress.Logify.Core.Internal {
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
                 StackTrace trace = new StackTrace(skipFrames + 1, true); // remove GetOuterNormalizedStackTrace call from stack trace
-                return ExceptionNormalizedStackCollector.NormalizeStackTrace(trace.ToString());
+                return normalizer.NormalizeStackTrace(trace.ToString());
             }
             catch {
                 return String.Empty;
