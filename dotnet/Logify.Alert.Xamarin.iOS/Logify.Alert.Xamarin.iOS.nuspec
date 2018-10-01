@@ -7,7 +7,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>https://logify.devexpress.com/Terms</licenseUrl>
-    <projectUrl>https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Xamarin.iOS.Unified</projectUrl>
+    <projectUrl>https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Xamarin.iOS</projectUrl>
     <iconUrl>https://secure.gravatar.com/avatar/abb60c275d6f175df3393a6369988c3a?s=128&amp;r=g</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>

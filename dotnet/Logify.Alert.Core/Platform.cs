@@ -11,7 +11,7 @@ namespace DevExpress.Logify.Core.Internal {
         NETCORE_ASP,
         NETCORE_CONSOLE,
         XAMARIN_ANDROID,
-        XAMARIN_IOS_UNIFIED,
+        XAMARIN_IOS,
         NONE
     }
 }

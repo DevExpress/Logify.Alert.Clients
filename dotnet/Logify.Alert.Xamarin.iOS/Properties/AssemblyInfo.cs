@@ -9,7 +9,7 @@ using DevExpress.Logify.Core.Internal;
 // associated with an assembly.
 [assembly: AssemblyTitle("DevExpress Logify Alert Xamarin.iOS Client")]
 [assembly: AssemblyDescription(AssemblyInfo.AssemblyDescriptionCommon +
-"The Logify.Alert.Xamarin.iOS.Unified package contains the Logify Alert client for Xamarin.iOS applications. Use this client to set up your application so it reported uncaught exceptions to the service.")]
+"The Logify.Alert.Xamarin.iOS package contains the Logify Alert client for Xamarin.iOS applications. Use this client to set up your application so it reported uncaught exceptions to the service.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(AssemblyInfo.AssemblyCompany)]
 [assembly: AssemblyProduct(AssemblyInfo.AssemblyProduct)]

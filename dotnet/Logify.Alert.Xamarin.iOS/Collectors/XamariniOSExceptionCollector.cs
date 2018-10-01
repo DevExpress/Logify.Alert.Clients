@@ -7,7 +7,7 @@ namespace DevExpress.Logify.Core.Internal {
         }
 
         protected override void RegisterCollectors(LogifyCollectorContext context) {
-            Collectors.Add(new DevelopementPlatformCollector(Platform.XAMARIN_IOS_UNIFIED)); // added in constuctor
+            Collectors.Add(new DevelopementPlatformCollector(Platform.XAMARIN_IOS)); // added in constuctor
             Collectors.Add(new XamarinApplicationCollector());
             Collectors.Add(new XamarinDisplayCollector());
             Collectors.Add(new XamarinMemoryCollector());

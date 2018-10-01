@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Xamarin.Androi
 		{870A9A50-1778-4980-9771-93E2B7FA9E86} = {870A9A50-1778-4980-9771-93E2B7FA9E86}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Xamarin.iOS.Unified", "Logify.Alert.Xamarin.iOS.Unified\Logify.Alert.Xamarin.iOS.Unified.csproj", "{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Xamarin.iOS", "Logify.Alert.Xamarin.iOS\Logify.Alert.Xamarin.iOS.csproj", "{159A7E1D-890B-4BFC-B033-0CFCA2D55BD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

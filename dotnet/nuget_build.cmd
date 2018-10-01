@@ -22,7 +22,7 @@ call :buildclient Logify.Alert.Log4Net
 call :buildclient Logify.Alert.NLog
 call :buildclient Logify.Alert.Serilog
 call :buildclient Logify.Alert.Xamarin.Android
-call :buildclient Logify.Alert.Xamarin.iOS.Unified
+call :buildclient Logify.Alert.Xamarin.iOS
 
 rd tmp /Q /S
 
@@ -110,7 +110,7 @@ call :unpackpackage %1 .\first
 for %%i in (.\first\*.nuspec) do set nuspecname=%%i
 for %%i in (.\first\lib\netstandard2.0\*.dll) do set asmname=%%i
 for %%i in (.\first\lib\Xamarin.Android\*.dll) do set asmname=%%i
-for %%i in (.\first\lib\Xamarin.iOS.Unified\*.dll) do set asmname=%%i
+for %%i in (.\first\lib\Xamarin.iOS\*.dll) do set asmname=%%i
 dotnet PatchNuspecByAssemblyAttributes.dll %nuspecname% %asmname%
 call :makepackage .\first %targetFileName%
 rd .\first /Q /S
