@@ -1,0 +1,53 @@
+apply plugin: "java"
+apply plugin: "maven-publish"
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.devexpress.logify:logify-alert-java:1.0.1"
+    compileOnly "ch.qos.logback:logback-classic:1.0.13"
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier "source"
+}
+
+publishing {
+    publications {
+        logback(MavenPublication) {
+            version rootProject.libVersion
+            groupId rootProject.groupId
+            artifactId "logify-alert-logback"
+
+            artifact(sourceJar)
+            from components.java
+
+            pom {
+                name = rootProject.pomName + " Logback"
+                description = rootProject.pomDescription +
+                        "\n\tThe logify-alert-logback artifact contains the Logify Alert appender for logback.\n  "
+                licenses {
+                    license {
+                        name = rootProject.licensename
+                        url = rootProject.licenseurl
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.bootstrapClasspath = project.files([ "file:C:/Program Files/Java/jdk1.6.0_45/jre/lib/rt.jar" ])
+    options.compilerArgs << "-Xlint:unchecked"
+}

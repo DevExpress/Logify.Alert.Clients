@@ -1,0 +1,61 @@
+apply plugin: "java"
+apply plugin: "maven-publish"
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.devexpress.logify:logify-alert-core:1.0.1"
+    testCompile project(path: ":Core", configuration: "testOutput")
+}
+
+jar {
+    from configurations.compile.collect {
+        it.isDirectory() ? it : zipTree(it)
+    }
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier "source"
+}
+
+publishing {
+    publications {
+        java(MavenPublication) {
+            version rootProject.libVersion
+            groupId rootProject.groupId
+            artifactId "logify-alert-java"
+
+            artifact(sourceJar)
+            from components.java
+
+            pom {
+                name = rootProject.pomName + " Java"
+                description = rootProject.pomDescription +
+                        "\n\t" + "The logify-alert-java artifact contains the Logify Alert client for Java applications." +
+                        "\n\t" + "Use this client to set up your application so it reported uncaught exceptions to the service." +
+                        "\n  "
+                licenses {
+                    license {
+                        name = rootProject.licensename
+                        url = rootProject.licenseurl
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.bootstrapClasspath = project.files([ "file:C:/Program Files/Java/jdk1.6.0_45/jre/lib/rt.jar" ])
+    options.compilerArgs << "-Xlint:unchecked"
+}

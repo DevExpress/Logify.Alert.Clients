@@ -1,0 +1,38 @@
+apply plugin: "java"
+
+ext {
+    libVersion = "1.0.1"
+    groupId = "com.devexpress.logify"
+
+    licensename = 'Logify Terms of Use and Service Agreement'
+    licenseurl = 'https://logify.devexpress.com/Account/Terms'
+
+    pomName = "DevExpress Logify Alert"
+    pomDescription = "\n\t" + "Logify Alert is a cloud service that catches unhandled exceptions in your applications and delivers crash reports." +
+            "\n\t" + "The service provides two approaches to catching exceptions." +
+            "\n\t" + "1) Automatic listening to unhandled exceptions, and sending reports for each exception that has been raised." +
+            "\n\t" + "2) Catching exceptions manually, and sending reports based on the required exceptions only." +
+            "\n  "
+}
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:3.1.4"
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            //url "https://github.com/DevExpress/Logify.Alert.Clients/raw/maven"
+            url "https://github.com/GrigoriyVahmistrov/logify-maven-test/raw/master"
+        }
+        google()
+        jcenter()
+    }
+}

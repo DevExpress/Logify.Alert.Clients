@@ -1,0 +1,88 @@
+apply plugin: "com.android.library"
+apply plugin: "maven-publish"
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+}
+
+dependencies {
+    implementation "com.devexpress.logify:logify-alert-core:1.0.1"
+    implementation "com.android.support:appcompat-v7:27.1.1"
+    androidTestImplementation "com.android.support.test:runner:1.0.2"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+    androidTestImplementation project(path: ":Core", configuration: "testOutput")
+    androidTestImplementation "com.android.support:appcompat-v7:27.1.1"
+    testImplementation "junit:junit:4.12"
+    testImplementation project(path: ":Core", configuration: "testOutput")
+}
+
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "source"
+}
+
+publishing {
+    publications {
+        android(MavenPublication) {
+            version rootProject.libVersion
+            groupId rootProject.groupId
+            artifactId "logify-alert-android"
+
+            artifact(sourceJar)
+            artifact("$buildDir/outputs/aar/Android-release.aar")
+
+            pom {
+                name = rootProject.pomName + " Android"
+                description = rootProject.pomDescription +
+                        "\n\t" + "The logify-alert-android artifact contains the Logify Alert client for Android applications." +
+                        "\n\t" + "Use this client to set up your application so it reported uncaught exceptions to the service." +
+                        "\n  "
+                licenses {
+                    license {
+                        name = rootProject.licensename
+                        url = rootProject.licenseurl
+                    }
+                }
+            }
+
+            pom.withXml {
+                def dependencies = asNode().appendNode("dependencies")
+                def dependency = dependencies.appendNode("dependency")
+                    dependency.appendNode("groupId", rootProject.groupId)
+                    dependency.appendNode("artifactId", "logify-alert-core")
+                    dependency.appendNode("version", rootProject.libVersion)
+                    dependency.appendNode("scope", "compile")
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked"
+}
