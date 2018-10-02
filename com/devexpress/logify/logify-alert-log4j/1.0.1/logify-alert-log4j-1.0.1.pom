@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.devexpress.logify</groupId>
+  <artifactId>logify-alert-log4j</artifactId>
+  <version>1.0.1</version>
+  <name>DevExpress Logify Alert Log4j</name>
+  <description>
+	Logify Alert is a cloud service that catches unhandled exceptions in your applications and delivers crash reports.
+	The service provides two approaches to catching exceptions.
+	1) Automatic listening to unhandled exceptions, and sending reports for each exception that has been raised.
+	2) Catching exceptions manually, and sending reports based on the required exceptions only.
+  
+	The logify-alert-log4j artifact contains the Logify Alert appender for log4j.
+  </description>
+  <licenses>
+    <license>
+      <name>Logify Terms of Use and Service Agreement</name>
+      <url>https://logify.devexpress.com/Account/Terms</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>com.devexpress.logify</groupId>
+      <artifactId>logify-alert-java</artifactId>
+      <version>1.0.1</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>
