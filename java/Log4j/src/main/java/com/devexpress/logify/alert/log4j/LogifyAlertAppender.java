@@ -8,7 +8,6 @@ public class LogifyAlertAppender extends AppenderSkeleton {
     private String ApiKey = "";
 
     public void setApiKey(String apiKey) {
-        System.out.println("Apikey: " + apiKey);
         ApiKey = apiKey;
     }
 
