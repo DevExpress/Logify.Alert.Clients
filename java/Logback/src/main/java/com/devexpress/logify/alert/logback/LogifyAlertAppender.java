@@ -7,12 +7,6 @@ import ch.qos.logback.core.AppenderBase;
 import com.devexpress.logify.alert.java.LogifyAlert;
 
 public class LogifyAlertAppender extends AppenderBase<ILoggingEvent> {
-    private String ApiKey = "";
-
-    public void setApiKey(String apiKey) {
-        ApiKey = apiKey;
-    }
-
     @Override
     protected void append(ILoggingEvent eventObject) {
         IThrowableProxy proxy = eventObject.getThrowableProxy();
@@ -21,9 +15,6 @@ public class LogifyAlertAppender extends AppenderBase<ILoggingEvent> {
             LogifyAlert client = LogifyAlert.getInstance();
 
             if (client != null) {
-                if (client.getApiKey() == null || client.getApiKey().equals(""))
-                    client.setApiKey(ApiKey);
-
                 client.send(throwable);
             }
         }
