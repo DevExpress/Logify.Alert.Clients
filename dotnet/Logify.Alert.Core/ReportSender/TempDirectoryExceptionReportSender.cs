@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DevExpress.Logify.Core.Internal {
     public class OfflineDirectoryExceptionReportSender : ExceptionReportSenderSkeleton, IOfflineDirectoryExceptionReportSender {
         internal const string TempFileNamePrefix = "LogifyR_";
-        internal const string TempFileNameExtension = "bin";
+        internal const string TempFileNameExtension = "alert";
         public string DirectoryName { get; set; }
         public int ReportCount { get; set; }
         public bool IsEnabled { get; set; }
