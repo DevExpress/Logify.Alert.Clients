@@ -36,7 +36,10 @@ In the *build.gradle* file, do the following:
 ## Quick Start
 Set up the Logify Alert's Java client in the *logify.properties* file:
 ```xml
+# required
 apiKey=YOUR_API_KEY
+
+# optional
 appName=YOUR_APP_NAME
 appVersion=YOUR_APP_VERSION
 userId=YOUR_USER_ID

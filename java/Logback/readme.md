@@ -36,7 +36,10 @@ In the *build.gradle* file, do the following:
 ## Quick Start
 Set up the Logify Alert's Java client in the *logify.properties* file:
 ```xml
+# required
 apiKey=YOUR_API_KEY
+
+# optional
 appName=YOUR_APP_NAME
 appVersion=YOUR_APP_VERSION
 userId=YOUR_USER_ID
@@ -48,8 +51,6 @@ Register the *LogifyAlertAppender* as a standard Logback appender in the *logbac
 
 ```xml
 <configuration>
-    <timestamp key="byDay" datePattern="yyyyMMdd'T'HHmmss" />
-
     <appender name="LOGIFYALERT" class="com.devexpress.logify.alert.logback.LogifyAlertAppender" />
 
     <root level="debug">
