@@ -13,7 +13,7 @@ namespace DevExpress.Logify.Core.Internal {
 
         #region Models map initialization
         static XamarinDeviceInfoCollector() {
-            Dictionary<string, string> modelsMap = new Dictionary<string, string>() {
+            modelsMap = new Dictionary<string, string>() {
                 { "iPhone1,1", "iPhone" },
                 { "iPhone1,2", "iPhone 3G" },
                 { "iPhone2,1", "iPhone 3GS" },
