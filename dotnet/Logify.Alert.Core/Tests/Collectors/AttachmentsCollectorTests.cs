@@ -35,9 +35,7 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             attachments.Add(new Attachment() { Name = "test", MimeType = "image/png" });
             this.collector = new AttachmentsCollector(attachments, additionalAttachments);
             collector.Process(null, Logger);
-            string expected = @"""attachments"": [
-],
-";
+            string expected = "\"attachments\": [\r\n],\r\n";
             Assert.AreEqual(expected, Content);
         }
         [Test]
@@ -45,9 +43,7 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             attachments.Add(new Attachment() { MimeType = "image/png", Content = new byte[] { 0, 1, 2 } });
             this.collector = new AttachmentsCollector(attachments, additionalAttachments);
             collector.Process(null, Logger);
-            string expected = @"""attachments"": [
-],
-";
+            string expected = "\"attachments\": [\r\n],\r\n";
             Assert.AreEqual(expected, Content);
         }
         [Test]
@@ -55,15 +51,7 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             attachments.Add(new Attachment() { Name = "img", MimeType = "image/png", Content = new byte[] { 0, 1, 2 } });
             this.collector = new AttachmentsCollector(attachments, additionalAttachments);
             collector.Process(null, Logger);
-            string expected = @"""attachments"": [
-{
-""name"":""img"",
-""mimeType"":""image/png"",
-""content"":""H4sIAAAAAAAEAGNgZAIAf4lUCAMAAAA="",
-""compress"":""gzip"",
-},
-],
-";
+            string expected = "\"attachments\": [\r\n{\r\n\"name\":\"img\",\r\n\"mimeType\":\"image/png\",\r\n\"content\":\"H4sIAAAAAAAEAGNgZAIAf4lUCAMAAAA=\",\r\n\"compress\":\"gzip\",\r\n},\r\n],\r\n";
             Assert.AreEqual(expected, Content);
         }
     }

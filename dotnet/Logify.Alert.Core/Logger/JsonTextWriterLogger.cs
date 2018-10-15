@@ -164,14 +164,14 @@ namespace DevExpress.Logify.Core.Internal {
             }
             public void SaveContent(TextWriter writer, bool lastObject) {
                 if (writer != null) {
-                    string jsonName = String.IsNullOrEmpty(name) ? string.Empty : "\"" + replaceDot(name) + "\": ";
+                    string jsonName = String.IsNullOrEmpty(name) ? string.Empty : "\"" + replaceDot(name) + "\":";
                     if (objects == null) {
                         string text = !NeedQuotes ? value : replacement.PerformReplacements(value, replaceTable);
                         string quote = !NeedQuotes ? string.Empty : "\"";
                         string comma = lastObject ? string.Empty : ",";
                         writer.WriteLine(jsonName + quote + text + quote + comma);
                     } else {
-                        string openedSymbol = isArray ? " [" : " {";
+                        string openedSymbol = isArray ? "[" : "{";
                         string closedSymbol = isArray ? "]" : "}";
                         writer.WriteLine(jsonName + openedSymbol);
                         if (objects != null) {

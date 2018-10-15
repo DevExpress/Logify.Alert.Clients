@@ -31,8 +31,8 @@ namespace DevExpress.Logify.Core.Tests.Collectors {
     @"""type"":""{0}""," + "\r\n" +
     @"""message"":""{1}""," + "\r\n" +
     @"""stackTrace"":""{2}""," + "\r\n" +
-    @"""normalizedStackTrace"":""{3}""," + "\r\n" +
     "{4}" +
+    @"""normalizedStackTrace"":""{3}""," + "\r\n" +
     @"}}," + "\r\n";
             return String.Format(
                 singleExceptionObjectFormat,
