@@ -37,7 +37,7 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             });
             this.collector = new BreadcrumbsCollector(breadcrumbs);
             collector.Process(null, Logger);
-            string expected = "\"breadcrumbs\": [\r\n{\r\n\"dateTime\":\"2017-09-01T20:18:36.0000000Z\",\r\n},\r\n],\r\n";
+            string expected = "\"breadcrumbs\":[\r\n{\r\n\"dateTime\":\"2017-09-01T20:18:36.0000000Z\"\r\n}\r\n]\r\n";
             Assert.AreEqual(expected, Content);
         }
         [Test]
@@ -58,7 +58,7 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             });
             this.collector = new BreadcrumbsCollector(breadcrumbs);
             collector.Process(null, Logger);
-            string expected = "\"breadcrumbs\": [\r\n{\r\n\"dateTime\":\"2017-09-01T20:18:36.0000000Z\",\r\n\"level\":\"Info\",\r\n\"event\":\"mouseClick\",\r\n\"category\":\"test\",\r\n\"message\":\"simple test breadcrumb\",\r\n\"className\":\"BreadcrumbsCollectorTests\",\r\n\"methodName\":\"SimpleBreadcrumb\",\r\n\"line\":15,\r\n\"threadId\":\"789\",\r\n\"customData\": {\r\n\"my_custom_field\":\"testvalue\",\r\n},\r\n},\r\n],\r\n";
+            string expected = "\"breadcrumbs\":[\r\n{\r\n\"dateTime\":\"2017-09-01T20:18:36.0000000Z\",\r\n\"level\":\"Info\",\r\n\"event\":\"mouseClick\",\r\n\"category\":\"test\",\r\n\"message\":\"simple test breadcrumb\",\r\n\"className\":\"BreadcrumbsCollectorTests\",\r\n\"methodName\":\"SimpleBreadcrumb\",\r\n\"line\":15,\r\n\"threadId\":\"789\",\r\n\"customData\":{\r\n\"my_custom_field\":\"testvalue\"\r\n}\r\n}\r\n]\r\n";
             Assert.AreEqual(expected, Content);
         }
         [Test]
@@ -71,7 +71,7 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             });
             this.collector = new BreadcrumbsCollector(breadcrumbs);
             collector.Process(null, Logger);
-            string expected = "\"breadcrumbs\": [\r\n{\r\n\"dateTime\":\"2018-09-01T20:18:36.0000000Z\",\r\n},\r\n{\r\n\"dateTime\":\"2017-09-01T20:18:36.0000000Z\",\r\n},\r\n],\r\n";
+            string expected = "\"breadcrumbs\":[\r\n{\r\n\"dateTime\":\"2018-09-01T20:18:36.0000000Z\"\r\n},\r\n{\r\n\"dateTime\":\"2017-09-01T20:18:36.0000000Z\"\r\n}\r\n]\r\n";
             Assert.AreEqual(expected, Content);
         }
     }

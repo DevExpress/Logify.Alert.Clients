@@ -50,31 +50,33 @@ namespace DevExpress.Logify.Core.Internal.Tests {
 
         [Test]
         public void BeginWriteObject() {
+            Logger.BeginWriteObject("");
             collector.Process(null, Logger);
-            string expected = String.Format(
-@"""os"": {{" + "\r\n" +
+            Logger.EndWriteObject("");
+            string expected = "{\r\n" + String.Format(
+@"""os"":{{" + "\r\n" +
     @"""platform"":""{0}""," + "\r\n" +
     @"""servicePack"":""{1}""," + "\r\n" +
     @"""version"":""{2}""," + "\r\n" +
-    @"""is64bit"":{3}," + "\r\n" +
+    @"""is64bit"":{3}" + "\r\n" +
 @"}}," + "\r\n" +
-@"""currentCulture"": {{" + "\r\n" +
+@"""currentCulture"":{{" + "\r\n" +
     @"""name"":""en-US""," + "\r\n" +
     @"""englishName"":""English (United States)""," + "\r\n" +
     @"""displayName"":""English (United States)""," + "\r\n" +
-    @"""isCultureCustomize"":false," + "\r\n" +
+    @"""isCultureCustomize"":false" + "\r\n" +
 @"}}," + "\r\n" +
-@"""currentUICulture"": {{" + "\r\n" +
+@"""currentUICulture"":{{" + "\r\n" +
     @"""name"":""en-US""," + "\r\n" +
     @"""englishName"":""English (United States)""," + "\r\n" +
     @"""displayName"":""English (United States)""," + "\r\n" +
-    @"""isCultureCustomize"":false," + "\r\n" +
-@"}}," + "\r\n",
+    @"""isCultureCustomize"":false" + "\r\n" +
+@"}}" + "\r\n",
  Environment.OSVersion.Platform,
  Environment.OSVersion.ServicePack,
  Environment.OSVersion.Version,
  Environment.Is64BitOperatingSystem.ToString().ToLowerInvariant()
-);
+)+ "}\r\n";
             Assert.AreEqual(expected, Content);
         }
     }

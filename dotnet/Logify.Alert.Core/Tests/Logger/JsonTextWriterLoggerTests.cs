@@ -26,59 +26,69 @@ namespace DevExpress.Logify.Core.Internal.Tests {
         [Test]
         public void BeginWriteObject() {
             logger.BeginWriteObject("testObject");
-            Assert.AreEqual("\"testObject\": {\r\n", content.ToString());
+            Assert.AreEqual(string.Empty, content.ToString());
         }
         [Test]
         public void BeginWriteObjectNoName() {
             logger.BeginWriteObject(String.Empty);
-            Assert.AreEqual("{\r\n", content.ToString());
+            Assert.AreEqual(string.Empty, content.ToString());
         }
         [Test]
         public void EndWriteObject() {
             logger.EndWriteObject("testObject");
-            Assert.AreEqual("},\r\n", content.ToString());
+            Assert.AreEqual(string.Empty, content.ToString());
         }
         [Test]
         public void WriteValueString() {
+            logger.BeginWriteObject(String.Empty);
             logger.WriteValue("variable", "value");
-            Assert.AreEqual("\"variable\":\"value\",\r\n", content.ToString());
+            logger.EndWriteObject(String.Empty);
+            Assert.AreEqual("{\r\n\"variable\":\"value\"\r\n}\r\n", content.ToString());
         }
         [Test]
         public void WriteValueStringWithDotInName() {
+            logger.BeginWriteObject(String.Empty);
             logger.WriteValue("devexpress.com", "value");
-            Assert.AreEqual("\"devexpress\uff0Ecom\":\"value\",\r\n", content.ToString());
+            logger.EndWriteObject(String.Empty);
+            Assert.AreEqual("{\r\n\"devexpress\uff0Ecom\":\"value\"\r\n}\r\n", content.ToString());
         }
         [Test]
         public void WriteValueStringSpecialCharacters() {
+            logger.BeginWriteObject(String.Empty);
             logger.WriteValue("variable", "special: \r\n\u0012\t\b\f\"\\;");
-            Assert.AreEqual(@"""variable"":""special: \r\n\u0012\t\b\f\""\\;""," + "\r\n", content.ToString());
+            logger.EndWriteObject(String.Empty);
+            Assert.AreEqual("{\r\n" + @"""variable"":""special: \r\n\u0012\t\b\f\""\\;""" + "\r\n}\r\n", content.ToString());
         }
         [Test]
         public void WriteValueBool() {
+            logger.BeginWriteObject(String.Empty);
             logger.WriteValue("variable", true);
-            Assert.AreEqual("\"variable\":true,\r\n", content.ToString());
+            logger.EndWriteObject(String.Empty);
+            Assert.AreEqual("{\r\n\"variable\":true\r\n}\r\n", content.ToString());
         }
         [Test]
         public void BeginWriteArray() {
             logger.BeginWriteArray("testArray");
-            Assert.AreEqual("\"testArray\": [\r\n", content.ToString());
+            Assert.AreEqual(String.Empty, content.ToString());
         }
         [Test]
         public void BeginWriteArrayNoName() {
             logger.BeginWriteArray(String.Empty);
-            Assert.AreEqual("[\r\n", content.ToString());
+            Assert.AreEqual(String.Empty, content.ToString());
         }
         [Test]
         public void EndWriteArray() {
             logger.EndWriteArray("testArray");
-            Assert.AreEqual("],\r\n", content.ToString());
+            Assert.AreEqual(String.Empty, content.ToString());
         }
 
         [Test]
         public void WriteValueArray() {
             int[] testArray = {1, 2, 3};
+            logger.BeginWriteObject(String.Empty);
             logger.WriteValue("testArray", testArray);
-            Assert.AreEqual("\"testArray\": [\r\n\"1\",\r\n\"2\",\r\n\"3\"\r\n],\r\n", content.ToString());
+            logger.EndWriteObject(String.Empty);
+            Assert.AreEqual("{\r\n\"testArray\":[\"1\",\"2\",\"3\"]\r\n}\r\n", content.ToString());
         }
 
         [Test]

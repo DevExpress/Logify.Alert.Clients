@@ -20,12 +20,12 @@ namespace DevExpress.Logify.Core.Internal.Tests {
         public void BeginWriteObject() {
             collector.Process(null, Logger);
             string expected = String.Format(
-@"""os"": {{" + "\r\n" +
+@"""os"":{{" + "\r\n" +
 @"""platform"":""{0}""," + "\r\n" +
 @"""servicePack"":""{1}""," + "\r\n" +
 @"""version"":""{2}""," + "\r\n" +
-@"""is64bit"":{3}," + "\r\n" +
-@"}}," + "\r\n",
+@"""is64bit"":{3}" + "\r\n" +
+@"}}" + "\r\n",
  Environment.OSVersion.Platform,
  Environment.OSVersion.ServicePack,
  Environment.OSVersion.Version,

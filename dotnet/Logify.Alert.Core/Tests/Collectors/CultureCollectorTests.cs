@@ -81,12 +81,12 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
             collector.Process(null, Logger);
             string expected =
-@"""currentCulture"": {" + "\r\n" +
+@"""currentCulture"":{" + "\r\n" +
 @"""name"":""en-US""," + "\r\n" +
 @"""englishName"":""English (United States)""," + "\r\n" +
 @"""displayName"":""English (United States)""," + "\r\n" +
-@"""isCultureCustomize"":false," + "\r\n" +
-@"}," + "\r\n";
+@"""isCultureCustomize"":false" + "\r\n" +
+@"}" + "\r\n";
             Assert.AreEqual(expected, Content);
         }
 
@@ -94,126 +94,63 @@ namespace DevExpress.Logify.Core.Internal.Tests {
         public void WhenCultureIsCustomize() {
             collector.Process(null, Logger);
             string expected =
-@"""currentCulture"": {" + "\r\n" +
+@"""currentCulture"":{" + "\r\n" +
 @"""name"":""en-US""," + "\r\n" +
 @"""englishName"":""English (United States)""," + "\r\n" +
 @"""displayName"":""English (United States)""," + "\r\n" +
 @"""isCultureCustomize"":true," + "\r\n" +
-    @"""details"": {" + "\r\n" +
-        @"""numberFormat"": {" + "\r\n" +
-            @"""currency"": {" + "\r\n" +
+    @"""details"":{" + "\r\n" +
+        @"""numberFormat"":{" + "\r\n" +
+            @"""currency"":{" + "\r\n" +
                 @"""decimalDigits"":2," + "\r\n" +
                 @"""decimalSeparator"":"".""," + "\r\n" +
                 @"""groupSeparator"":"",""," + "\r\n" +
-                @"""groupSize"": [" + "\r\n" +"\"3\"" +"\r\n" + "]," + "\r\n" +
+                @"""groupSize"":[""3""]," + "\r\n" +
                 @"""symbol"":""@""," + "\r\n" +
                 @"""negativePatternID"":0," + "\r\n" +
-                @"""positivePatternID"":0," + "\r\n" +
+                @"""positivePatternID"":0" + "\r\n" +
             @"}," + "\r\n" +
-            @"""number"": {" + "\r\n" +
+            @"""number"":{" + "\r\n" +
                 @"""decimalDigits"":2," + "\r\n" +
                 @"""decimalSeparator"":"".""," + "\r\n" +
                 @"""groupSeparator"":"",""," + "\r\n" +
-                @"""groupSize"": [" + "\r\n" + "\"3\"" + "\r\n" + "]," + "\r\n" +
-                @"""negativePatternID"":1," + "\r\n" +
+                @"""groupSize"":[""3""]," + "\r\n" +
+                @"""negativePatternID"":1" + "\r\n" +
             @"}," + "\r\n" +
-            @"""percent"": {" + "\r\n" +
+            @"""percent"":{" + "\r\n" +
                 @"""decimalDigits"":2," + "\r\n" +
                 @"""decimalSeparator"":"".""," + "\r\n" +
                 @"""groupSeparator"":"",""," + "\r\n" +
-                @"""groupSize"": [" + "\r\n" + "\"3\"" + "\r\n" + "]," + "\r\n" +
+                @"""groupSize"":[""3""]," + "\r\n" +
                 @"""symbol"":""?""," + "\r\n" +
                 @"""negativePatternID"":0," + "\r\n" +
-                @"""positivePatternID"":0," + "\r\n" +
+                @"""positivePatternID"":0" + "\r\n" +
             @"}," + "\r\n" +
-            @"""sign"": {" + "\r\n" +
+            @"""sign"":{" + "\r\n" +
                 @"""positive"":""+""," + "\r\n" +
-                @"""negative"":""-""," + "\r\n" +
+                @"""negative"":""-""" + "\r\n" +
             @"}," + "\r\n" +
-            @"""infinity"": {" + "\r\n" +
+            @"""infinity"":{" + "\r\n" +
                 @"""positive"":""Infinity""," + "\r\n" +
-                @"""negative"":""-Infinity""," + "\r\n" +
+                @"""negative"":""-Infinity""" + "\r\n" +
             @"}," + "\r\n" +
             @"""perMilleSymbol"":""‰""," + "\r\n" +
             @"""NaNSymbol"":""NaN""," + "\r\n" +
             @"""digitShapes"":""None""," + "\r\n" +
-            @"""nativeDigits"": [" 
-                + "\r\n" + "\"0\","
-                + "\r\n" + "\"1\","
-                + "\r\n" + "\"2\","
-                + "\r\n" + "\"3\","
-                + "\r\n" + "\"4\","
-                + "\r\n" + "\"5\","
-                + "\r\n" + "\"6\","
-                + "\r\n" + "\"7\","
-                + "\r\n" + "\"8\","
-                + "\r\n" + "\"9\"" + "\r\n" +
-            @"]," + "\r\n" +
+            @"""nativeDigits"":[""0"",""1"",""2"",""3"",""4"",""5"",""6"",""7"",""8"",""9""]" + "\r\n" +
         @"}," + "\r\n" +
-        @"""dateTime"": {" + "\r\n" +
+        @"""dateTime"":{" + "\r\n" +
             @"""dateSeparator"":""my_dateseparator""," + "\r\n" +
             @"""timeSeparator"":""my_timeseparator""," + "\r\n" +
             @"""firstDayOfWeek"":""Sunday""," + "\r\n" +
             @"""am"":""my_am""," + "\r\n" +
             @"""pm"":""my_pm""," + "\r\n" +
-            @"""abbreviatedDayNames"": ["
-                + "\r\n" + "\"Sun\","
-                + "\r\n" + "\"Mon\","
-                + "\r\n" + "\"Tue\","
-                + "\r\n" + "\"Wed\","
-                + "\r\n" + "\"Thu\","
-                + "\r\n" + "\"Fri\","
-                + "\r\n" + "\"Sat\"" + "\r\n" +
-            @"]," + "\r\n" +
-            @"""abbreviatedMonthNames"": ["
-                + "\r\n" + "\"q\","
-                + "\r\n" + "\"w\","
-                + "\r\n" + "\"e\","
-                + "\r\n" + "\"r\","
-                + "\r\n" + "\"t\","
-                + "\r\n" + "\"y\","
-                + "\r\n" + "\"u\","
-                + "\r\n" + "\"i\","
-                + "\r\n" + "\"o\","
-                + "\r\n" + "\"p\","
-                + "\r\n" + "\"a\","
-                + "\r\n" + "\"s\","
-                + "\r\n" + "\"d\"" + "\r\n" +
-            @"]," + "\r\n" +
-            @"""dayNames"": ["
-                + "\r\n" + "\"z\","
-                + "\r\n" + "\"x\","
-                + "\r\n" + "\"c\","
-                + "\r\n" + "\"v\","
-                + "\r\n" + "\"b\","
-                + "\r\n" + "\"f\","
-                + "\r\n" + "\"g\"" + "\r\n" +
-            @"]," + "\r\n" +
-            @"""monthNames"": ["
-                + "\r\n" + "\"full_q\","
-                + "\r\n" + "\"full_w\","
-                + "\r\n" + "\"full_e\","
-                + "\r\n" + "\"full_r\","
-                + "\r\n" + "\"full_t\","
-                + "\r\n" + "\"full_y\","
-                + "\r\n" + "\"full_u\","
-                + "\r\n" + "\"full_i\","
-                + "\r\n" + "\"full_o\","
-                + "\r\n" + "\"full_p\","
-                + "\r\n" + "\"full_a\","
-                + "\r\n" + "\"full_s\","
-                + "\r\n" + "\"full_d\"" + "\r\n" +
-            @"]," + "\r\n" +
-            @"""shortestDayNames"": ["
-                + "\r\n" + "\"short_z\","
-                + "\r\n" + "\"short_x\","
-                + "\r\n" + "\"short_c\","
-                + "\r\n" + "\"short_v\","
-                + "\r\n" + "\"short_b\","
-                + "\r\n" + "\"short_f\","
-                + "\r\n" + "\"short_g\"" + "\r\n" +
-            @"]," + "\r\n" +
-            @"""pattern"": {" + "\r\n" +
+            @"""abbreviatedDayNames"":[""Sun"",""Mon"",""Tue"",""Wed"",""Thu"",""Fri"",""Sat""]," + "\r\n" +
+            @"""abbreviatedMonthNames"":[""q"",""w"",""e"",""r"",""t"",""y"",""u"",""i"",""o"",""p"",""a"",""s"",""d""]," + "\r\n" +
+            @"""dayNames"":[""z"",""x"",""c"",""v"",""b"",""f"",""g""]," + "\r\n" +
+            @"""monthNames"":[""full_q"",""full_w"",""full_e"",""full_r"",""full_t"",""full_y"",""full_u"",""full_i"",""full_o"",""full_p"",""full_a"",""full_s"",""full_d""]," + "\r\n" +
+            @"""shortestDayNames"":[""short_z"",""short_x"",""short_c"",""short_v"",""short_b"",""short_f"",""short_g""]," + "\r\n" +
+            @"""pattern"":{" + "\r\n" +
                 @"""shortTime"":""my_short_time""," + "\r\n" +
                 @"""longTime"":""my_long_time""," + "\r\n" +
                 @"""shortDate"":""my_short_date""," + "\r\n" +
@@ -223,8 +160,8 @@ namespace DevExpress.Logify.Core.Internal.Tests {
                 @"""fullDateTime"":""my_full""," + "\r\n" +
                 @"""sortableDateTime"":""yyyy'-'MM'-'dd'T'HH':'mm':'ss""," + "\r\n" +
                 @"""universalSortableDateTime"":""yyyy'-'MM'-'dd HH':'mm':'ss'Z'""," + "\r\n" +
-                @"""RFC1123"":""ddd, dd MMM yyyy HH':'mm':'ss 'GMT'""," + "\r\n" +
-            @"}," + "\r\n" +
+                @"""RFC1123"":""ddd, dd MMM yyyy HH':'mm':'ss 'GMT'""" + "\r\n" +
+            @"}" + "\r\n" +
         @"}," + "\r\n" +
         @"""listSeparator"":"",""," + "\r\n" +
         @"""isRightToLeft"":false," + "\r\n" +
@@ -236,9 +173,9 @@ namespace DevExpress.Logify.Core.Internal.Tests {
         @"""isNeutralCulture"":false," + "\r\n" +
         @"""ISO2"":""en""," + "\r\n" +
         @"""ISO1"":""eng""," + "\r\n" +
-        @"""WinAPI"":""ENU""," + "\r\n" +
-    @"}," + "\r\n" +
-@"}," + "\r\n";
+        @"""WinAPI"":""ENU""" + "\r\n" +
+    @"}" + "\r\n" +
+@"}" + "\r\n";
             Assert.AreEqual(expected, Content);
         }
     }
@@ -265,12 +202,12 @@ namespace DevExpress.Logify.Core.Internal.Tests {
         public void BeginWriteObject() {
             collector.Process(null, Logger);
             string expected =
-@"""currentUICulture"": {" + "\r\n" +
+@"""currentUICulture"":{" + "\r\n" +
 @"""name"":""en-US""," + "\r\n" +
 @"""englishName"":""English (United States)""," + "\r\n" +
 @"""displayName"":""English (United States)""," + "\r\n" +
-@"""isCultureCustomize"":false," + "\r\n" +
-@"}," + "\r\n";
+@"""isCultureCustomize"":false" + "\r\n" +
+@"}" + "\r\n";
             Assert.AreEqual(expected, Content);
         }
     }
