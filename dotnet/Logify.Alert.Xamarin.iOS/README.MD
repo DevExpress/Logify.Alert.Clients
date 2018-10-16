@@ -1,7 +1,7 @@
 # Logify Alert for Xamarin.iOS applications
 A Xamarin.iOS client to report exceptions to [Logify Alert](https://logify.devexpress.com).
 
-## Install <a href="https://www.nuget.org/packages/Logify.Alert.Win/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Win.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Win.svg" style="max-width:100%;" /></a>
+## Install <a href="https://www.nuget.org/packages/Logify.Alert.Xamarin.iOS/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Xamarin.iOS.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Xamarin.iOS.svg" style="max-width:100%;" /></a>
 ```sh
 $ Install-Package Logify.Alert.Xamarin.iOS
 ```
@@ -58,17 +58,36 @@ To load client configuration parameters specified remotely, call the *LoadRemote
 AttachmentCollection. Specifies a collection of files attached to a report. The total attachments size must not be more than **3 Mb** per one crash report. The attachment name must be unique within one crash report.
 ```csharp
 using DevExpress.Logify.Core;
-using DevExpress.Logify.Win;
+using DevExpress.Logify.Xamarin;
 
 LogifyAlert client = LogifyAlert.Instance;
 client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
 
 Attachment newAt = new Attachment();
 newAt.Name = "My attachment's unique name per one report";
-newAt.Content = File.ReadAllBytes(@"C:\Work\Image_to_attach.jpg");
+newAt.Content = File.ReadAllBytes(@"My_files/Image_to_attach.jpg");
 // We strongly recommend that you specify the attachment type.
 newAt.MimeType = "image/jpeg";
 client.Attachments.Add(newAt);
+```
+
+#### Breadcrumbs
+BreadcrumbCollection. Specifies a collection of manual breadcrumbs attached to a report. The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by default. To change the maximum allowed size of attached breadcrumbs, use the *BreadcrumbsMaxCount* property.
+```csharp
+using DevExpress.Logify.Core;
+using DevExpress.Logify.Xamarin;
+
+LogifyAlert.Instance.Breadcrumbs.Add(new Breadcrumb() { 
+  DateTime = DateTime.UtcNow, 
+  Event = BreadcrumbEvent.Manual, 
+  Message = "A manually added breadcrumb" 
+});
+```
+
+#### BreadcrumbsMaxCount
+Integer. Specifies the maximum allowed number of breadcrumbs attached to one crash report. The default value is 1000 instances (or 3 MB).
+```csharp
+LogifyAlert.Instance.BreadcrumbsMaxCount = 2000;
 ```
 
 #### CustomData
@@ -84,7 +103,7 @@ client.CustomData["CustomerName"] = "Mary";
 IDictionary<String, String>. Gets the collection of tags specifying additional fields from a raw report, which will be used in auto ignoring, filtering or detecting duplicates. A key is a tag name (a string that consists of a-z, A-Z, 0-9, and _ characters), and a value is a tag value that is saved to a report. A new tag is added with **Allow search** enabled.
 
 ```csharp
-client.Tags["OS"] = "Win8";
+client.Tags["OS"] = "iOS 12.0";
 ```
 
 #### Instance
