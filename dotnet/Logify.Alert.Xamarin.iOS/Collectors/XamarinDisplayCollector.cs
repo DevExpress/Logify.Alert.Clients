@@ -10,8 +10,11 @@ namespace DevExpress.Logify.Core.Internal {
             logger.BeginWriteObject("display");
             try {
                 UIScreen mainScreen = UIScreen.MainScreen;
-                logger.WriteValue("width", mainScreen.Bounds.Width.ToString());
-                logger.WriteValue("height", mainScreen.Bounds.Height.ToString());
+                nfloat scale = mainScreen.Scale;
+                nfloat width = mainScreen.Bounds.Width * scale;
+                nfloat height = mainScreen.Bounds.Height * scale;
+                logger.WriteValue("width", width.ToString());
+                logger.WriteValue("height", height.ToString());
                 //logger.WriteValue("dpiX", mainScreen. metrics.Xdpi.ToString());
                 //logger.WriteValue("dpiY", metrics.Ydpi.ToString());
             }
