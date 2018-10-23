@@ -1,6 +1,6 @@
 {
   "name": "logify-alert",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node.js client for Logify Alert",
   "main": "src/logifyAlert.js",
   "repository": "https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/js/Logify.Alert.NodeJS",
