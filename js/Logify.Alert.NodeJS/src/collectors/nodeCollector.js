@@ -115,7 +115,7 @@ export default class nodeCollector extends compositeCollector {
         var path = require("path");
         var dir = path.join(__dirname);
         if(dir.indexOf("\\node_modules\\") == -1)
-            return null;
+            return dir;
 
         let result = this.findParentFolderByCondition(dir, (d) => { return !d.endsWith("node_modules\\"); });
         if(result == null)
@@ -125,6 +125,9 @@ export default class nodeCollector extends compositeCollector {
     }
 
     findPackageJsonFilePath(dir) {
+        if(dir.charAt(dir.length -1) != '\\')
+            dir += '\\';
+
         let result = this.findParentFolderByCondition(dir, (d) => { return !this.isFileExist(d + 'package.json'); });
         if(result == null)
             return null;
