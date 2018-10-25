@@ -9,7 +9,7 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DevExpress Logify Alert UWP")]
+[assembly: AssemblyTitle("DevExpress Logify Alert UWP Client")]
 [assembly: AssemblyDescription(AssemblyInfo.AssemblyDescriptionCommon +
 "The Logify.Alert.UWP package contains the Logify Alert client for UWP applications. Use this client to set up your application so it reported uncaught exceptions to the service.")]
 [assembly: AssemblyConfiguration("")]
@@ -23,7 +23,6 @@ using System.Windows;
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
-[assembly: CLSCompliant(true)]
 
 //In order to begin building localizable applications, set 
 //<UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
@@ -44,4 +43,3 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(AssemblyInfo.Version)]
 [assembly: AssemblyFileVersion(AssemblyInfo.FileVersion)]
-[assembly: AssemblyInformationalVersion(AssemblyInfo.Version)]
