@@ -127,11 +127,5 @@ namespace DevExpress.Logify.Xamarin {
         protected override bool RaiseConfirmationDialogShowing(ReportConfirmationModel model) {
             return false;
         }
-        protected override IInfoCollector CreateNormalizedStackCollector() {
-            return new RegexpExceptionNormalizedStackCollector();
-        }
-        protected override IStackTraceNormalizer CreateStackNormalizer() {
-            return new RegexpExceptionNormalizedStackCollector();
-        }
     }
 }
