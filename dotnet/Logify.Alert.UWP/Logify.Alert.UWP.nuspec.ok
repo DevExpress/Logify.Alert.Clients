@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://logify.devexpress.com/Terms</licenseUrl>
+    <projectUrl>https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.UWP</projectUrl>
+    <iconUrl>https://s.gravatar.com/avatar/162c1a1348dc0973b3dbcf4768f2f593?s=512&amp;r=g</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>$description$</description>
+    <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
+    <copyright>Copyright (c) 2000-2018 Developer Express Inc.</copyright>
+    <tags>Logify Alert CrashReport Crash Exception Handler UWP</tags>
+    <dependencies>
+      <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.0.6" />
+      <dependency id="Logify.Alert.Core" version="$version$" />
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Logify.Alert.UWP</id>
+    <version>1.0.48</version>
+    <title>DevExpress Logify Alert UWP Client</title>
+    <authors>Developer Express Inc.</authors>
+    <owners>Developer Express Inc.</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://logify.devexpress.com/Terms</licenseUrl>
+    <projectUrl>https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.UWP</projectUrl>
+    <iconUrl>https://s.gravatar.com/avatar/162c1a1348dc0973b3dbcf4768f2f593?s=512&amp;r=g</iconUrl>
+    <description>Logify Alert is a cloud service that catches unhandled exceptions in your applications and delivers crash reports.
+
+The service provides two approaches to catching exceptions.
+1) Automatic listening to unhandled exceptions, and sending reports for each exception that has been raised.
+2) Catching exceptions manually, and sending reports based on the required exceptions only.
+
+The Logify.Alert.UWP package contains the Logify Alert client for UWP applications. Use this client to set up your application so it reported uncaught exceptions to the service.</description>
+    <copyright>Copyright (c) 2000-2018 Developer Express Inc.</copyright>
+    <tags>Logify Alert CrashReport Crash Exception Handler UWP</tags>
+    <dependencies>
+      <dependency id="Logify.Alert.Core" version="1.0.48" />
+      <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.0.6" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\..\bin\uap10.0\Logify.Alert.UWP.dll" target="lib\uap10.0" />
+  </files>
+</package>
