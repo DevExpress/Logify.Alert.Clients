@@ -1,5 +1,5 @@
-# Logify Alert for WPF applications
-A WPF client to report exceptions to [Logify Alert](https://logify.devexpress.com)
+# Logify Alert for UWP applications
+A UWP client to report exceptions to [Logify Alert](https://logify.devexpress.com).
 
 ## Install <a href="https://www.nuget.org/packages/Logify.Alert.UWP/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.UWP.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.UWP.svg" style="max-width:100%;" /></a>
 ```sh
@@ -7,7 +7,7 @@ $ Install-Package Logify.Alert.UWP
 ```
 
 ## Quick Start
-### Automatic error reporting
+### Send reports automatically
 ```csharp
 using DevExpress.Logify.UWP;
 
@@ -16,9 +16,10 @@ client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
 client.StartExceptionsHandling();
 ```
 
-### Manual error reporting
+### Send reports manually
 ```csharp
 using DevExpress.Logify.UWP;
+
 try {
     LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
     RunYourCode();
@@ -26,57 +27,6 @@ try {
 catch (Exception e) {
     LogifyAlert.Instance.Send(e);
 }
-```
-
-### Manual error reporting via [System.Diagnostics.Trace](https://msdn.microsoft.com/en-us/library/system.diagnostics.trace(v=vs.110).aspx)
-```csharp
-using System.Diagnostics;
-using DevExpress.Logify.UWP;
-try {
-    LogifyAlert.Instance.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
-    RunYourCode();
-}
-catch (Exception e) {
-    Trace.TraceError("An exception occurred", e);
-}
-```
-
-You can set up the Logify Alert trace listener using the **App.config** file as follows.
-
-```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
-  <system.diagnostics>
-    <trace autoflush="true" indentsize="4">
-      <listeners>
-        <add name="LogifyAlertTraceListener"  type="DevExpress.Logify.UWP.LogifyAlertTraceListener, Logify.Alert.UWP" />
-      </listeners>
-    </trace>
-  </system.diagnostics>
-</configuration>
-```
-
-## Configuration
-You can setup the Logify Alert client using **App.config** file as follows
-```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
-  <configSections>
-    <section name="logifyAlert" type="DevExpress.Logify.LogifyConfigSection, Logify.Alert.UWP" />
-  </configSections>
-  <logifyAlert>
-    <apiKey value="My Api Key" />
-    <confirmSend value="false" />
-    <offlineReportsEnabled value="true" />
-    <offlineReportsCount value="20" />
-    <collectBreadcrumbs value="true" />
-    <breadcrumbsMaxCount value="500" />
-    <collectMiniDump value="true" />
-    <customData>
-      <add key="MACHINE_NAME" value="My Server" />
-    </customData>
-  </logifyAlert>
-</configuration>
 ```
 
 ## API
@@ -116,7 +66,7 @@ client.ApiKey = "SPECIFY_YOUR_API_KEY_HERE";
 
 Attachment newAt = new Attachment();
 newAt.Name = "My attachment's unique name per one report";
-newAt.Content = File.ReadAllBytes(@"C:\Work\Image_to_attach.jpg");
+newAt.Content = File.ReadAllBytes(@"My_files\Image_to_attach.jpg");
 // We strongly recommend that you specify the attachment type.
 newAt.MimeType = "image/jpeg";
 client.Attachments.Add(newAt);
@@ -141,28 +91,6 @@ Integer. Specifies the maximum allowed number of breadcrumbs attached to one cra
 LogifyAlert.Instance.BreadcrumbsMaxCount = 2000;
 ```
 
-#### CollectBreadcrumbs
-Boolean. Specifies whether automatic breadcrumbs collecting is enabled. The default value is **false**.
-The total breadcrumbs size is limited by 1000 instances (or **3 Mb**) per one crash report by default. To change the maximum allowed size of attached breadcrumbs, use the *BreadcrumbsMaxCount* property.
-```csharp
-LogifyAlert.Instance.CollectBreadcrumbs = true;  
-LogifyAlert.Instance.StartExceptionsHandling();
-```
-
-#### CollectMiniDump
-Boolean. Specifies whether automatic minidumps collecting is enabled. The default value is **false**.
-```csharp
-LogifyAlert.Instance.CollectMiniDump = true;  
-```
-
-#### ConfirmSendReport
-Boolean. Specifies whether or not a user must confirm sending reports to the Logify Alert service.
-By default, the **ConfirmSendReport** property is set to **false** and all uncaught exceptions are automatically processed and sent to the Logify Alert service.
-```csharp
-client.ConfirmSendReport = true;
-```
-To customize the confirmation dialog apperance, handle the **ConfirmationDialogShowing** event.
-
 #### CustomData
 IDictionary<String, String>. Gets the collection of custom data sent with generated reports.
 Use the **CustomData** property to attach additional information to the generated report. For instance, you can use this property to track additional metrics that are important in terms of your application: CPU usage, environment parameters, and so on. The field name can only consists of a-z, A-Z, 0-9, and _ characters.
@@ -175,7 +103,7 @@ client.CustomData["CustomerName"] = "Mary";
 IDictionary<String, String>. Gets the collection of tags specifying additional fields from a raw report, which will be used in auto ignoring, filtering or detecting duplicates. A key is a tag name (a string that consists of a-z, A-Z, 0-9, and _ characters), and a value is a tag value that is saved to a report. A new tag is added with **Allow search** enabled.
 
 ```csharp
-client.Tags["OS"] = "Win8";
+client.Tags["OS"] = "Build 17763";
 ```
 
 #### Instance
@@ -278,7 +206,7 @@ catch (Exception e) {
 
   Attachment newAt = new Attachment();
   newAt.Name = "My attachment's unique name per one report";
-  newAt.Content = File.ReadAllBytes(@"C:\Work\Image_to_attach.jpg");
+  newAt.Content = File.ReadAllBytes(@"My_files\Image_to_attach.jpg");
   // We strongly recommend that you specify the attachment type.
   newAt.MimeType = "image/jpeg";
   AttachmentCollection newCol = new AttachmentCollection();
@@ -324,7 +252,7 @@ catch (Exception e) {
 
   Attachment newAt = new Attachment();
   newAt.Name = "My attachment's unique name per one report";
-  newAt.Content = File.ReadAllBytes(@"C:\Work\Image_to_attach.jpg");
+  newAt.Content = File.ReadAllBytes(@"My_files\Image_to_attach.jpg");
   // We strongly recommend that you specify the attachment type.
   newAt.MimeType = "image/jpeg";
   AttachmentCollection newCol = new AttachmentCollection();
@@ -413,26 +341,6 @@ LogifyAlert.Instance.CanReportException += OnCanReportException;
 void OnCanReportException(object sender, CanReportExceptionEventArgs args) {
     if (args.Exception is MyCustomException)
         args.Cancel = true;
-}
-```
-
-#### ConfirmationDialogShowing
-
-If you set the **ConfirmSendReport** property to **true**, the ConfirmationDialogShowing event occurs before showing the confirmation dialog and allows you to customize the confirmation window's apperance.
-
-```csharp
-LogifyAlert.Instance.ConfirmationDialogShowing += Instance_ConfirmationDialogShowing;
-
-private void Instance_ConfirmationDialogShowing(object sender, ConfirmationDialogEventArgs e) {
-  ConfirmWindow w = new ConfirmWindow();
-  w.DataContext = e.Model;
-
-  // Commands Logify to not show the standard conformation dialog
-  e.Handled = true;
-  // Shows the custom confirmation window
-  w.ShowDialog();
-
-  Environment.Exit(1);
 }
 ```
 
