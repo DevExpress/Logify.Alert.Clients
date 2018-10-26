@@ -9,7 +9,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <licenseUrl>https://logify.devexpress.com/Terms</licenseUrl>
     <projectUrl>https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.UWP</projectUrl>
-    <iconUrl>https://secure.gravatar.com/avatar/6b38f1e9ffd8b069bcdc2741934fdbcf?s=512&amp;r=g</iconUrl>
+    <iconUrl>https://s.gravatar.com/avatar/162c1a1348dc0973b3dbcf4768f2f593?s=512&amp;r=g</iconUrl>
     <description>Logify Alert is a cloud service that catches unhandled exceptions in your applications and delivers crash reports.
 
 The service provides two approaches to catching exceptions.
