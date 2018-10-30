@@ -14,6 +14,7 @@
 | [WPF](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Wpf) | <a href="https://www.nuget.org/packages/Logify.Alert.Wpf/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Wpf.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Wpf.svg" style="max-width:100%;" /></a> |
 | [Xamarin.Android](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Xamarin.Android) | <a href="https://www.nuget.org/packages/Logify.Alert.Xamarin.Android/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Xamarin.Android.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Xamarin.Android.svg" style="max-width:100%;" /></a> |
 | [Xamarin.iOS](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.Xamarin.iOS) | <a href="https://www.nuget.org/packages/Logify.Alert.Xamarin.iOS/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.Xamarin.iOS.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.Xamarin.Android.svg" style="max-width:100%;" /></a> |
+[comment]: <> | [UWP](https://github.com/DevExpress/Logify.Alert.Clients/tree/develop/dotnet/Logify.Alert.UWP) | <a href="https://www.nuget.org/packages/Logify.Alert.UWP/"><img alt="Nuget Version" src="https://img.shields.io/nuget/v/Logify.Alert.UWP.svg" data-canonical-src="https://img.shields.io/nuget/v/Logify.Alert.UWP.svg" style="max-width:100%;" /></a> |
 
 ## Integrations
 | Product | Package |
