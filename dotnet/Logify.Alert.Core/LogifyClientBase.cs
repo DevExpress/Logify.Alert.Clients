@@ -271,10 +271,10 @@ namespace DevExpress.Logify.Core {
             return result;
         }
         protected virtual IInfoCollector CreateNormalizedStackCollector() {
-            return new RegexpExceptionNormalizedStackCollector();
+            return new LegacyExceptionNormalizedStackCollector();
         }
         protected virtual IStackTraceNormalizer CreateStackNormalizer() {
-            return new RegexpExceptionNormalizedStackCollector();
+            return new LegacyExceptionNormalizedStackCollector();
         }
         protected abstract IExceptionReportSender CreateExceptionReportSender();
         protected abstract RootInfoCollector CreateDefaultCollectorCore(LogifyCollectorContext context);

@@ -29,7 +29,7 @@ namespace DevExpress.Logify.Core.Internal {
             if (String.IsNullOrEmpty(stackTrace))
                 return String.Empty;
             const string replacement = "$2";
-            return normalizator.Replace(stackTrace, replacement) + Environment.NewLine;
+            return normalizator.Replace(stackTrace, replacement);
         }
     }
 
