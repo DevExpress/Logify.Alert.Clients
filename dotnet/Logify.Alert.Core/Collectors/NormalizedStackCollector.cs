@@ -24,12 +24,23 @@ namespace DevExpress.Logify.Core.Internal {
             }
         }
 
-        static Regex normalizator = new Regex(@"^(\s*(?:at)\s*)?(.+[\)|-])\s*((\[.+\])?\s+in\s+.*)?$", RegexOptions.Multiline);
+        static Regex normalizer = new Regex(@"\n?(\s*(?:at)\s*)?(.+[\)|-])\s*((\[.+\])*\s*(in\s+.*)*)?$", RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        static readonly string replacement = "$2";
         public string NormalizeStackTrace(string stackTrace) {
             if (String.IsNullOrEmpty(stackTrace))
                 return String.Empty;
-            const string replacement = "$2";
-            return normalizator.Replace(stackTrace, replacement);
+
+            string[] frames = stackTrace.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < frames.Length; i++)
+                result.AppendLine(NormalizeStackFrame(frames[i]));
+
+            return result.ToString();
+        }
+        string NormalizeStackFrame(string str) {
+            return normalizer.Replace(str, replacement);
         }
     }
 
