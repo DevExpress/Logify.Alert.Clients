@@ -1,8 +1,8 @@
 'use strict';
 import rawHtmlTagCollectorBase from "./rawHtmlTagCollectorBase";
 
-export default class scriptsCollector extends rawHtmlTagCollectorBase {
+export default class metasCollector extends rawHtmlTagCollectorBase {
     constructor(_owner) {
-        super(_owner, "script");
+        super(_owner, "meta");
     }
 }

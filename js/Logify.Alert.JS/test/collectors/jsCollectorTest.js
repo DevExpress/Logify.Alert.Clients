@@ -114,9 +114,9 @@ describe('jsCollector tests', function() {
         win.document.readyState = "mocReadyState";
         
         win.document.getElementsByTagName =  function (tagName) {
-            if(tagName == 'script') {
-                var result = [];
-                var scr = { "innerHTML":"", "outerHTML":"1" };
+            if(tagName === 'script' || tagName === 'meta') {
+                let result = [];
+                let scr = { "innerHTML":"", "outerHTML":"1" };
                 result.push(scr);
                 scr = { "innerHTML":"1", "outerHTML":"2" };
                 result.push(scr);
@@ -157,7 +157,7 @@ describe('jsCollector tests', function() {
     }
     
     function checkData(collector, hasStack) {
-        assert.equal(12, collector.collectors.length);
+        assert.equal(13, collector.collectors.length);
 
         assert.equal("mocErrorMsg", collector.reportData.error.message);
         assert.equal("mocUrl", collector.reportData.error.url);
