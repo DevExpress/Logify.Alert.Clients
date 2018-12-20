@@ -39,6 +39,11 @@ namespace DevExpress.Logify.Core.Internal.Tests {
             Assert.AreEqual(string.Empty, content.ToString());
         }
         [Test]
+        public void WriteValueWithoutBeginString() {
+            logger.WriteValue("variable", "value");
+            Assert.AreEqual("\"variable\":\"value\"\r\n", content.ToString());
+        }
+        [Test]
         public void WriteValueString() {
             logger.BeginWriteObject(String.Empty);
             logger.WriteValue("variable", "value");

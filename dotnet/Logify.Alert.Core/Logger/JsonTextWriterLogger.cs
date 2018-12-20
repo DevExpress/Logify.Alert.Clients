@@ -156,9 +156,10 @@ namespace DevExpress.Logify.Core.Internal {
             return result;
         }
         void IncludeInObjectModel(JsonLoggerObject jsonLoggerObject) {
-            if (lastOpenedObject != null) {
+            if (lastOpenedObject != null)
                 lastOpenedObject.Add(jsonLoggerObject);
-            }
+            else
+                jsonLoggerObject.SaveContent(writer, true);
         }
     }
     

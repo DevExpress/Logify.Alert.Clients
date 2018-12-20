@@ -108,7 +108,7 @@ namespace DevExpress.Logify.Core.Internal {
             TextWriterLogger logger = new TextWriterLogger(writer);
 
             logger.WriteValue("userComments", value);
-            return content.ToString();
+            return "," + content.ToString();
         }
     }
 }
