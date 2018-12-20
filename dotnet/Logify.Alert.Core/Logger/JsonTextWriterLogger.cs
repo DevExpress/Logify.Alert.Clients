@@ -117,22 +117,22 @@ namespace DevExpress.Logify.Core.Internal {
         public void WriteValue(string name, string text) {
             JsonLoggerObject jsonLoggerObject = new JsonLoggerObject(name, text, lastOpenedObject);
             jsonLoggerObject.NeedQuotes = true;
-            IncludeInObjectModel(jsonLoggerObject);
+            IncludeInObjectModel(jsonLoggerObject, true);
         }
         public void WriteValue(string name, bool value) {
-            IncludeInObjectModel(new JsonLoggerObject(name, (value ? "true" : "false"), lastOpenedObject));
+            IncludeInObjectModel(new JsonLoggerObject(name, (value ? "true" : "false"), lastOpenedObject), true);
         }
         public void WriteValue(string name, int value) {
-            IncludeInObjectModel(new JsonLoggerObject(name, value.ToString(), lastOpenedObject));
+            IncludeInObjectModel(new JsonLoggerObject(name, value.ToString(), lastOpenedObject), true);
         }
         public void WriteValue(string name, Array array) {
             if (array == null || array.Length == 0) return;
-            IncludeInObjectModel(new JsonLoggerObject(name, ArrayToString(array), lastOpenedObject));
+            IncludeInObjectModel(new JsonLoggerObject(name, ArrayToString(array), lastOpenedObject), true);
         }
 
         void BeginWriteObject(string name, bool isArray) {
             JsonLoggerObject newObject = new JsonLoggerObject(name, null, lastOpenedObject, isArray);
-            IncludeInObjectModel(newObject);
+            IncludeInObjectModel(newObject, false);
             lastOpenedObject = newObject;
         }
         void EndWriteObject() {
@@ -155,10 +155,10 @@ namespace DevExpress.Logify.Core.Internal {
             result += "]";
             return result;
         }
-        void IncludeInObjectModel(JsonLoggerObject jsonLoggerObject) {
+        void IncludeInObjectModel(JsonLoggerObject jsonLoggerObject, bool needSaveContent) {
             if (lastOpenedObject != null)
                 lastOpenedObject.Add(jsonLoggerObject);
-            else
+            else if (needSaveContent)
                 jsonLoggerObject.SaveContent(writer, true);
         }
     }
