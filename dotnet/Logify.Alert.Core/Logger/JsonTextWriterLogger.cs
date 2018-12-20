@@ -117,24 +117,22 @@ namespace DevExpress.Logify.Core.Internal {
         public void WriteValue(string name, string text) {
             JsonLoggerObject jsonLoggerObject = new JsonLoggerObject(name, text, lastOpenedObject);
             jsonLoggerObject.NeedQuotes = true;
-            lastOpenedObject.Add(jsonLoggerObject);
+            IncludeInObjectModel(jsonLoggerObject);
         }
         public void WriteValue(string name, bool value) {
-            lastOpenedObject.Add(new JsonLoggerObject(name, (value ? "true" : "false"), lastOpenedObject));
+            IncludeInObjectModel(new JsonLoggerObject(name, (value ? "true" : "false"), lastOpenedObject));
         }
         public void WriteValue(string name, int value) {
-            lastOpenedObject.Add(new JsonLoggerObject(name, value.ToString(), lastOpenedObject));
+            IncludeInObjectModel(new JsonLoggerObject(name, value.ToString(), lastOpenedObject));
         }
         public void WriteValue(string name, Array array) {
             if (array == null || array.Length == 0) return;
-            lastOpenedObject.Add(new JsonLoggerObject(name, ArrayToString(array), lastOpenedObject));
+            IncludeInObjectModel(new JsonLoggerObject(name, ArrayToString(array), lastOpenedObject));
         }
 
         void BeginWriteObject(string name, bool isArray) {
             JsonLoggerObject newObject = new JsonLoggerObject(name, null, lastOpenedObject, isArray);
-            if (lastOpenedObject != null) {
-                lastOpenedObject.Add(newObject);
-            }
+            IncludeInObjectModel(newObject);
             lastOpenedObject = newObject;
         }
         void EndWriteObject() {
@@ -156,6 +154,11 @@ namespace DevExpress.Logify.Core.Internal {
             }
             result += "]";
             return result;
+        }
+        void IncludeInObjectModel(JsonLoggerObject jsonLoggerObject) {
+            if (lastOpenedObject != null) {
+                lastOpenedObject.Add(jsonLoggerObject);
+            }
         }
     }
     
