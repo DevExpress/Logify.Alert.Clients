@@ -54,7 +54,7 @@ namespace DevExpress.Logify.Web {
         }
     }
 
-    class LogifyHttpException : Exception {
+    public class LogifyHttpException : Exception {
         readonly int httpStatusCode;
 
         [IgnoreCallTracking]
