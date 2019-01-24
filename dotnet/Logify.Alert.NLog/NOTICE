@@ -1,0 +1,11 @@
+Logify.Alert.NLog v1.0.50.0
+	Logify.Alert.Core
+	NLog | Jarek Kowalski;Kim Christensen;Julian Verdurmen https://github.com/NLog/NLog/blob/master/LICENSE.txt
+----------------------------------------------------------------------------------------------------
+Logify.Alert.Core v1.0.50.0
+	Microsoft.Extensions.Configuration.Binder | Microsoft https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+	Microsoft.Extensions.DependencyModel | Microsoft.Extensions.DependencyModel https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+	Microsoft.Extensions.Logging | Microsoft https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+	System.ComponentModel | Microsoft http://go.microsoft.com/fwlink/?LinkId=329770
+	System.Diagnostics.StackTrace | Microsoft http://go.microsoft.com/fwlink/?LinkId=329770
+	System.Threading.Thread | Microsoft http://go.microsoft.com/fwlink/?LinkId=329770
