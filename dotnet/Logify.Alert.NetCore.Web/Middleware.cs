@@ -40,9 +40,9 @@ namespace DevExpress.Logify.Web {
         [IgnoreCallTracking]
         string Create404ExceptionMessage(HttpContext context) {
             try {
-                if (context.Request == null || context.Request.Path == null)
+                if (context.Request == null)
                     return String.Empty;
-                return String.Format("The controller for path '{0}' was not found or does not implement IController.", context.Request.Path.ToString());
+                return String.Format("The controller for path '{0}' was not found or does not implement IController.", Utils.GetRequestFullPath(context.Request));
             }
             catch {
                 return String.Empty;
