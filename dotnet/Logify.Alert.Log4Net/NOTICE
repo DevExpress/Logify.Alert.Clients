@@ -1,8 +1,8 @@
-Logify.Alert.Log4Net v1.0.50.0
+Logify.Alert.Log4Net v1.0.51.0
 	log4net | The Apache Software Foundation http://logging.apache.org/log4net/license.html
 	Logify.Alert.Core
 ----------------------------------------------------------------------------------------------------
-Logify.Alert.Core v1.0.50.0
+Logify.Alert.Core v1.0.51.0
 	Microsoft.Extensions.Configuration.Binder | Microsoft https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
 	Microsoft.Extensions.DependencyModel | Microsoft.Extensions.DependencyModel https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
 	Microsoft.Extensions.Logging | Microsoft https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
