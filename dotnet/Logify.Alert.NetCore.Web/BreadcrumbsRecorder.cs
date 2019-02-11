@@ -30,13 +30,13 @@ namespace DevExpress.Logify.Core.Internal {
 
         [IgnoreCallTracking]
         internal void AddBreadcrumb(HttpContext context) {
-            if(context.Request != null && context.Request.Path != null && context.Response != null) {
+            if(context.Request != null && context.Response != null) {
                 try {
                     Breadcrumb breadcrumb = new Breadcrumb();
                     breadcrumb.Event = BreadcrumbEvent.Request;
                     breadcrumb.CustomData = new Dictionary<string, string>() {
                         { "method", context.Request.Method },
-                        { "url", context.Request.Path.Value },
+                        { "url", Utils.GetRequestFullPath(context.Request) },
                         { "status", context.Response.StatusCode.ToString() },
                         { "session", TryGetSessionId(context) }
                     };
@@ -57,7 +57,7 @@ namespace DevExpress.Logify.Core.Internal {
                     b.Event == BreadcrumbEvent.Request &&
                     b.CustomData != null &&
                     b.CustomData["method"] == context.Request.Method &&
-                    b.CustomData["url"] == context.Request.Path.Value &&
+                    b.CustomData["url"] == Utils.GetRequestFullPath(context.Request) &&
                     b.CustomData["session"] == TryGetSessionId(context)
                 ).First();
 

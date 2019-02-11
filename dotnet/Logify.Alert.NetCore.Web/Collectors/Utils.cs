@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
@@ -148,7 +149,6 @@ namespace DevExpress.Logify.Core.Internal {
 
             return validVersion;
         }
-
         static bool IsVersionInvalid(string version) {
             bool isInvalid = true;
 
@@ -160,6 +160,14 @@ namespace DevExpress.Logify.Core.Internal {
             }
 
             return isInvalid;
+        }
+        public static string GetRequestFullPath(HttpRequest request) {
+            StringBuilder result = new StringBuilder();
+            if (request.PathBase != null && request.PathBase.HasValue)
+                result.Append(request.PathBase.Value);
+            if (request.Path != null && request.Path.HasValue)
+                result.Append(request.Path.Value);
+            return result.ToString();
         }
     }
 }

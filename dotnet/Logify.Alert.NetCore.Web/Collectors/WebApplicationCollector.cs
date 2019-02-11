@@ -1,10 +1,7 @@
 ﻿using System;
-//using System.Web.Configuration;
-using DevExpress.Logify.Core;
 using Microsoft.AspNetCore.Http;
 
-namespace DevExpress.Logify.Core.Internal
-{
+namespace DevExpress.Logify.Core.Internal {
     class NetCoreWebApplicationCollector : ApplicationCollector {
         readonly HttpContext context;
         public NetCoreWebApplicationCollector(HttpContext context) : base() {
@@ -12,8 +9,8 @@ namespace DevExpress.Logify.Core.Internal
         }
         public override string AppName {
             get {
-                if (context != null && context.Request != null && context.Request.Path != null)
-                    return context.Request.Path.Value;
+                if (context != null && context.Request != null)
+                    return Utils.GetRequestFullPath(context.Request);
                 return String.Empty;
             }
         }
