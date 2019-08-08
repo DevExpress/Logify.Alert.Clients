@@ -1,7 +1,7 @@
 package com.devexpress.logify.alert.core.reportSender;
 
 import com.devexpress.logify.alert.core.LogifyClientExceptionReport;
-import java.io.DataOutputStream;
+import java.io.BufferedOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -24,7 +24,7 @@ public class ReportSender extends ExceptionReportSenderSkeleton {
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
 
-            DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+            BufferedOutputStream wr = new BufferedOutputStream(urlConnection.getOutputStream());
             wr.write(report.getReportString().getBytes("UTF-8"));
             wr.flush();
             wr.close();

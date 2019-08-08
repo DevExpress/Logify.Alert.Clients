@@ -1,2 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.devexpress.logify.Android.Android" />
+    package="com.devexpress.logify.Android.Android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>
