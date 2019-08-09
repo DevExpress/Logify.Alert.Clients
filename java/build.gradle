@@ -1,7 +1,7 @@
 apply plugin: "java"
 
 ext {
-    libVersion = "1.0.1"
+    libVersion = "1.0.2"
     groupId = "com.devexpress.logify"
 
     licensename = 'Logify Terms of Use and Service Agreement'

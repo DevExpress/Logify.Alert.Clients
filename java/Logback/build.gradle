@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    compile "com.devexpress.logify:logify-alert-java:1.0.1"
+    compile "com.devexpress.logify:logify-alert-java:1.0.2"
     compileOnly "ch.qos.logback:logback-classic:1.0.13"
 }
 
