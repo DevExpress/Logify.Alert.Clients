@@ -6,15 +6,15 @@ An Android client to report exceptions to [Logify Alert](https://logify.devexpre
 In your application module's *build.gradle* file, do the following:
 1. In the *dependencies* section, declare a dependency on the *logify-alert-android* library:
     ```jsp
-    compile "com.devexpress.logify:logify-alert-android:1.0.1"
+    compile "com.devexpress.logify:logify-alert-android:1.0.2"
     ```
 2. In the *repositories* section, declare the Logify Alert's maven repository:
    ```jsp
     maven {
-        url "https://github.com/TestURL/logify-maven-test/raw/master"
+        url "https://github.com/DevExpress/Logify.Alert.Clients/raw/maven"
     }
     ```
-3. In the *defaultConfig* section, ensure that *minSdkVersion* is set to a value from 17 to 27.
+3. In the *defaultConfig* section, ensure that *minSdkVersion* is set to a value from 17 to 28.
 
 ### Maven
 In the *pom.xml* file, do the following:
@@ -23,22 +23,17 @@ In the *pom.xml* file, do the following:
     <dependency>
         <groupId>com.devexpress.logify</groupId>
         <artifactId>logify-alert-android</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
     ```
 2. In the *repositories* section, declare the Logify Alert's maven repository:
    ```xml
         <repository>
             <id>any-name-or-id</id>
-            <url>https://github.com/TestURL/logify-maven-test/raw/master </url>
+            <url>https://github.com/DevExpress/Logify.Alert.Clients/raw/maven</url>
         </repository>
     ```
-3. In the *defaultConfig* section, ensure that *minSdkVersion* is set to a value from 17 to 27.
-
-In the *AndroidManifest.xml* file, add the following permission to allow your application to access the Internet and send reports to the Logify Alert service:
-```xml
-<uses-permission android:name="android.permission.INTERNET" />
-```
+3. In the *defaultConfig* section, ensure that *minSdkVersion* is set to a value from 17 to 28.
 
 ## Quick Start
 ### Send Reports Automatically
