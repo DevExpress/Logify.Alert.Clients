@@ -9,14 +9,14 @@ In the *pom.xml* file, do the following:
     <dependency>
         <groupId>com.devexpress.logify</groupId>
         <artifactId>logify-alert-java</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
     ```
 2. In the *repositories* section, declare the Logify Alert's maven repository:
    ```xml
     <repository>
         <id>any-name-or-id</id>
-        <url>https://github.com/TestURL/logify-maven-test/raw/master </url>
+        <url>https://github.com/DevExpress/Logify.Alert.Clients/raw/maven</url>
     </repository>
     ```
 
@@ -24,12 +24,12 @@ In the *pom.xml* file, do the following:
 In the *build.gradle* file, do the following:
 1. In the *dependencies* section, declare a dependency on the *logify-alert-java* library:
     ```jsp
-    compile "com.devexpress.logify:logify-alert-java:1.0.1"
+    compile "com.devexpress.logify:logify-alert-java:1.0.2"
     ```
 2. In the *repositories* section, declare the Logify Alert's maven repository:
    ```jsp
     maven {
-        url "https://github.com/TestURL/logify-maven-test/raw/master"
+        url "https://github.com/DevExpress/Logify.Alert.Clients/raw/maven"
     }
     ```
 
