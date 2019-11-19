@@ -1,7 +1,7 @@
-Logify.Alert.Wpf v1.0.51.0
+Logify.Alert.Wpf v1.0.52.0
 	Logify.Alert.Core
 ----------------------------------------------------------------------------------------------------
-Logify.Alert.Core v1.0.51.0
+Logify.Alert.Core v1.0.52.0
 	Microsoft.Extensions.Configuration.Binder | Microsoft https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
 	Microsoft.Extensions.DependencyModel | Microsoft.Extensions.DependencyModel https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
 	Microsoft.Extensions.Logging | Microsoft https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
