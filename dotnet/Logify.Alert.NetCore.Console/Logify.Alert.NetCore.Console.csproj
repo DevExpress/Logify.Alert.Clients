@@ -29,6 +29,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Logify.Alert.Core\Collectors\MiniDumpCollector.cs" Link="Collectors\MiniDumpCollector.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Logify.Alert.Core\Logify.Alert.NetCore.Core.csproj" />
   </ItemGroup>
 </Project>

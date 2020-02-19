@@ -40,6 +40,7 @@
     <Compile Remove="Collectors\FrameworkVersionsCollector.cs" />
     <Compile Remove="Collectors\GuiResourcesCollector.cs" />
     <Compile Remove="Collectors\MemoryCollector.cs" />
+    <Compile Remove="Collectors\MiniDumpCollector.cs" />
     <Compile Remove="Collectors\ScreenShotCollector.cs" />
     <Compile Remove="Collectors\VirtualMachineCollector.cs" />
     <Compile Remove="ReportSender\ExternalProcessReportSender.cs" />
