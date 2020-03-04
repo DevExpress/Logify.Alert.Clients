@@ -75,7 +75,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BreadcrumbsRecorder.cs" />
+    <Compile Include="Collectors\AvailableVirtulaMemoryCollector.cs" />
     <Compile Include="Collectors\WinFormsApplicationCollector.cs" />
+    <Compile Include="Collectors\WinFormsMemoryCollector.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="ConfirmReportSend.cs">
       <SubType>Form</SubType>
