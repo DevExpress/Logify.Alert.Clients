@@ -17,10 +17,9 @@ namespace DevExpress.Logify.Core.Internal {
         }
 
         void ExtendMemoryCollector(LogifyCollectorContext context) {
-            IInfoCollector collector = Collectors.FirstOrDefault(c => c.GetType() == typeof(MemoryCollector));
+            MemoryCollector collector = Collectors.FirstOrDefault(c => c.GetType() == typeof(MemoryCollector)) as MemoryCollector;
             if (collector != null) {
-                int index = Collectors.IndexOf(collector);
-                Collectors[index] = new WinFormsMemoryCollector(context);
+                collector.Collectors.Add(new AvailableVirtulaMemoryCollector());
             }
         }
 
