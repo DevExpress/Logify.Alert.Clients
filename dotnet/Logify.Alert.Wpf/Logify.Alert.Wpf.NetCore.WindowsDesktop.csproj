@@ -34,7 +34,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <ItemGroup Condition="'$(Configuration)|$(Platform)'!='Debug|AnyCPU'">
         <Compile Remove="Tests\LogifyClientTests.cs" />
     </ItemGroup>
 </Project>
