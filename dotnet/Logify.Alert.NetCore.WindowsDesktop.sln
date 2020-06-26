@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30218.91
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.Wpf.NetCore.WindowsDesktop", "Logify.Alert.Wpf\Logify.Alert.Wpf.NetCore.WindowsDesktop.csproj", "{D03B821B-9765-4C90-A7C9-5D00E9D15776}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logify.Alert.NetCore.WindowsDesktop.Core", "Logify.Alert.Core\Logify.Alert.NetCore.WindowsDesktop.Core.csproj", "{0E11EA22-4A30-469A-83A0-F9A49DA5A423}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D03B821B-9765-4C90-A7C9-5D00E9D15776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D03B821B-9765-4C90-A7C9-5D00E9D15776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D03B821B-9765-4C90-A7C9-5D00E9D15776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D03B821B-9765-4C90-A7C9-5D00E9D15776}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E11EA22-4A30-469A-83A0-F9A49DA5A423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E11EA22-4A30-469A-83A0-F9A49DA5A423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E11EA22-4A30-469A-83A0-F9A49DA5A423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E11EA22-4A30-469A-83A0-F9A49DA5A423}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B29E1D0-6880-42BA-B42A-51F91BF4D536}
+	EndGlobalSection
+EndGlobal
