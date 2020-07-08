@@ -23,7 +23,7 @@ namespace DevExpress.Logify.Core.Internal {
                 logger.WriteValue("gac", asm.GlobalAssemblyCache);
                 logger.WriteValue("fullTrust", asm.IsFullyTrusted);
                 try {
-                    if (!asm.IsDynamic) {
+                    if (!asm.IsDynamic && !string.IsNullOrEmpty(asm.Location)) {
                         FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(asm.Location);
                         logger.WriteValue("fileVersion", fileVersion.FileVersion);
                     }
