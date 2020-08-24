@@ -912,7 +912,16 @@ namespace DevExpress.Logify.Core {
                     map.FirstChanceFrameCount = frameCount;
                     MethodArgumentsMap[ex] = map;
                 }
-                int lineIndex = map.FirstChanceFrameCount - frameCount;
+                var stackTrace = new StackTrace(ex);
+                int lineIndex = -1;
+                for (int i = 0; i < stackTrace.FrameCount; i++) {
+                    if (stackTrace.GetFrame(i).GetMethod() == call.Method) {
+                        lineIndex = i;
+                        break;
+                    }
+                }
+                if (lineIndex == -1)
+                    lineIndex = map.FirstChanceFrameCount - frameCount;
                 map[lineIndex] = call;
             }
             catch {
