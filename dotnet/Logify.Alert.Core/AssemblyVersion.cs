@@ -18,7 +18,7 @@ namespace DevExpress.Logify.Core.Internal {
 #elif NETFX_CORE
     public const string Version = VersionShort + ".0.3";
 #else
-        public const string Version = VersionShort + ".54";
+        public const string Version = VersionShort + ".55";
 #endif
 
 
